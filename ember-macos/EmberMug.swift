@@ -17,13 +17,14 @@ enum LiquidState: Int {
 }
 
 class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
-    @Published var batteryLevel: Int = 0
+    @Published var batteryLevel: Int = 0 // 5 - 100
     @Published var isCharging: Bool = false
     @Published var currentTemp: Float = 0.0
     @Published var targetTemp: Float = 0.0
     @Published var liquidState: LiquidState = LiquidState.empty
     
-    private var peripheral: CBPeripheral?
+    var peripheral: CBPeripheral?
+    
     private var targetTempCharacteristic: CBCharacteristic?
     private var currentTempCharacteristic: CBCharacteristic?
     private var batteryCharacteristic: CBCharacteristic?

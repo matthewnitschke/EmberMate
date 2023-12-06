@@ -7,10 +7,12 @@
 
 import CoreBluetooth
 
-class BluetoothViewModel: NSObject, ObservableObject {
+class BluetoothManager: NSObject, ObservableObject {
     private var centralManager: CBCentralManager?
     @Published var peripherals: [CBPeripheral] = []
+    
     @Published var isConnected = false
+    @Published var isConnecting = false
     
     var emberMug: EmberMug
     
@@ -29,14 +31,20 @@ class BluetoothViewModel: NSObject, ObservableObject {
     }
     
     func connect(peripheral: CBPeripheral) {
+        isConnecting = true
         peripheral.delegate = emberMug
         self.centralManager!.connect(peripheral)
     }
+    
+    @objc func disconnect() {
+        self.centralManager!.cancelPeripheralConnection(emberMug.peripheral!)
+        UserDefaults.standard.removeObject(forKey: "peripheralIdentifier")
+        isConnected = false
+    }
 }
 
-extension BluetoothViewModel: CBCentralManagerDelegate {
+extension BluetoothManager: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        print(central.state.rawValue)
         if central.state == .poweredOn {
             
             var peripheralFound = false
@@ -57,7 +65,6 @@ extension BluetoothViewModel: CBCentralManagerDelegate {
             }
             
             if (!peripheralFound) {
-                print("Scanning")
                 self.centralManager!.scanForPeripherals(
                     withServices: [CBUUID(string: "fc543622-236c-4c94-8fa9-944a3e5353fa")]
                 )
@@ -76,6 +83,7 @@ extension BluetoothViewModel: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        isConnecting = false
         isConnected = true
         UserDefaults.standard.set(peripheral.identifier.uuidString, forKey: "peripheralIdentifier")
         peripheral.discoverServices(nil)

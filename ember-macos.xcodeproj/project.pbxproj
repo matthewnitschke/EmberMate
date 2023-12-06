@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A0489DA2B1FEF1100426D46 /* MenuBarExtraAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 1A0489D92B1FEF1100426D46 /* MenuBarExtraAccess */; };
+		1A0489DC2B2022B000426D46 /* ContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0489DB2B2022B000426D46 /* ContextMenu.swift */; };
 		1A31E58A2B1ED18A0082AD12 /* ember_macosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A31E5892B1ED18A0082AD12 /* ember_macosApp.swift */; };
 		1A31E58E2B1ED18B0082AD12 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A31E58D2B1ED18B0082AD12 /* Assets.xcassets */; };
 		1A31E5912B1ED18B0082AD12 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A31E5902B1ED18B0082AD12 /* Preview Assets.xcassets */; };
@@ -14,9 +16,11 @@
 		1A31E59B2B1ED1D40082AD12 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A31E59A2B1ED1D40082AD12 /* BluetoothManager.swift */; };
 		1A31E59D2B1ED1E60082AD12 /* EmberMug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A31E59C2B1ED1E60082AD12 /* EmberMug.swift */; };
 		1AD754482B1ED69E00E54851 /* ConnectMugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD754472B1ED69E00E54851 /* ConnectMugView.swift */; };
+		1AE494212B1FE69D0097A4F1 /* MugControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE494202B1FE69D0097A4F1 /* MugControlView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A0489DB2B2022B000426D46 /* ContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenu.swift; sourceTree = "<group>"; };
 		1A31E5862B1ED18A0082AD12 /* ember-macos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ember-macos.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A31E5892B1ED18A0082AD12 /* ember_macosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ember_macosApp.swift; sourceTree = "<group>"; };
 		1A31E58D2B1ED18B0082AD12 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -26,6 +30,7 @@
 		1A31E59A2B1ED1D40082AD12 /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
 		1A31E59C2B1ED1E60082AD12 /* EmberMug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmberMug.swift; sourceTree = "<group>"; };
 		1AD754472B1ED69E00E54851 /* ConnectMugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectMugView.swift; sourceTree = "<group>"; };
+		1AE494202B1FE69D0097A4F1 /* MugControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MugControlView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A0489DA2B1FEF1100426D46 /* MenuBarExtraAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,10 +68,12 @@
 				1A31E58D2B1ED18B0082AD12 /* Assets.xcassets */,
 				1A31E5922B1ED18B0082AD12 /* ember_macos.entitlements */,
 				1A31E58F2B1ED18B0082AD12 /* Preview Content */,
-				1A31E5982B1ED1B00082AD12 /* AppView.swift */,
-				1A31E59A2B1ED1D40082AD12 /* BluetoothManager.swift */,
 				1A31E59C2B1ED1E60082AD12 /* EmberMug.swift */,
+				1A31E59A2B1ED1D40082AD12 /* BluetoothManager.swift */,
+				1A31E5982B1ED1B00082AD12 /* AppView.swift */,
 				1AD754472B1ED69E00E54851 /* ConnectMugView.swift */,
+				1AE494202B1FE69D0097A4F1 /* MugControlView.swift */,
+				1A0489DB2B2022B000426D46 /* ContextMenu.swift */,
 			);
 			path = "ember-macos";
 			sourceTree = "<group>";
@@ -94,6 +102,9 @@
 			dependencies = (
 			);
 			name = "ember-macos";
+			packageProductDependencies = (
+				1A0489D92B1FEF1100426D46 /* MenuBarExtraAccess */,
+			);
 			productName = "ember-macos";
 			productReference = 1A31E5862B1ED18A0082AD12 /* ember-macos.app */;
 			productType = "com.apple.product-type.application";
@@ -122,6 +133,9 @@
 				Base,
 			);
 			mainGroup = 1A31E57D2B1ED18A0082AD12;
+			packageReferences = (
+				1A0489D82B1FEF1100426D46 /* XCRemoteSwiftPackageReference "MenuBarExtraAccess" */,
+			);
 			productRefGroup = 1A31E5872B1ED18A0082AD12 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -150,6 +164,8 @@
 			files = (
 				1A31E58A2B1ED18A0082AD12 /* ember_macosApp.swift in Sources */,
 				1A31E59D2B1ED1E60082AD12 /* EmberMug.swift in Sources */,
+				1AE494212B1FE69D0097A4F1 /* MugControlView.swift in Sources */,
+				1A0489DC2B2022B000426D46 /* ContextMenu.swift in Sources */,
 				1A31E59B2B1ED1D40082AD12 /* BluetoothManager.swift in Sources */,
 				1A31E5992B1ED1B00082AD12 /* AppView.swift in Sources */,
 				1AD754482B1ED69E00E54851 /* ConnectMugView.swift in Sources */,
@@ -352,6 +368,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1A0489D82B1FEF1100426D46 /* XCRemoteSwiftPackageReference "MenuBarExtraAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/orchetect/MenuBarExtraAccess";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1A0489D92B1FEF1100426D46 /* MenuBarExtraAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1A0489D82B1FEF1100426D46 /* XCRemoteSwiftPackageReference "MenuBarExtraAccess" */;
+			productName = MenuBarExtraAccess;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1A31E57E2B1ED18A0082AD12 /* Project object */;
 }
