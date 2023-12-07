@@ -7,48 +7,54 @@
 
 import Foundation
 import SwiftUI
+import UserNotifications
 
 struct MugControlView: View {
     @ObservedObject var emberMug: EmberMug
 
     var body: some View {
         VStack {
-            HStack(spacing: 1) {
-                Spacer()
-                Text("\(self.emberMug.batteryLevel)%")
+            HStack(alignment: .center) {
+                Text(emberMug.peripheral?.name ?? "")
                     .font(.caption)
-                    .foregroundColor(Color.black)
+                Spacer()
                 Image(systemName: getBatteryIcon())
-                    .foregroundColor(Color.black)
             }
             
-            
-            Text(
-                emberMug.liquidState == LiquidState.empty
-                    ? "Empty"
-                    : String(format: "%.1f °C", self.emberMug.currentTemp)
-            ).font(.largeTitle)
-                .padding(.vertical, 50)
-        
-            
             HStack {
+                Text(
+                    emberMug.liquidState == LiquidState.empty
+                        ? "Empty"
+                        : String(format: "%.1f°", self.emberMug.currentTemp)
+                ).font(.largeTitle)
+               
+            }.padding(.vertical, 17)
+            
+            HStack(alignment: .center) {
                 Button(action: {
                     let nextTemp = round((self.emberMug.targetTemp - 0.5) * 2) / 2
                     self.emberMug.setTargetTemp(temp: nextTemp)
                 }) {
                     Image(systemName: "chevron.left")
+                        .font(.title2)
                 }.buttonStyle(PlainButtonStyle())
+                
                 Spacer()
-                Text("Target: \(String(format: "%.1f °C", self.emberMug.targetTemp))")
+                
+                Text(String(format: "Target: %.1f°", self.emberMug.targetTemp))
+                
                 Spacer()
+                
                 Button(action: {
-                    let nextTemp = round((self.emberMug.targetTemp + 0.5) * 2) / 2
-                    self.emberMug.setTargetTemp(temp: nextTemp)
-                }) {
-                    Image(systemName: "chevron.right")
-                }.buttonStyle(PlainButtonStyle())
+                   let nextTemp = round((self.emberMug.targetTemp + 0.5) * 2) / 2
+                   self.emberMug.setTargetTemp(temp: nextTemp)
+               }) {
+                   Image(systemName: "chevron.right")
+                       .font(.title2)
+               }.buttonStyle(PlainButtonStyle())
             }
-        }.padding(8).background(LinearGradient(
+            
+        }.padding(10).background(LinearGradient(
             colors: getBackgroundGradient(),
             startPoint: .top,
             endPoint: .bottom
@@ -87,12 +93,16 @@ struct MugControlView: View {
         let red = minColor.0 + (maxColor.0 - minColor.0) * clampedValue
         let green = minColor.1 + (maxColor.1 - minColor.1) * clampedValue
         let blue = minColor.2 + (maxColor.2 - minColor.2) * clampedValue
-
-        return Color(red: red / 255.0, green: green / 255.0, blue: blue / 255.0)
+        
+        return getColor(red, green, blue)
     }
     
     private func getColor(_ red: Int, _ green: Int, _ blue: Int) -> Color {
-        return Color(red: Double(red) / 255, green: Double(green) / 255, blue: Double(blue) / 255)
+        return getColor(Double(red), Double(green), Double(blue))
+    }
+    
+    private func getColor(_ red: Double, _ green: Double, _ blue: Double) -> Color {
+        return Color(red: red / 255, green: green / 255, blue: blue / 255)
     }
     
     private func getBatteryIcon() -> String {

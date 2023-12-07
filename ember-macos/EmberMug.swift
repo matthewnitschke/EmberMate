@@ -16,21 +16,33 @@ enum LiquidState: Int {
     case stableTemperature = 6
 }
 
+enum TemperatureUnit: Int {
+    case celcius = 0
+    case fahrenheit = 1
+}
+
 class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     @Published var batteryLevel: Int = 0 // 5 - 100
     @Published var isCharging: Bool = false
     @Published var currentTemp: Float = 0.0
     @Published var targetTemp: Float = 0.0
     @Published var liquidState: LiquidState = LiquidState.empty
+    @Published var temperatureUnit: TemperatureUnit = TemperatureUnit.celcius
     
     var peripheral: CBPeripheral?
-    
+
     private var targetTempCharacteristic: CBCharacteristic?
     private var currentTempCharacteristic: CBCharacteristic?
     private var batteryCharacteristic: CBCharacteristic?
     private var liquidStateCharacteristic: CBCharacteristic?
+    private var temperatureUnitCharacteristic: CBCharacteristic?
     
     func setTargetTemp(temp: Float) {
+        // add an artifical limit, to mirror the app
+        // I'm unsure if this is a requirement, but I
+        // dont want to have people accidentially breaking their mugs
+        if (temp < 50 || temp > 63) { return }
+        
         self.targetTemp = temp
         
         let uintVal = UInt16(temp * 100)
@@ -63,6 +75,8 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
                 batteryCharacteristic = characteristic
             case CBUUID(string: "fc540008-236c-4c94-8fa9-944a3e5353fa"):
                 liquidStateCharacteristic = characteristic
+            case CBUUID(string: "fc540004-236c-4c94-8fa9-944a3e5353fa"):
+                temperatureUnitCharacteristic = characteristic
             case CBUUID(string: "fc540012-236c-4c94-8fa9-944a3e5353fa"):
                 // enable notifications for the event characteristic
                 peripheral.setNotifyValue(true, for: characteristic)
@@ -93,6 +107,10 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
                 if let state = LiquidState(rawValue: Int(data[0])) {
                     liquidState = state
                 }
+            } else if (characteristic == temperatureUnitCharacteristic) {
+                if let unit = TemperatureUnit(rawValue: Int(data[0])) {
+                    temperatureUnit = unit
+                }
             } else if (characteristic.uuid == CBUUID(string: "fc540012-236c-4c94-8fa9-944a3e5353fa")) {
                 let state = Int(data[0])
                 
@@ -109,7 +127,6 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
                 } else if (state == 8) {
                     peripheral.readValue(for: liquidStateCharacteristic!)
                 }
-                
             }
         }
     }

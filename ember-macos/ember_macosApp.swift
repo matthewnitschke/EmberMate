@@ -22,8 +22,6 @@ struct ember_controllerApp: App {
         bluetoothManager = BluetoothManager(emberMug: mug)
     }
     
-   
-    
     var body: some Scene {
         MenuBarExtra() {
             AppView(emberMug: emberMug, bluetoothManager: bluetoothManager)
@@ -31,7 +29,7 @@ struct ember_controllerApp: App {
             HStack {
                 Image(systemName: emberMug.liquidState == LiquidState.empty ? "mug" : "mug.fill")
                 if (emberMug.liquidState != LiquidState.empty) {
-                    Text(String(format: "%.1f °C", emberMug.currentTemp))
+                    Text(String(format: "%.1f°", emberMug.currentTemp))
                 }
             }
         }.menuBarExtraAccess(isPresented: $isMenuPresented) { statusItem in
@@ -40,7 +38,7 @@ struct ember_controllerApp: App {
                 self.statusItem = statusItem
 
                 NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { event in
-                    let contextMenu = ContextMenu(bluetoothManager: bluetoothManager)
+                    let contextMenu = ContextMenu(bluetoothManager: bluetoothManager, emberMug: emberMug)
 
                     statusItem.menu = contextMenu.menu
                     statusItem.button?.performClick(nil)
