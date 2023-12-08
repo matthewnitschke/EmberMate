@@ -10,7 +10,7 @@ import SwiftUI
 
 func getFormattedTemperature(_ temp: Double, unit: TemperatureUnit) -> String {
     if unit == .celcius {
-        return String(format: "%.f°", temp)
+        return String(format: "%.1f°", temp)
     }
     
     return String(format: "%.0f°", (temp * 9/5) + 32)
