@@ -29,7 +29,7 @@ struct ember_controllerApp: App {
             HStack {
                 Image(systemName: emberMug.liquidState == LiquidState.empty ? "mug" : "mug.fill")
                 if (emberMug.liquidState != LiquidState.empty) {
-                    Text(String(format: "%.1f°", emberMug.currentTemp))
+                    Text(getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit))
                 }
             }
         }.menuBarExtraAccess(isPresented: $isMenuPresented) { statusItem in

@@ -18,14 +18,14 @@ struct MugControlView: View {
                 Text(emberMug.peripheral?.name ?? "")
                     .font(.caption)
                 Spacer()
-                Image(systemName: getBatteryIcon())
+                Image(systemName: getBatteryIcon(emberMug.batteryLevel, isCharging: emberMug.isCharging))
             }
             
             HStack {
                 Text(
                     emberMug.liquidState == LiquidState.empty
                         ? "Empty"
-                        : String(format: "%.1f°", self.emberMug.currentTemp)
+                        : getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit)
                 ).font(.largeTitle)
                
             }.padding(.vertical, 17)
@@ -41,7 +41,7 @@ struct MugControlView: View {
                 
                 Spacer()
                 
-                Text(String(format: "Target: %.1f°", self.emberMug.targetTemp))
+                Text("Target: \(getFormattedTemperature(emberMug.targetTemp, unit: emberMug.temperatureUnit))")
                 
                 Spacer()
                 
@@ -85,32 +85,5 @@ struct MugControlView: View {
             interpolateColor(minColor: (247, 209, 111), maxColor: (236, 113, 47), value: val),
             interpolateColor(minColor: (213, 122, 52), maxColor: (183, 67, 30), value: val),
         ]
-    }
-    
-    func interpolateColor(minColor: (Double, Double, Double), maxColor: (Double, Double, Double), value: Double) -> Color {
-        let clampedValue = max(0, min(value, 13)) / 13.0
-
-        let red = minColor.0 + (maxColor.0 - minColor.0) * clampedValue
-        let green = minColor.1 + (maxColor.1 - minColor.1) * clampedValue
-        let blue = minColor.2 + (maxColor.2 - minColor.2) * clampedValue
-        
-        return getColor(red, green, blue)
-    }
-    
-    private func getColor(_ red: Int, _ green: Int, _ blue: Int) -> Color {
-        return getColor(Double(red), Double(green), Double(blue))
-    }
-    
-    private func getColor(_ red: Double, _ green: Double, _ blue: Double) -> Color {
-        return Color(red: red / 255, green: green / 255, blue: blue / 255)
-    }
-    
-    private func getBatteryIcon() -> String {
-        if (emberMug.isCharging) {
-            return "battery.100.bolt"
-        }
-        
-        let segment = Int(round(Double(emberMug.batteryLevel) / 25.0) * 25.0)
-        return "battery.\(segment)"
     }
 }

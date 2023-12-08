@@ -25,7 +25,8 @@ class ContextMenu: NSObject, NSMenuDelegate {
         
         if (bluetoothManager.isConnected) {            
             let batteryItem = NSMenuItem(title: "\(emberMug.batteryLevel)% - \(emberMug.peripheral?.name ?? "Unknown Device")", action: nil, keyEquivalent: "")
-            batteryItem.image = NSImage(systemSymbolName: getBatteryIcon(), accessibilityDescription: nil)
+            let icon = getBatteryIcon(emberMug.batteryLevel, isCharging: emberMug.isCharging)
+            batteryItem.image = NSImage(systemSymbolName: icon, accessibilityDescription: nil)
             menu.addItem(batteryItem)
             
             let disconnectMenuItem = NSMenuItem(title: "Disconnect", action: #selector(disconnectClicked(_:)), keyEquivalent: "")
@@ -42,14 +43,5 @@ class ContextMenu: NSObject, NSMenuDelegate {
 
     @objc open func disconnectClicked(_ sender: NSMenuItem) {
         bluetoothManager.disconnect()
-    }
-    
-    private func getBatteryIcon() -> String {
-        if (emberMug.isCharging) {
-            return "battery.100.bolt"
-        }
-        
-        let segment = Int(round(Double(emberMug.batteryLevel) / 25.0) * 25.0)
-        return "battery.\(segment)"
     }
 }

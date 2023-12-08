@@ -24,8 +24,8 @@ enum TemperatureUnit: Int {
 class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     @Published var batteryLevel: Int = 0 // 5 - 100
     @Published var isCharging: Bool = false
-    @Published var currentTemp: Float = 0.0
-    @Published var targetTemp: Float = 0.0
+    @Published var currentTemp: Double = 0.0
+    @Published var targetTemp: Double = 0.0
     @Published var liquidState: LiquidState = LiquidState.empty
     @Published var temperatureUnit: TemperatureUnit = TemperatureUnit.celcius
     
@@ -37,7 +37,7 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     private var liquidStateCharacteristic: CBCharacteristic?
     private var temperatureUnitCharacteristic: CBCharacteristic?
     
-    func setTargetTemp(temp: Float) {
+    func setTargetTemp(temp: Double) {
         // add an artifical limit, to mirror the app
         // I'm unsure if this is a requirement, but I
         // dont want to have people accidentially breaking their mugs
@@ -96,10 +96,10 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
         if let data = data {
             if characteristic == targetTempCharacteristic {
                 let temp = data.extractUInt16()
-                targetTemp = Float(temp) * 0.01
+                targetTemp = Double(temp) * 0.01
             } else if (characteristic == currentTempCharacteristic) {
                 let temp = data.extractUInt16()
-                currentTemp = Float(temp) * 0.01
+                currentTemp = Double(temp) * 0.01
             } else if characteristic == batteryCharacteristic {
                 batteryLevel = Int(data[0])
                 isCharging = Int(data[1]) == 1
