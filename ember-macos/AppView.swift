@@ -10,11 +10,12 @@ import SwiftUI
 
 struct AppView: View {
     @ObservedObject var emberMug: EmberMug
+    var appState: AppState
     @ObservedObject var bluetoothManager: BluetoothManager
     
     var body: some View {
         if bluetoothManager.isConnected {
-            MugControlView(emberMug: emberMug)
+            MugControlView(emberMug: emberMug, appState: appState)
         } else {
             ConnectMugView(bluetoothManager: bluetoothManager)
         }

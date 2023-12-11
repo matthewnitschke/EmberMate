@@ -11,6 +11,7 @@ import UserNotifications
 
 struct MugControlView: View {
     @ObservedObject var emberMug: EmberMug
+    @ObservedObject var appState: AppState
 
     var body: some View {
         VStack {
@@ -22,36 +23,52 @@ struct MugControlView: View {
             }
             
             HStack {
-                Text(
-                    emberMug.liquidState == LiquidState.empty
-                        ? "Empty"
-                        : getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit)
-                ).font(.largeTitle)
-               
-            }.padding(.vertical, 17)
-            
-            HStack(alignment: .center) {
                 Button(action: {
-                    let nextTemp = round((self.emberMug.targetTemp - 0.5) * 2) / 2
-                    self.emberMug.setTargetTemp(temp: nextTemp)
+                    setTemperature(delta: -0.5)
                 }) {
                     Image(systemName: "chevron.left")
                         .font(.title2)
-                }.buttonStyle(PlainButtonStyle())
+                        .frame(width: 30, height: 100)
+                        .background(Color.black.opacity(0.29))
+                }.buttonStyle(PlainButtonStyle()).cornerRadius(9)
                 
                 Spacer()
                 
-                Text("Target: \(getFormattedTemperature(emberMug.targetTemp, unit: emberMug.temperatureUnit))")
+                VStack {
+                    Text(
+                        emberMug.liquidState == LiquidState.empty
+                            ? "Empty"
+                            : getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit)
+                    ).font(.largeTitle)
+                    
+                    if emberMug.liquidState != LiquidState.empty {
+                        Text("Target: \(getFormattedTemperature(emberMug.targetTemp, unit: emberMug.temperatureUnit))")
+                    }
+                }
                 
                 Spacer()
                 
                 Button(action: {
-                   let nextTemp = round((self.emberMug.targetTemp + 0.5) * 2) / 2
-                   self.emberMug.setTargetTemp(temp: nextTemp)
-               }) {
-                   Image(systemName: "chevron.right")
-                       .font(.title2)
-               }.buttonStyle(PlainButtonStyle())
+                    setTemperature(delta: 0.5)
+                }) {
+                    Image(systemName: "chevron.right")
+                        .font(.title2)
+                        .frame(width: 30, height: 100)
+                        .background(Color.black.opacity(0.29))
+                }.buttonStyle(PlainButtonStyle()).cornerRadius(9)
+            }
+            
+            HStack {
+                ForEach(appState.presets, id: \.id) { preset in
+                    TemperaturePresetButton(
+                        preset: preset,
+                        onSelect: { emberMug.setTargetTemp(temp: $0) }
+                    )
+                }
+            }
+            
+            if !appState.timers.isEmpty {
+                TimerView(appState: appState)
             }
             
         }.padding(10).background(LinearGradient(
@@ -61,8 +78,13 @@ struct MugControlView: View {
         ))
     }
     
+    private func setTemperature(delta: Double) {
+        let nextTemp = round((self.emberMug.targetTemp + delta) * 2) / 2
+        self.emberMug.setTargetTemp(temp: nextTemp)
+    }
+    
     private func getBackgroundGradient() -> [Color] {
-        let empty = [getColor(217, 223, 229), getColor(111, 113, 125)]
+        let empty = [getColor(212, 212, 212), getColor(69, 69, 69)]
         let min = [getColor(247, 209, 111), getColor(213, 122, 52)]
         let max = [getColor(236, 113, 47), getColor(183, 67, 30)]
         

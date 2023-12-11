@@ -16,6 +16,23 @@ func getFormattedTemperature(_ temp: Double, unit: TemperatureUnit) -> String {
     return String(format: "%.0f°", (temp * 9/5) + 32)
 }
 
+func formatTime(_ seconds: Int) -> String {
+    let minutes = seconds / 60
+    let remainingSeconds = seconds % 60
+    return String(format: "%d:%02d", minutes, remainingSeconds)
+}
+
+func convertTimeToSeconds(timeString: String) -> Int? {
+    let components = timeString.components(separatedBy: ":")
+    
+    guard components.count == 2,
+        let minutes = Int(components[0]),
+        let seconds = Int(components[1]) else {
+            return nil // Return nil if the format is not as expected
+    }
+    
+    return minutes * 60 + seconds
+}
 
 func getBatteryIcon(_ batteryLevel: Int, isCharging: Bool) -> String {
     if (isCharging) {

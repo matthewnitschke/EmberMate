@@ -15,6 +15,10 @@
 		1A31E5992B1ED1B00082AD12 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A31E5982B1ED1B00082AD12 /* AppView.swift */; };
 		1A31E59B2B1ED1D40082AD12 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A31E59A2B1ED1D40082AD12 /* BluetoothManager.swift */; };
 		1A31E59D2B1ED1E60082AD12 /* EmberMug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A31E59C2B1ED1E60082AD12 /* EmberMug.swift */; };
+		1A42A7402B267CC400233E50 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A42A73F2B267CC400233E50 /* SettingsView.swift */; };
+		1A42A7432B2697CF00233E50 /* TemperaturePresetButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A42A7422B2697CF00233E50 /* TemperaturePresetButton.swift */; };
+		1A42A7452B269A3900233E50 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A42A7442B269A3900233E50 /* TimerView.swift */; };
+		1A42A7472B269DC400233E50 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A42A7462B269DC400233E50 /* AppState.swift */; };
 		1AA35E2C2B22CC0E00B144C0 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA35E2B2B22CC0E00B144C0 /* Utils.swift */; };
 		1AD754482B1ED69E00E54851 /* ConnectMugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD754472B1ED69E00E54851 /* ConnectMugView.swift */; };
 		1AE494212B1FE69D0097A4F1 /* MugControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE494202B1FE69D0097A4F1 /* MugControlView.swift */; };
@@ -30,6 +34,10 @@
 		1A31E5982B1ED1B00082AD12 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		1A31E59A2B1ED1D40082AD12 /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
 		1A31E59C2B1ED1E60082AD12 /* EmberMug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmberMug.swift; sourceTree = "<group>"; };
+		1A42A73F2B267CC400233E50 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		1A42A7422B2697CF00233E50 /* TemperaturePresetButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperaturePresetButton.swift; sourceTree = "<group>"; };
+		1A42A7442B269A3900233E50 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
+		1A42A7462B269DC400233E50 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		1AA35E2B2B22CC0E00B144C0 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		1AD754472B1ED69E00E54851 /* ConnectMugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectMugView.swift; sourceTree = "<group>"; };
 		1AE494202B1FE69D0097A4F1 /* MugControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MugControlView.swift; sourceTree = "<group>"; };
@@ -66,6 +74,7 @@
 		1A31E5882B1ED18A0082AD12 /* ember-macos */ = {
 			isa = PBXGroup;
 			children = (
+				1A42A7412B2696CC00233E50 /* Components */,
 				1A31E5892B1ED18A0082AD12 /* ember_macosApp.swift */,
 				1A31E58D2B1ED18B0082AD12 /* Assets.xcassets */,
 				1A31E5922B1ED18B0082AD12 /* ember_macos.entitlements */,
@@ -77,6 +86,8 @@
 				1AE494202B1FE69D0097A4F1 /* MugControlView.swift */,
 				1A0489DB2B2022B000426D46 /* ContextMenu.swift */,
 				1AA35E2B2B22CC0E00B144C0 /* Utils.swift */,
+				1A42A73F2B267CC400233E50 /* SettingsView.swift */,
+				1A42A7462B269DC400233E50 /* AppState.swift */,
 			);
 			path = "ember-macos";
 			sourceTree = "<group>";
@@ -87,6 +98,15 @@
 				1A31E5902B1ED18B0082AD12 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		1A42A7412B2696CC00233E50 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				1A42A7422B2697CF00233E50 /* TemperaturePresetButton.swift */,
+				1A42A7442B269A3900233E50 /* TimerView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -168,9 +188,13 @@
 				1A31E58A2B1ED18A0082AD12 /* ember_macosApp.swift in Sources */,
 				1A31E59D2B1ED1E60082AD12 /* EmberMug.swift in Sources */,
 				1AE494212B1FE69D0097A4F1 /* MugControlView.swift in Sources */,
+				1A42A7472B269DC400233E50 /* AppState.swift in Sources */,
+				1A42A7402B267CC400233E50 /* SettingsView.swift in Sources */,
 				1A0489DC2B2022B000426D46 /* ContextMenu.swift in Sources */,
 				1A31E59B2B1ED1D40082AD12 /* BluetoothManager.swift in Sources */,
+				1A42A7452B269A3900233E50 /* TimerView.swift in Sources */,
 				1A31E5992B1ED1B00082AD12 /* AppView.swift in Sources */,
+				1A42A7432B2697CF00233E50 /* TemperaturePresetButton.swift in Sources */,
 				1AD754482B1ED69E00E54851 /* ConnectMugView.swift in Sources */,
 				1AA35E2C2B22CC0E00B144C0 /* Utils.swift in Sources */,
 			);

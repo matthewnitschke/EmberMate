@@ -23,6 +23,10 @@ class ContextMenu: NSObject, NSMenuDelegate {
         
         super.init()
         
+        let preferencesMenuItem = NSMenuItem(title: "Preferences", action: #selector(preferencesClicked(_:)), keyEquivalent: "")
+        preferencesMenuItem.target = self
+        menu.addItem(preferencesMenuItem)
+        
         if (bluetoothManager.isConnected) {            
             let batteryItem = NSMenuItem(title: "\(emberMug.batteryLevel)% - \(emberMug.peripheral?.name ?? "Unknown Device")", action: nil, keyEquivalent: "")
             let icon = getBatteryIcon(emberMug.batteryLevel, isCharging: emberMug.isCharging)
@@ -39,6 +43,11 @@ class ContextMenu: NSObject, NSMenuDelegate {
 
         // Set the menu delegate
         menu.delegate = self
+    }
+    
+    @objc open func preferencesClicked(_ sender: NSMenuItem) {
+        NSApp.activate(ignoringOtherApps: true)
+        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
     }
 
     @objc open func disconnectClicked(_ sender: NSMenuItem) {

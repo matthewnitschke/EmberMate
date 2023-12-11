@@ -12,6 +12,7 @@ import MenuBarExtraAccess
 struct ember_controllerApp: App {
     @ObservedObject private var emberMug: EmberMug
     @ObservedObject private var bluetoothManager: BluetoothManager
+    @ObservedObject private var appState: AppState
     
     @State private var isMenuPresented = false
     @State private var statusItem: NSStatusItem?
@@ -20,14 +21,17 @@ struct ember_controllerApp: App {
         let mug = EmberMug()
         self.emberMug = mug
         bluetoothManager = BluetoothManager(emberMug: mug)
+        
+        appState = AppState()
     }
     
     var body: some Scene {
         MenuBarExtra() {
-            AppView(emberMug: emberMug, bluetoothManager: bluetoothManager)
+            AppView(emberMug: emberMug, appState: appState, bluetoothManager: bluetoothManager)
         } label: {
             HStack {
                 Image(systemName: emberMug.liquidState == LiquidState.empty ? "mug" : "mug.fill")
+                
                 if (emberMug.liquidState != LiquidState.empty) {
                     Text(getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit))
                 }
@@ -47,7 +51,11 @@ struct ember_controllerApp: App {
                     return event
                 }
             }
-           
+
         }.menuBarExtraStyle(.window)
+        
+        Settings {
+            SettingsView(appState: appState)
+        }
     }
 }

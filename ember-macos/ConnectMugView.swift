@@ -11,19 +11,12 @@ import CoreBluetooth
 
 struct ConnectMugView: View {
     @ObservedObject var bluetoothManager: BluetoothManager
-    
     @State private var selectedMug: CBPeripheral?
 
-    
     var body: some View {
         VStack {
             Text("Select a Mug")
                 .font(.title).padding(.top)
-//            Picker("Device", selection: $selectedMug) {
-//                ForEach(bluetoothManager.peripherals, id: \.self) { peripheral in
-//                    Text(peripheral.name ?? "Unknown Device").tag(peripheral)
-//                }
-//            }
             List(
                 bluetoothManager.peripherals,
                 id: \.self,
