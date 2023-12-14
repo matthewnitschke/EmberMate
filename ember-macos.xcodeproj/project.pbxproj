@@ -41,6 +41,7 @@
 		1AA35E2B2B22CC0E00B144C0 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		1AD754472B1ED69E00E54851 /* ConnectMugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectMugView.swift; sourceTree = "<group>"; };
 		1AE494202B1FE69D0097A4F1 /* MugControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MugControlView.swift; sourceTree = "<group>"; };
+		1AE785402B2A975C00FD31ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +75,7 @@
 		1A31E5882B1ED18A0082AD12 /* ember-macos */ = {
 			isa = PBXGroup;
 			children = (
+				1AE785402B2A975C00FD31ED /* Info.plist */,
 				1A42A7412B2696CC00233E50 /* Components */,
 				1A31E5892B1ED18A0082AD12 /* ember_macosApp.swift */,
 				1A31E58D2B1ED18B0082AD12 /* Assets.xcassets */,
@@ -330,6 +332,9 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ember-macos/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth used to communicate with ember mug";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Peripheral usage detection used to communicate with ember mug";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -359,6 +364,9 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ember-macos/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth used to communicate with ember mug";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Peripheral usage detection used to communicate with ember mug";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
