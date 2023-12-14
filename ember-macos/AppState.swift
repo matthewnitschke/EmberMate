@@ -94,6 +94,8 @@ class AppState: ObservableObject {
                 content.title = "Ember Timer Complete"
                 content.subtitle = "Your timer is complete"
                 content.sound = UNNotificationSound.default
+                content.userInfo = ["icon": "AppIcon"]
+            
                 let request = UNNotificationRequest(identifier: "timerDone", content: content, trigger: nil)
                 UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             }

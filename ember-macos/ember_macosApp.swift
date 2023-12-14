@@ -56,6 +56,7 @@ struct ember_controllerApp: App {
         
         Settings {
             SettingsView(appState: appState)
+                .frame(width: 400, height: 510)
         }
     }
 }
