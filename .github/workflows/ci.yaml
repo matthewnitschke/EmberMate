@@ -31,3 +31,5 @@ jobs:
             -archivePath "build/ember-macos.xcarchive" \
             -exportPath "build" \
             -exportOptionsPlist "exportOptions.plist"
+      - name: ls
+        run: ls build
