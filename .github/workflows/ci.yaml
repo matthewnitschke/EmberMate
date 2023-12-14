@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: [macos-latest]
+    runs-on: macos-latest
     steps:
       - uses: swift-actions/setup-swift@v1.25.0
         with:
