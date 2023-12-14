@@ -32,6 +32,9 @@ jobs:
             -exportPath "build" \
             -exportOptionsPlist "exportOptions.plist"
 
+      - name: Convert to DMG
+        run: hdiutil create -srcdir "build" -volname "ember-macos" "ember-macos.dmg"
+
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
