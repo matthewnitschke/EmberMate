@@ -39,4 +39,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ember-macos.app
-          path: build/ember-macos.app
+          path: build/ember-macos.dmg
