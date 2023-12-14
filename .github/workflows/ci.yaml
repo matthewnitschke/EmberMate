@@ -31,5 +31,9 @@ jobs:
             -archivePath "build/ember-macos.xcarchive" \
             -exportPath "build" \
             -exportOptionsPlist "exportOptions.plist"
-      - name: ls
-        run: ls build
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: ember-macos.app
+          path: build/ember-macos.app
