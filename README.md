@@ -6,3 +6,13 @@
 # ember-macos
 
 A menubar application for controlling ember mugs
+
+<p float="left">
+  <img src="https://github.com/matthewnitschke/ember-macos/assets/6363089/6b79f863-1be2-4988-baee-f130d33807d6" width="400" /> 
+  <img src="https://github.com/matthewnitschke/ember-macos/assets/6363089/d9b849a9-443f-4e5c-9fb8-490abed66abf" width="400" />
+</p>
+
+![with-timer](https://github.com/matthewnitschke/ember-macos/assets/6363089/6b37e508-8a57-4129-b1ca-23a09f260f7e)
+
+# Installation
+wip
