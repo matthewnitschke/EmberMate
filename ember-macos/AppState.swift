@@ -159,25 +159,3 @@ class Preset: Identifiable, ObservableObject, Codable {
         try container.encode(temperature, forKey: .temperature)
     }
 }
-
-//class Timer: Identifiable, ObservableObject, Codable {
-//    var id = UUID().uuidString
-//    @Published var time: String = "4:00"
-//
-//    private enum CodingKeys: String, CodingKey {
-//        case id
-//        case time
-//    }
-//
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        id = try container.decode(String.self, forKey: .id)
-//        time = try container.decode(String.self, forKey: .time)
-//    }
-//
-//    func encode(to encoder: Encoder) throws {
-//        var container = encoder.container(keyedBy: CodingKeys.self)
-//        try container.encode(id, forKey: .id)
-//        try container.encode(time, forKey: .time)
-//    }
-//}
