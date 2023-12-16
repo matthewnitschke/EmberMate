@@ -21,8 +21,8 @@ struct TimerView: View {
             
             if appState.countdown == nil {
                 ForEach(appState.timers, id: \.self) { time in
-                    Button(formatTime(time)) {
-                        appState.startTimer(time)
+                    Button(time) {
+                        appState.startTimer(convertTimeToSeconds(time)!)
                     }
                 }
             }

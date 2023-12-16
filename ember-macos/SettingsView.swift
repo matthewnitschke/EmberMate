@@ -12,69 +12,62 @@ import AppKit
 
 
 struct SettingsView: View {
-    @ObservedObject var appState: AppState
+    var appState: AppState
+    var emberMug: EmberMug
+    var bluetoothManager: BluetoothManager
     
     @State var internalTime: String?
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading) {
-                    Text("Presets").font(.title)
-                    
-                    Grid(alignment: .leading) {
-                        ForEach(appState.presets, id: \.id) { preset in
-                            PresetRowView(
-                                preset: preset,
-                                onRemove: {
-                                    appState.presets.removeAll(where: { $0.id == preset.id })
-                                }
-                            )
-                        }.padding(.bottom, 7)
-                    }
-                    
-                    
-                    Button("+") {
-                        appState.presets.append(Preset())
-                    }
-                    
-                    
-                    Text("Timer").font(.title).padding(.top, 20)
-                    TextField("Enter integers separated by commas", text: Binding(
-                        get: {
-                            internalTime ?? appState.timers
-                                .map(formatTime)
-                                .joined(separator: ", ")
-                        },
-                        set: { internalTime = $0 }
-                    ))
-                    
-                    HStack(alignment: .center) {
-                        Button("Save") {
-                            if let internalTime = internalTime {
-                                let components = internalTime
-                                    .split(separator: ",")
-                                    .map { String($0.trimmingCharacters(in: .whitespaces)) }
-                                    .compactMap(convertTimeToSeconds)
-                                appState.timers = components.compactMap { Int($0) }
-                            }
-                            
-                            appState.save()
-                        }
-                    }.padding(.top, 30)
-      
+        TabView {
+            GeneralSettingsView(
+                emberMug: emberMug,
+                bluetoothManager: bluetoothManager
+            )
+                .tabItem {
+                    Label("General", systemImage: "gear")
                 }
-                .padding(30)
-                .navigationTitle("Settings")
-            }
+            PresetsSettingsView(appState: appState)
+                .tabItem {
+                    Label("Presets", systemImage: "square.and.arrow.down")
+                }
         }
-        .frame(width: 480, height: 500)
+        .navigationTitle("Settings")
+        
     }
 }
 
-struct PresetRowView: View {
-    @State private var isIconPopoverPresented = false
-    @ObservedObject var preset: Preset
+struct GeneralSettingsView: View {
+    @ObservedObject var emberMug: EmberMug
+    @ObservedObject var bluetoothManager: BluetoothManager
+    
+    @State var openAtLogin: Bool = false
+    
+    var body: some View {
+        Form {
+            Section {
+                HStack {
+                    Image(systemName: "mug.fill")
+                        .font(.largeTitle)
+                    VStack(alignment: .leading) {
+                        Text(emberMug.peripheral?.name ?? "Unknown Device")
+                        HStack(spacing: 3) {
+                            Image(systemName: getBatteryIcon(emberMug.batteryLevel, isCharging: emberMug.isCharging))
+                            Text("\(emberMug.batteryLevel)%")
+                        }.foregroundColor(.gray)
+                    }
+                    Spacer()
+                    Button("Disconnect") {
+                        bluetoothManager.disconnect()
+                    }
+                }
+            }
+        }.formStyle(.grouped)
+    }
+}
+
+struct PresetsSettingsView: View {
+    @ObservedObject var appState: AppState
     
     var images: [String] = [
         "mug.fill",
@@ -85,34 +78,92 @@ struct PresetRowView: View {
         "flame.fill"
     ]
     
-    var onRemove: () -> Void
-    
     var body: some View {
-        GridRow {
-            Button(action: {
-                isIconPopoverPresented.toggle()
-            }) {
-                Image(systemName: preset.icon)
-                    .frame(width: 20)
-            }
-            .popover(isPresented: $isIconPopoverPresented, arrowEdge: .leading) {
-                LazyVGrid(
-                    columns: [GridItem(.fixed(30), spacing: 7), GridItem(.fixed(30), spacing: 7)],
-                    spacing: 7
-                ) {
-                    ForEach(images, id: \.self) { image in
+        Form {
+            Section {
+                ForEach($appState.presets, id: \.id) { preset in
+                    HStack {
                         Button(action: {
-                            preset.icon = image
+                            appState.presets.removeAll(where: { $0.id == preset.id })
                         }) {
-                            Image(systemName: image).font(.title)
-                        }.buttonStyle(PlainButtonStyle())
+                            Image(systemName: "trash")
+                        }.buttonStyle(.plain)
+                        
+                        TextField("Name", text: preset.name)
+                            .labelsHidden()
+                        
+                        TextField("Temperature", value: preset.temperature, format: .number)
+                            .labelsHidden()
+                            .multilineTextAlignment(.trailing)
+                        
+                        Picker(
+                            selection: preset.icon,
+                            label: Text("Icon")
+                        ) {
+                            ForEach(images, id: \.self) { image in
+                                Image(systemName: image)
+                                    .tag(image)
+                            }
+                        }.frame(width: 45).labelsHidden()
                     }
-                }.padding(10)
+                }
+            } header: {
+                Text("Temperature")
+            } footer: {
+                Button("+") {
+                    appState.presets.append(Preset())
+                }
             }
             
-            TextField("Name", text: $preset.name)
-            TextField("Temp", value: $preset.temperature, format: .number)
-            Button("-") { onRemove() }
+            Section {
+                ForEach(appState.timers.indices, id: \.self) { index in
+                    HStack {
+                        Button(action: {
+                            appState.timers.remove(at: index)
+                        }) {
+                            Image(systemName: "trash")
+                        }.buttonStyle(.plain)
+                        
+                        TextField("Duration", text: Binding(
+                            get: {
+                                // zombie child render issue, mod the response so the requests are always in bounds
+                                appState.timers[index % appState.timers.count]
+                            },
+                            set: { newValue in
+                                appState.timers[index] = newValue
+                            }
+                        )).labelsHidden()
+                    }
+                }
+            } header: {
+                Text("Timer")
+            } footer: {
+                Button("+") {
+                    appState.timers.append("4:00")
+                }
+            }
+            
         }
+        .formStyle(.grouped)
+    }
+}
+
+extension Array: RawRepresentable where Element: Codable {
+    public init?(rawValue: String) {
+        guard let data = rawValue.data(using: .utf8),
+              let result = try? JSONDecoder().decode([Element].self, from: data)
+        else {
+            return nil
+        }
+        self = result
+    }
+    
+    public var rawValue: String {
+        guard let data = try? JSONEncoder().encode(self),
+              let result = String(data: data, encoding: .utf8)
+        else {
+            return "[]"
+        }
+        return result
     }
 }
