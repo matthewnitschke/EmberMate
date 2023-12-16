@@ -33,6 +33,8 @@ class AppState: ObservableObject {
         )
     ]
     
+    @AppStorage("notifyOnTemperatureReached") var notifyOnTemperatureReached: Bool = true
+    
     private var cancellables: Set<AnyCancellable> = []
     
     init() {
