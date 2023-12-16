@@ -22,7 +22,7 @@ func formatTime(_ seconds: Int) -> String {
     return String(format: "%d:%02d", minutes, remainingSeconds)
 }
 
-func convertTimeToSeconds(timeString: String) -> Int? {
+func convertTimeToSeconds(_ timeString: String) -> Int? {
     let components = timeString.components(separatedBy: ":")
     
     guard components.count == 2,

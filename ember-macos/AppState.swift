@@ -14,7 +14,7 @@ class AppState: ObservableObject {
     var timer: Timer?
     @Published var countdown: Int?
     
-    @Published var timers: [Int] = [4*60, 5*60, 6*60]
+    @Published var timers: [String] = ["4:00", "5:00", "6:00"]
     @Published var presets: [Preset] = [
         Preset(
             icon: "cup.and.saucer.fill",
@@ -33,44 +33,56 @@ class AppState: ObservableObject {
         )
     ]
     
+    private var cancellables: Set<AnyCancellable> = []
+    
     init() {
+        let encoder = JSONEncoder()
+        let decoder = JSONDecoder()
+        
         let presets = UserDefaults.standard.string(forKey: "presets")
         if let presets = presets {
             do {
-                let decoder = JSONDecoder()
                 self.presets = try decoder.decode([Preset].self, from: presets.data(using: .utf8)!)
             } catch {
                 print("Error decoding presets: \(error)")
             }
         }
+        self.$presets
+            .sink { newData in
+                do {
+                    let presetData = try encoder.encode(newData)
+                    if let jsonString = String(data: presetData, encoding: .utf8) {
+                        print("Saving: \(jsonString)")
+                        UserDefaults.standard.set(jsonString, forKey: "presets")
+                    }
+                } catch {
+                    print("Error encoding presets: \(error)")
+                }
+            }
+            .store(in: &cancellables)
+        
         
         let timers = UserDefaults.standard.string(forKey: "timers")
         if let timers = timers {
             do {
-               let decoder = JSONDecoder()
-               self.timers = try decoder.decode([Int].self, from: timers.data(using: .utf8)!)
-           } catch {
-               print("Error decoding timers: \(error)")
-           }
-        }
-    }
-    
-    func save() {
-        do {
-            let encoder = JSONEncoder()
-            
-            let jsonData = try encoder.encode(presets)
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                UserDefaults.standard.set(jsonString, forKey: "presets")
+                self.timers = try decoder.decode([String].self, from: timers.data(using: .utf8)!)
+            } catch {
+                print("Error decoding timers: \(error)")
             }
-            
-           let timerData = try encoder.encode(timers)
-           if let jsonString = String(data: timerData, encoding: .utf8) {
-               UserDefaults.standard.set(jsonString, forKey: "timers")
-           }
-       } catch {
-           print("Error encoding presets: \(error)")
-       }
+        }
+        self.$timers
+            .sink { newData in
+                do {
+                    let timerData = try encoder.encode(newData)
+                    if let jsonString = String(data: timerData, encoding: .utf8) {
+                        print("Saving: \(jsonString)")
+                        UserDefaults.standard.set(jsonString, forKey: "timers")
+                    }
+                } catch {
+                    print("Error encoding timers: \(error)")
+                }
+            }
+            .store(in: &cancellables)
     }
     
     func startTimer(_ time: Int) {
@@ -95,7 +107,7 @@ class AppState: ObservableObject {
                 content.subtitle = "Your timer is complete"
                 content.sound = UNNotificationSound.default
                 content.userInfo = ["icon": "AppIcon"]
-            
+                
                 let request = UNNotificationRequest(identifier: "timerDone", content: content, trigger: nil)
                 UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             }
@@ -113,7 +125,7 @@ class Preset: Identifiable, ObservableObject, Codable {
     @Published var icon: String = "mug.fill"
     @Published var name: String = "Coffee"
     @Published var temperature: Double = 55.0
-
+    
     private enum CodingKeys: String, CodingKey {
         case id
         case icon
@@ -130,7 +142,7 @@ class Preset: Identifiable, ObservableObject, Codable {
         self.name = name
         self.temperature = temperature
     }
-
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -138,7 +150,7 @@ class Preset: Identifiable, ObservableObject, Codable {
         name = try container.decode(String.self, forKey: .name)
         temperature = try container.decode(Double.self, forKey: .temperature)
     }
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -147,3 +159,25 @@ class Preset: Identifiable, ObservableObject, Codable {
         try container.encode(temperature, forKey: .temperature)
     }
 }
+
+//class Timer: Identifiable, ObservableObject, Codable {
+//    var id = UUID().uuidString
+//    @Published var time: String = "4:00"
+//
+//    private enum CodingKeys: String, CodingKey {
+//        case id
+//        case time
+//    }
+//
+//    required init(from decoder: Decoder) throws {
+//        let container = try decoder.container(keyedBy: CodingKeys.self)
+//        id = try container.decode(String.self, forKey: .id)
+//        time = try container.decode(String.self, forKey: .time)
+//    }
+//
+//    func encode(to encoder: Encoder) throws {
+//        var container = encoder.container(keyedBy: CodingKeys.self)
+//        try container.encode(id, forKey: .id)
+//        try container.encode(time, forKey: .time)
+//    }
+//}

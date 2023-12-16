@@ -55,7 +55,11 @@ struct ember_controllerApp: App {
         }.menuBarExtraStyle(.window)
         
         Settings {
-            SettingsView(appState: appState)
+            SettingsView(
+                appState: appState,
+                emberMug: emberMug,
+                bluetoothManager: bluetoothManager
+            )
                 .frame(width: 400, height: 510)
         }
     }
