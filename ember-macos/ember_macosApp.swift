@@ -17,12 +17,17 @@ struct ember_controllerApp: App {
     @State private var isMenuPresented = false
     @State private var statusItem: NSStatusItem?
     
+    private var notificationAdapter: NotificationAdapter
+    
     init() {
         let mug = EmberMug()
         self.emberMug = mug
         bluetoothManager = BluetoothManager(emberMug: mug)
         
-        appState = AppState()
+        let state = AppState()
+        self.appState = state
+        
+        self.notificationAdapter = NotificationAdapter(appState: state, emberMug: mug)
     }
     
     var body: some Scene {

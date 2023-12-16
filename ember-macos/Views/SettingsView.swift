@@ -22,6 +22,7 @@ struct SettingsView: View {
         TabView {
             GeneralSettingsView(
                 emberMug: emberMug,
+                appState: appState,
                 bluetoothManager: bluetoothManager
             )
                 .tabItem {
@@ -39,9 +40,10 @@ struct SettingsView: View {
 
 struct GeneralSettingsView: View {
     @ObservedObject var emberMug: EmberMug
+    @ObservedObject var appState: AppState
     @ObservedObject var bluetoothManager: BluetoothManager
     
-    @State var openAtLogin: Bool = false
+    @AppStorage("notifyTemperatureReached") var notifyTemperatureReached: Bool = true
     
     var body: some View {
         Form {
@@ -60,6 +62,10 @@ struct GeneralSettingsView: View {
                     Button("Disconnect") {
                         bluetoothManager.disconnect()
                     }
+                }
+                
+                Section {
+                    Toggle("Notify when temperature is reached", isOn: appState.$notifyOnTemperatureReached)
                 }
             }
         }.formStyle(.grouped)
