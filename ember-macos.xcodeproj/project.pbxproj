@@ -23,6 +23,7 @@
 		1AD754482B1ED69E00E54851 /* ConnectMugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD754472B1ED69E00E54851 /* ConnectMugView.swift */; };
 		1AE494212B1FE69D0097A4F1 /* MugControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE494202B1FE69D0097A4F1 /* MugControlView.swift */; };
 		1AF9BE722B2E2D35002C930D /* NotificationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF9BE712B2E2D35002C930D /* NotificationAdapter.swift */; };
+		1AF9BE762B2E3BCE002C930D /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 1AF9BE752B2E3BCE002C930D /* LaunchAtLogin */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AF9BE762B2E3BCE002C930D /* LaunchAtLogin in Frameworks */,
 				1A0489DA2B1FEF1100426D46 /* MenuBarExtraAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -140,6 +142,7 @@
 			name = "ember-macos";
 			packageProductDependencies = (
 				1A0489D92B1FEF1100426D46 /* MenuBarExtraAccess */,
+				1AF9BE752B2E3BCE002C930D /* LaunchAtLogin */,
 			);
 			productName = "ember-macos";
 			productReference = 1A31E5862B1ED18A0082AD12 /* ember-macos.app */;
@@ -171,6 +174,7 @@
 			mainGroup = 1A31E57D2B1ED18A0082AD12;
 			packageReferences = (
 				1A0489D82B1FEF1100426D46 /* XCRemoteSwiftPackageReference "MenuBarExtraAccess" */,
+				1AF9BE742B2E3BCE002C930D /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
 			);
 			productRefGroup = 1A31E5872B1ED18A0082AD12 /* Products */;
 			projectDirPath = "";
@@ -428,6 +432,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		1AF9BE742B2E3BCE002C930D /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin-Modern";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -435,6 +447,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1A0489D82B1FEF1100426D46 /* XCRemoteSwiftPackageReference "MenuBarExtraAccess" */;
 			productName = MenuBarExtraAccess;
+		};
+		1AF9BE752B2E3BCE002C930D /* LaunchAtLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1AF9BE742B2E3BCE002C930D /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */;
+			productName = LaunchAtLogin;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

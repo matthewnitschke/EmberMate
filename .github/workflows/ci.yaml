@@ -32,11 +32,18 @@ jobs:
             -exportPath "build" \
             -exportOptionsPlist "exportOptions.plist"
 
-      - name: Convert to DMG
-        run: hdiutil create -srcdir "build" -volname "ember-macos" "ember-macos.dmg"
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          path: build/ember-macos.app
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --global create-dmg
+      - run: create-dmg --dmg-title='Ember MacOS' 'build/ember-macos.app' ./
 
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: ember-macos.dmg
-          path: ember-macos.dmg
+          path: Ember\ MacOS*.dmg

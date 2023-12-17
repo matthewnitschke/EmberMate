@@ -8,8 +8,7 @@
 import Foundation
 import SwiftUI
 import AppKit
-
-
+import LaunchAtLogin
 
 struct SettingsView: View {
     var appState: AppState
@@ -65,6 +64,7 @@ struct GeneralSettingsView: View {
                 }
                 
                 Section {
+                    LaunchAtLogin.Toggle()
                     Toggle("Notify when temperature is reached", isOn: appState.$notifyOnTemperatureReached)
                 }
             }
