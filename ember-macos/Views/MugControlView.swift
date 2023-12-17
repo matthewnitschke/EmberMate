@@ -62,7 +62,11 @@ struct MugControlView: View {
                 ForEach(appState.presets, id: \.id) { preset in
                     TemperaturePresetButton(
                         preset: preset,
-                        onSelect: { emberMug.setTargetTemp(temp: $0) }
+                        isSelected: appState.selectedPreset?.id == preset.id,
+                        onSelect: {
+                            appState.selectedPreset = preset
+                            emberMug.setTargetTemp(temp: $0)
+                        }
                     )
                 }
             }
@@ -79,6 +83,8 @@ struct MugControlView: View {
     }
     
     private func setTemperature(delta: Double) {
+        appState.selectedPreset = nil
+        
         let nextTemp = round((self.emberMug.targetTemp + delta) * 2) / 2
         self.emberMug.setTargetTemp(temp: nextTemp)
     }
