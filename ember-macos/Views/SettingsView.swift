@@ -42,8 +42,6 @@ struct GeneralSettingsView: View {
     @ObservedObject var appState: AppState
     @ObservedObject var bluetoothManager: BluetoothManager
     
-    @AppStorage("notifyTemperatureReached") var notifyTemperatureReached: Bool = true
-    
     var body: some View {
         Form {
             Section {
