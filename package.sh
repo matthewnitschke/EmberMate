@@ -21,4 +21,4 @@ xcodebuild \
     -exportOptionsPlist "exportOptions.plist"
 
 
-create-dmg --dmg-title='Ember MacOS' 'build/ember-macos.app' ./
+create-dmg --dmg-title='Ember-MacOS' 'build/ember-macos.app' ./
