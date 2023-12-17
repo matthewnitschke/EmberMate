@@ -35,7 +35,7 @@ struct ember_controllerApp: App {
             AppView(emberMug: emberMug, appState: appState, bluetoothManager: bluetoothManager)
         } label: {
             HStack {
-                Image(systemName: emberMug.liquidState == LiquidState.empty ? "mug" : "mug.fill")
+                Image(systemName: getIconName())
                 
                 if (emberMug.liquidState != LiquidState.empty) {
                     Text(getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit))
@@ -67,5 +67,17 @@ struct ember_controllerApp: App {
             )
                 .frame(width: 400, height: 510)
         }
+    }
+    
+    func getIconName() -> String {
+        if (emberMug.liquidState == LiquidState.empty) {
+            return "mug"
+        }
+        
+        if (appState.selectedPreset != nil) {
+            return appState.selectedPreset!.icon
+        }
+        
+        return "mug.fill"
     }
 }

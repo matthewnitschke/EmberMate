@@ -10,6 +10,7 @@ import SwiftUI
 
 struct TemperaturePresetButton: View {
     var preset: Preset
+    var isSelected: Bool
     var onSelect: (Double) -> Void
     
     var body: some View {
@@ -28,7 +29,7 @@ struct TemperaturePresetButton: View {
             }
             .padding(10)
             .frame(width: 90, height: 90)
-            .background(Color.black.opacity(0.29))
+            .background(Color.black.opacity(isSelected ? 0.6 : 0.29))
         }
         .buttonStyle(PlainButtonStyle())
         .cornerRadius(9)

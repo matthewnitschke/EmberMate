@@ -12,6 +12,10 @@ import UserNotifications
 
 class AppState: ObservableObject {
     var timer: Timer?
+    
+    // this value is not persisted, only published
+    @Published var selectedPreset: Preset?
+    
     @Published var countdown: Int?
     
     @Published var timers: [String] = ["4:00", "5:00", "6:00"]
