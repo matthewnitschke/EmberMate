@@ -31,7 +31,7 @@ struct TemperaturePresetButton: View {
             .frame(width: 90, height: 90)
             .background(Color.black.opacity(isSelected ? 0.6 : 0.29))
         }
-        .buttonStyle(PlainButtonStyle())
+        .buttonStyle(.plain)
         .cornerRadius(9)
     }
 }

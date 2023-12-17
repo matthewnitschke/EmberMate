@@ -114,36 +114,47 @@ struct PresetsSettingsView: View {
             } header: {
                 Text("Temperature")
             } footer: {
-                Button("+") {
-                    appState.presets.append(Preset())
+                HStack {
+                    Spacer()
+                    Button("+") {
+                        appState.presets.append(Preset())
+                    }
                 }
             }
             
             Section {
-                ForEach(appState.timers.indices, id: \.self) { index in
-                    HStack {
-                        Button(action: {
-                            appState.timers.remove(at: index)
-                        }) {
-                            Image(systemName: "trash")
-                        }.buttonStyle(.plain)
-                        
-                        TextField("Duration", text: Binding(
-                            get: {
-                                // zombie child render issue, mod the response so the requests are always in bounds
-                                appState.timers[index % appState.timers.count]
-                            },
-                            set: { newValue in
-                                appState.timers[index] = newValue
-                            }
-                        )).labelsHidden()
+                if (!appState.timers.isEmpty) {
+                    ForEach(appState.timers.indices, id: \.self) { index in
+                        HStack {
+                            Button(action: {
+                                appState.timers.remove(at: index)
+                            }) {
+                                Image(systemName: "trash")
+                            }.buttonStyle(.plain)
+                            
+                            TextField("Duration", text: Binding(
+                                get: {
+                                    // zombie child render issue, ensure that [index] always referes to a value
+                                    if (appState.timers.count - 1 < index) {
+                                        return ""
+                                    }
+                                    return appState.timers[index]
+                                },
+                                set: { newValue in
+                                    appState.timers[index] = newValue
+                                }
+                            )).labelsHidden()
+                        }
                     }
                 }
             } header: {
                 Text("Timer")
             } footer: {
-                Button("+") {
-                    appState.timers.append("4:00")
+                HStack {
+                    Spacer()
+                    Button("+") {
+                        appState.timers.append("4:00")
+                    }
                 }
             }
             
