@@ -33,3 +33,6 @@ build/
 *~
 *.dat
 *.dep
+
+Ember Macos*.dmg
+exportOptions.plist
