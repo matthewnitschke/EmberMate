@@ -3,14 +3,10 @@
   <span>Control your <a href="https://ember.com/">ember mug</a>, directly from your MacOS menubar</span>
 </p>
 
+
 # ember-macos
 
 A menubar application for controlling ember mugs
-
-<p float="left">
-  <img src="https://github.com/matthewnitschke/ember-macos/assets/6363089/6b79f863-1be2-4988-baee-f130d33807d6" width="400" /> 
-  <img src="https://github.com/matthewnitschke/ember-macos/assets/6363089/d9b849a9-443f-4e5c-9fb8-490abed66abf" width="400" />
-</p>
 
 ![with-timer](https://github.com/matthewnitschke/ember-macos/assets/6363089/6b37e508-8a57-4129-b1ca-23a09f260f7e)
 
@@ -24,6 +20,9 @@ A menubar application for controlling ember mugs
 
 ![popup](https://github.com/matthewnitschke/ember-macos/assets/6363089/99c1c338-cb6a-4311-b4e4-2b5055b49bce)
 
-This message is displayed because the `ember-macos` application is not what you would call "signed". Apple charges $100 a year to sign appliceations, and this is something I do not want to pay for.
+This message is displayed because the `ember-macos` application is not what you would call "signed". Apple charges developers yearly to sign appliceations, and this is something I do not want to pay for at this time
 
 You can force allow opening the application by `ctrl+clicking` the application icon, and selecting "Open" from the dropdown menu
+
+# Support this project
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png)](https://www.buymeacoffee.com/matthewnitschke)
