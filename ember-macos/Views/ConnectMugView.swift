@@ -15,26 +15,68 @@ struct ConnectMugView: View {
 
     var body: some View {
         VStack {
-            Text("Select a Mug")
-                .font(.title).padding(.top)
-            List(
-                bluetoothManager.peripherals,
-                id: \.self,
-                selection: $selectedMug
-            ) { peripheral in
-                Text(peripheral.name ?? "Unknown Device")
-            }
-            if let selectedMug = selectedMug {
-                
-                if (bluetoothManager.isConnecting) {
-                    ProgressView()
-                } else {
-                    Button("Connect") {
-                        bluetoothManager.connect(peripheral: selectedMug)
-                    }
+            Text("Connect a Device")
+                .fontWeight(.medium)
+                .font(.largeTitle)
+            Spacer()
+            if (bluetoothManager.peripherals.isEmpty) {
+                VStack {
+                    ProgressView("Searching")
                 }
+                    .padding(10)
+                    .background(Color.black.opacity(0.29))
+                    .cornerRadius(9)
+            } else {
+                SelectDeviceView(bluetoothManager: bluetoothManager)
+                
             }
-        }.padding(8)
+        }.padding(20).frame(width: 350, height: 300)
+        .background(LinearGradient(
+            colors: [getColor(234, 182, 125), getColor(186, 102, 56)],
+            startPoint: .top,
+            endPoint: .bottom
+        ))
     }
 }
 
+struct SelectDeviceView: View {
+    @ObservedObject var bluetoothManager: BluetoothManager
+    @State private var selectedMug: CBPeripheral?
+    
+    var body: some View {
+        HStack {
+            ForEach(bluetoothManager.peripherals, id: \.self) { peripheral in
+                Button(action: {
+                    if selectedMug == nil {
+                        selectedMug = peripheral
+                        bluetoothManager.connect(peripheral: selectedMug!)
+                    }
+                }) {
+                    VStack {
+                        Spacer()
+                        
+                        if selectedMug != nil {
+                            ProgressView()
+                        } else {
+                            Image(systemName: "mug")
+                                .font(.largeTitle)
+                        }
+                        
+                        Spacer()
+                        
+                        Text(peripheral.name ?? "Unknown Device")
+                            .font(.caption)
+                    }
+                    .padding(10)
+                    .frame(width: 90, height: 90)
+                    .background(Color.black.opacity(0.29))
+                }
+                .buttonStyle(.plain)
+                .cornerRadius(9)
+                }
+        }
+        
+        
+        Spacer()
+    }
+}

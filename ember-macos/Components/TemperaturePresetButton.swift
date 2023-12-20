@@ -14,24 +14,14 @@ struct TemperaturePresetButton: View {
     var onSelect: (Double) -> Void
     
     var body: some View {
-        Button(action: {
-            onSelect(preset.temperature)
-        }) {
-            VStack {
-                Text(preset.name)
-                    .font(.caption)
-                Spacer()
-                Image(systemName: preset.icon)
-                    .font(.largeTitle)
-                Spacer()
-                Text(getFormattedTemperature(preset.temperature, unit: .celcius))
-                    .font(.caption)
+        IconButton(
+            headerText: preset.name,
+            footerText: getFormattedTemperature(preset.temperature, unit: .celcius),
+            icon: preset.icon,
+            isSelected: isSelected,
+            onSelect: {
+                onSelect(preset.temperature)
             }
-            .padding(10)
-            .frame(width: 90, height: 90)
-            .background(Color.black.opacity(isSelected ? 0.6 : 0.29))
-        }
-        .buttonStyle(.plain)
-        .cornerRadius(9)
+        )
     }
 }
