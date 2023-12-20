@@ -76,7 +76,7 @@ struct MugControlView: View {
             }
             
         }.padding(10).background(LinearGradient(
-            colors: getBackgroundGradient(),
+            colors: getBackgroundGradientForMugState(),
             startPoint: .top,
             endPoint: .bottom
         ))
@@ -89,29 +89,26 @@ struct MugControlView: View {
         self.emberMug.setTargetTemp(temp: nextTemp)
     }
     
-    private func getBackgroundGradient() -> [Color] {
-        let empty = [getColor(212, 212, 212), getColor(69, 69, 69)]
-        let min = [getColor(247, 209, 111), getColor(213, 122, 52)]
-        let max = [getColor(236, 113, 47), getColor(183, 67, 30)]
-        
+    private func emptyBackgroundGradient() -> [Color] {
+        return [getColor(212, 212, 212), getColor(69, 69, 69)]
+    }
+    
+    private func getBackgroundGradientForMugState() -> [Color] {
         if (emberMug.liquidState == LiquidState.empty) {
-            return empty
+            return [getColor(212, 212, 212), getColor(69, 69, 69)]
         }
-        
         
         let currentTemp = emberMug.currentTemp
         
+        var val = 0.0
         if (currentTemp <= 50) {
-            return min
+            val = 0.0
         } else if (currentTemp >= 63) {
-            return max
+            val = 1.0
+        } else {
+            val = Double(currentTemp - 50)
         }
         
-        let val = Double(currentTemp - 50)
-        
-        return [
-            interpolateColor(minColor: (247, 209, 111), maxColor: (236, 113, 47), value: val),
-            interpolateColor(minColor: (213, 122, 52), maxColor: (183, 67, 30), value: val),
-        ]
+        return getBackgroundGradient(val)
     }
 }

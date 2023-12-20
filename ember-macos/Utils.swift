@@ -8,6 +8,13 @@
 import Foundation
 import SwiftUI
 
+func getBackgroundGradient(_ val: Double) -> [Color] {
+    return [
+        interpolateColor(minColor: (247, 209, 111), maxColor: (236, 113, 47), value: val),
+        interpolateColor(minColor: (213, 122, 52), maxColor: (183, 67, 30), value: val),
+    ]
+}
+
 func getFormattedTemperature(_ temp: Double, unit: TemperatureUnit) -> String {
     if unit == .celcius {
         return String(format: "%.1f°", temp)
@@ -42,6 +49,7 @@ func getBatteryIcon(_ batteryLevel: Int, isCharging: Bool) -> String {
     let segment = Int(round(Double(batteryLevel) / 25.0) * 25.0)
     return "battery.\(segment)"
 }
+
 
 
 func interpolateColor(minColor: (Double, Double, Double), maxColor: (Double, Double, Double), value: Double) -> Color {
