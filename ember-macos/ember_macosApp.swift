@@ -37,7 +37,7 @@ struct ember_controllerApp: App {
             HStack {
                 Image(systemName: getIconName())
                 
-                if (emberMug.liquidState != LiquidState.empty) {
+                if (bluetoothManager.state == .connected && emberMug.liquidState != .empty) {
                     Text(getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit))
                 }
             }
@@ -70,7 +70,14 @@ struct ember_controllerApp: App {
     }
     
     func getIconName() -> String {
-        if (emberMug.liquidState == LiquidState.empty) {
+        if (bluetoothManager.state == .reConnecting) {
+            // "empty" state for a reconnecting mug
+            // ideally this would be a mug with a slash in it
+            // but I dont want to create a custom icon
+            return "mug"
+        }
+        
+        if (emberMug.liquidState == .empty) {
             return "mug"
         }
         

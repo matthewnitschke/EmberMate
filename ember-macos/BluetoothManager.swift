@@ -7,12 +7,26 @@
 
 import CoreBluetooth
 
+enum ConnectionState {
+    // there is a mug currently connected
+    case connected
+    
+    // we are actively looking for a mug
+    case connecting
+    
+    // a mug was previouslly connected, but then
+    // was disconnected and we are searching for it
+    case reConnecting
+    
+    // there is no mug connected
+    case disconnected
+}
+
 class BluetoothManager: NSObject, ObservableObject {
     private var centralManager: CBCentralManager?
     @Published var peripherals: [CBPeripheral] = []
     
-    @Published var isConnected = false
-    @Published var isConnecting = false
+    @Published var state: ConnectionState = .disconnected
     
     var emberMug: EmberMug
     
@@ -31,7 +45,8 @@ class BluetoothManager: NSObject, ObservableObject {
     }
     
     func connect(peripheral: CBPeripheral) {
-        isConnecting = true
+        state = .connecting
+        UserDefaults.standard.set(peripheral.identifier.uuidString, forKey: "peripheralIdentifier")
         peripheral.delegate = emberMug
         self.centralManager!.connect(peripheral)
     }
@@ -39,11 +54,13 @@ class BluetoothManager: NSObject, ObservableObject {
     @objc func disconnect() {
         self.centralManager!.cancelPeripheralConnection(emberMug.peripheral!)
         UserDefaults.standard.removeObject(forKey: "peripheralIdentifier")
-        isConnected = false
+        state = .disconnected
     }
 }
 
 extension BluetoothManager: CBCentralManagerDelegate {
+    
+    
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if central.state == .poweredOn {
             
@@ -72,7 +89,14 @@ extension BluetoothManager: CBCentralManagerDelegate {
         }
     }
     
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+    // initial device discovery, this will be any ember devices
+    // around the device that is scanning
+    func centralManager(
+        _ central: CBCentralManager,
+        didDiscover peripheral: CBPeripheral,
+        advertisementData: [String : Any],
+        rssi RSSI: NSNumber
+    ) {
         if !peripherals.contains(peripheral) {
             self.peripherals.append(peripheral)
         }
@@ -83,9 +107,17 @@ extension BluetoothManager: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        isConnecting = false
-        isConnected = true
-        UserDefaults.standard.set(peripheral.identifier.uuidString, forKey: "peripheralIdentifier")
+        state = .connected
+        
         peripheral.discoverServices(nil)
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        // only try to re-connect if we were connected
+        // eg: dont re-connect to a device that was just explicitly disconnected
+        if state == .connected {
+            state = .reConnecting
+            centralManager!.connect(emberMug.peripheral!, options: nil)
+        }
     }
 }

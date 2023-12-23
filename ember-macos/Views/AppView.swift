@@ -14,10 +14,10 @@ struct AppView: View {
     @ObservedObject var bluetoothManager: BluetoothManager
     
     var body: some View {
-        if bluetoothManager.isConnected {
-            MugControlView(emberMug: emberMug, appState: appState)
-        } else {
-            ConnectMugView(bluetoothManager: bluetoothManager)
+        switch bluetoothManager.state {
+        case .connected: MugControlView(emberMug: emberMug, appState: appState)
+        case .disconnected, .connecting: ConnectMugView(bluetoothManager: bluetoothManager)
+        case .reConnecting: Text("Device Disconnected. Searching...").padding()
         }
     }
 }
