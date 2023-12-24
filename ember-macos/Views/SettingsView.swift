@@ -70,6 +70,7 @@ struct GeneralSettingsView: View {
                 Section {
                     LaunchAtLogin.Toggle()
                     Toggle("Notify when temperature is reached", isOn: appState.$notifyOnTemperatureReached)
+                    Toggle("Notify on low battery (15%)", isOn: appState.$notifyOnLowBattery)
                 }
             }
         }.formStyle(.grouped)
