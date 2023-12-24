@@ -53,6 +53,7 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
         peripheral?.writeValue(data, for: targetTempCharacteristic!, type: .withResponse)
     }
     
+    
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         self.peripheral = peripheral
         for service: CBService in peripheral.services! {

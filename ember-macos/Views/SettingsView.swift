@@ -46,24 +46,31 @@ struct GeneralSettingsView: View {
         Form {
             Section {
                 HStack {
-                    Image(systemName: "mug.fill")
-                        .font(.largeTitle)
-                    VStack(alignment: .leading) {
-                        Text(emberMug.peripheral?.name ?? "Unknown Device")
-                        HStack(spacing: 3) {
-                            Image(systemName: getBatteryIcon(emberMug.batteryLevel, isCharging: emberMug.isCharging))
-                            Text("\(emberMug.batteryLevel)%")
-                        }.foregroundColor(.gray)
-                    }
-                    Spacer()
-                    Button("Disconnect") {
-                        bluetoothManager.disconnect()
+                    if (bluetoothManager.state == .disconnected) {
+                        Image(systemName: "mug")
+                            .font(.largeTitle)
+                        Text("No Device Connected")
+                    } else {
+                        Image(systemName: "mug.fill")
+                            .font(.largeTitle)
+                        VStack(alignment: .leading) {
+                            Text(emberMug.peripheral?.name ?? "Unknown Device")
+                            HStack(spacing: 3) {
+                                Image(systemName: getBatteryIcon(emberMug.batteryLevel, isCharging: emberMug.isCharging))
+                                Text("\(emberMug.batteryLevel)%")
+                            }.foregroundColor(.gray)
+                        }
+                        Spacer()
+                        Button("Disconnect") {
+                            bluetoothManager.disconnect()
+                        }
                     }
                 }
                 
                 Section {
                     LaunchAtLogin.Toggle()
                     Toggle("Notify when temperature is reached", isOn: appState.$notifyOnTemperatureReached)
+                    Toggle("Notify on low battery (15%)", isOn: appState.$notifyOnLowBattery)
                 }
             }
         }.formStyle(.grouped)
