@@ -70,7 +70,7 @@ struct ember_controllerApp: App {
     }
     
     func getIconName() -> String {
-        if (bluetoothManager.state == .reConnecting) {
+        if (bluetoothManager.state == .reConnecting || bluetoothManager.state == .disconnected) {
             // "empty" state for a reconnecting mug
             // ideally this would be a mug with a slash in it
             // but I dont want to create a custom icon
