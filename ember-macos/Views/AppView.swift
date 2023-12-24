@@ -17,7 +17,7 @@ struct AppView: View {
         switch bluetoothManager.state {
         case .connected: MugControlView(emberMug: emberMug, appState: appState)
         case .disconnected, .connecting: ConnectMugView(bluetoothManager: bluetoothManager)
-        case .reConnecting: Text("Device Disconnected. Searching...").padding()
+        case .reConnecting: Text("Device Lost, Searching...").padding()
         }
     }
 }
