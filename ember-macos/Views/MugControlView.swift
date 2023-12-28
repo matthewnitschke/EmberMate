@@ -41,9 +41,7 @@ struct MugControlView: View {
                             : getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit)
                     ).font(.largeTitle)
                     
-                    if emberMug.liquidState != LiquidState.empty {
-                        Text("Target: \(getFormattedTemperature(emberMug.targetTemp, unit: emberMug.temperatureUnit))")
-                    }
+                    Text("Target: \(getFormattedTemperature(emberMug.targetTemp, unit: emberMug.temperatureUnit))")
                 }
                 
                 Spacer()
