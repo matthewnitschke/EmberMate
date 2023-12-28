@@ -62,6 +62,7 @@ struct MugControlView: View {
                 ForEach(appState.presets, id: \.id) { preset in
                     TemperaturePresetButton(
                         preset: preset,
+                        temperatureUnit: emberMug.temperatureUnit,
                         isSelected: appState.selectedPreset?.id == preset.id,
                         onSelect: {
                             appState.selectedPreset = preset
