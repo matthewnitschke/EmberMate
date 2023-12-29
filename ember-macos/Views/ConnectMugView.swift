@@ -36,6 +36,7 @@ struct ConnectMugView: View {
             startPoint: .top,
             endPoint: .bottom
         ))
+        .environment(\.colorScheme, .dark) // Ignore OS level light mode, UI is designed for "dark" mode
     }
 }
 
