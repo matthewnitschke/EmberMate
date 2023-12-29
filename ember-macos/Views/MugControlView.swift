@@ -79,6 +79,7 @@ struct MugControlView: View {
             startPoint: .top,
             endPoint: .bottom
         ))
+        .environment(\.colorScheme, .dark)
     }
     
     private func setTemperature(delta: Double) {

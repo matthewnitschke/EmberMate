@@ -36,6 +36,7 @@ struct ConnectMugView: View {
             startPoint: .top,
             endPoint: .bottom
         ))
+        .environment(\.colorScheme, .dark)
     }
 }
 
