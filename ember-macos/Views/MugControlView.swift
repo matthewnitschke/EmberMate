@@ -79,7 +79,7 @@ struct MugControlView: View {
             startPoint: .top,
             endPoint: .bottom
         ))
-        .environment(\.colorScheme, .dark)
+        .environment(\.colorScheme, .dark) // Ignore OS level light mode, UI is designed for "dark" mode
     }
     
     private func setTemperature(delta: Double) {
