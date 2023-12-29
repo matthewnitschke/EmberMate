@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreBluetooth
+import Combine
 
 enum LiquidState: Int {
     case empty = 1
@@ -37,6 +38,21 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     private var liquidStateCharacteristic: CBCharacteristic?
     private var temperatureUnitCharacteristic: CBCharacteristic?
     
+    private var cancellables: Set<AnyCancellable> = []
+    
+    override init() {
+        super.init()
+        
+        self.$temperatureUnit
+            .sink { newData in
+                if (newData != self.temperatureUnit) {
+                    self.setTemperatureUnit(newData)
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    
     func setTargetTemp(temp: Double) {
         // add an artifical limit, to mirror the app
         // I'm unsure if this is a requirement, but I
@@ -53,6 +69,10 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
         peripheral?.writeValue(data, for: targetTempCharacteristic!, type: .withResponse)
     }
     
+    func setTemperatureUnit(_ unit: TemperatureUnit) {
+        let data = Data([UInt8(unit.rawValue)])
+        peripheral?.writeValue(data, for: temperatureUnitCharacteristic!, type: .withResponse)
+    }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         self.peripheral = peripheral

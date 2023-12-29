@@ -68,6 +68,16 @@ struct GeneralSettingsView: View {
                 }
                 
                 Section {
+                    Picker(
+                        selection: $emberMug.temperatureUnit,
+                        label: Text("Temperature Unit")
+                    ) {
+                        Text("F°").tag(TemperatureUnit.fahrenheit)
+                        Text("C°").tag(TemperatureUnit.celcius)
+                    }
+                }
+                
+                Section {
                     LaunchAtLogin.Toggle()
                     Toggle("Notify when temperature is reached", isOn: appState.$notifyOnTemperatureReached)
                     Toggle("Notify on low battery (15%)", isOn: appState.$notifyOnLowBattery)
