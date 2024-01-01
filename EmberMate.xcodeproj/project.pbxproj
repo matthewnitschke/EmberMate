@@ -354,7 +354,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "EmberMate/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Ember Macos";
+				INFOPLIST_KEY_CFBundleDisplayName = "EmberMate";
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth used to communicate with ember mug";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Peripheral usage detection used to communicate with ember mug";
@@ -377,7 +377,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = "EmberMate/ember_macos.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "EmberMate/EmberMate.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -387,7 +387,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "EmberMate/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Ember Macos";
+				INFOPLIST_KEY_CFBundleDisplayName = "EmberMate";
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth used to communicate with ember mug";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Peripheral usage detection used to communicate with ember mug";

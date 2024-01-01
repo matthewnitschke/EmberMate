@@ -34,5 +34,5 @@ build/
 *.dat
 *.dep
 
-Ember Macos*.dmg
+EmberMate*.dmg
 exportOptions.plist
