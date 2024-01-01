@@ -1,6 +1,6 @@
 //
 //  SettingsView.swift
-//  ember-macos
+//  EmberMate
 //
 //  Created by Matthew Nitschke on 12/10/23.
 //
@@ -14,9 +14,9 @@ struct SettingsView: View {
     var appState: AppState
     var emberMug: EmberMug
     var bluetoothManager: BluetoothManager
-    
+
     @State var internalTime: String?
-    
+
     var body: some View {
         TabView {
             GeneralSettingsView(
@@ -33,7 +33,6 @@ struct SettingsView: View {
                 }
         }
         .navigationTitle("Settings")
-        
     }
 }
 
@@ -41,7 +40,7 @@ struct GeneralSettingsView: View {
     @ObservedObject var emberMug: EmberMug
     @ObservedObject var appState: AppState
     @ObservedObject var bluetoothManager: BluetoothManager
-    
+
     var body: some View {
         Form {
             Section {
@@ -66,17 +65,7 @@ struct GeneralSettingsView: View {
                         }
                     }
                 }
-                
-                Section {
-                    Picker(
-                        selection: $emberMug.temperatureUnit,
-                        label: Text("Temperature Unit")
-                    ) {
-                        Text("F°").tag(TemperatureUnit.fahrenheit)
-                        Text("C°").tag(TemperatureUnit.celcius)
-                    }
-                }
-                
+
                 Section {
                     LaunchAtLogin.Toggle()
                     Toggle("Notify when temperature is reached", isOn: appState.$notifyOnTemperatureReached)
@@ -89,7 +78,7 @@ struct GeneralSettingsView: View {
 
 struct PresetsSettingsView: View {
     @ObservedObject var appState: AppState
-    
+
     var images: [String] = [
         "mug.fill",
         "cup.and.saucer.fill",
@@ -98,7 +87,7 @@ struct PresetsSettingsView: View {
         "star.fill",
         "flame.fill"
     ]
-    
+
     var body: some View {
         Form {
             Section {
@@ -109,14 +98,14 @@ struct PresetsSettingsView: View {
                         }) {
                             Image(systemName: "trash")
                         }.buttonStyle(.plain)
-                        
+
                         TextField("Name", text: preset.name)
                             .labelsHidden()
-                        
+
                         TextField("Temperature", value: preset.temperature, format: .number)
                             .labelsHidden()
                             .multilineTextAlignment(.trailing)
-                        
+
                         Picker(
                             selection: preset.icon,
                             label: Text("Icon")
@@ -138,7 +127,7 @@ struct PresetsSettingsView: View {
                     }
                 }
             }
-            
+
             Section {
                 if (!appState.timers.isEmpty) {
                     ForEach(appState.timers.indices, id: \.self) { index in
@@ -148,7 +137,7 @@ struct PresetsSettingsView: View {
                             }) {
                                 Image(systemName: "trash")
                             }.buttonStyle(.plain)
-                            
+
                             TextField("Duration", text: Binding(
                                 get: {
                                     // zombie child render issue, ensure that [index] always referes to a value
@@ -174,7 +163,7 @@ struct PresetsSettingsView: View {
                     }
                 }
             }
-            
+
         }
         .formStyle(.grouped)
     }
@@ -189,7 +178,7 @@ extension Array: RawRepresentable where Element: Codable {
         }
         self = result
     }
-    
+
     public var rawValue: String {
         guard let data = try? JSONEncoder().encode(self),
               let result = String(data: data, encoding: .utf8)

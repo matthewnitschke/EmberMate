@@ -19,7 +19,7 @@ func getFormattedTemperature(_ temp: Double, unit: TemperatureUnit) -> String {
     if unit == .celcius {
         return String(format: "%.1f°", temp)
     }
-    
+
     return String(format: "%.0f°", (temp * 9/5) + 32)
 }
 
@@ -31,13 +31,13 @@ func formatTime(_ seconds: Int) -> String {
 
 func convertTimeToSeconds(_ timeString: String) -> Int? {
     let components = timeString.components(separatedBy: ":")
-    
+
     guard components.count == 2,
         let minutes = Int(components[0]),
         let seconds = Int(components[1]) else {
             return nil // Return nil if the format is not as expected
     }
-    
+
     return minutes * 60 + seconds
 }
 
@@ -58,7 +58,7 @@ func interpolateColor(minColor: (Double, Double, Double), maxColor: (Double, Dou
     let red = minColor.0 + (maxColor.0 - minColor.0) * clampedValue
     let green = minColor.1 + (maxColor.1 - minColor.1) * clampedValue
     let blue = minColor.2 + (maxColor.2 - minColor.2) * clampedValue
-    
+
     return getColor(red, green, blue)
 }
 

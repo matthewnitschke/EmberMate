@@ -1,6 +1,6 @@
 //
 //  TemperaturePresetButton.swift
-//  ember-macos
+//  EmberMate
 //
 //  Created by Matthew Nitschke on 12/10/23.
 //
@@ -13,7 +13,7 @@ struct TemperaturePresetButton: View {
     var temperatureUnit: TemperatureUnit
     var isSelected: Bool
     var onSelect: (Double) -> Void
-    
+
     var body: some View {
         IconButton(
             headerText: preset.name,

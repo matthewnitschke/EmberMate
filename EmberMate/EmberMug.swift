@@ -1,6 +1,6 @@
 //
 //  EmberMug.swift
-//  ember-macos
+//  EmberMate
 //
 //  Created by Matthew Nitschke on 12/2/23.
 //
@@ -29,7 +29,7 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     @Published var targetTemp: Double = 0.0
     @Published var liquidState: LiquidState = LiquidState.empty
     @Published var temperatureUnit: TemperatureUnit = TemperatureUnit.celcius
-    
+
     var peripheral: CBPeripheral?
 
     private var targetTempCharacteristic: CBCharacteristic?
@@ -37,12 +37,12 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     private var batteryCharacteristic: CBCharacteristic?
     private var liquidStateCharacteristic: CBCharacteristic?
     private var temperatureUnitCharacteristic: CBCharacteristic?
-    
+
     private var cancellables: Set<AnyCancellable> = []
-    
+
     override init() {
         super.init()
-        
+
         self.$temperatureUnit
             .sink { newData in
                 if (newData != self.temperatureUnit) {
@@ -51,29 +51,29 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
             }
             .store(in: &cancellables)
     }
-    
-    
+
+
     func setTargetTemp(temp: Double) {
         // add an artifical limit, to mirror the app
         // I'm unsure if this is a requirement, but I
         // dont want to have people accidentially breaking their mugs
         if (temp < 50 || temp > 63) { return }
-        
+
         self.targetTemp = temp
-        
+
         let uintVal = UInt16(temp * 100)
         let byte1 = UInt8(uintVal & 0xFF)
         let byte2 = UInt8((uintVal >> 8) & 0xFF)
-        
+
         let data = Data([byte1, byte2])
         peripheral?.writeValue(data, for: targetTempCharacteristic!, type: .withResponse)
     }
-    
+
     func setTemperatureUnit(_ unit: TemperatureUnit) {
         let data = Data([UInt8(unit.rawValue)])
         peripheral?.writeValue(data, for: temperatureUnitCharacteristic!, type: .withResponse)
     }
-    
+
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         self.peripheral = peripheral
         for service: CBService in peripheral.services! {
@@ -83,10 +83,10 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
             }
         }
     }
-    
+
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         for characteristic: CBCharacteristic in service.characteristics! {
-            
+
             switch characteristic.uuid {
             case CBUUID(string: "fc540003-236c-4c94-8fa9-944a3e5353fa"):
                 targetTempCharacteristic = characteristic
@@ -104,16 +104,16 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
             default:
                 print("Unregistered characteristic \(characteristic.uuid)")
             }
-            
+
             // read the initial value
             // TODO: probably only do this if its a value we care about
             peripheral.readValue(for: characteristic)
         }
     }
-    
+
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         let data = characteristic.value
-        
+
         if let data = data {
             if characteristic == targetTempCharacteristic {
                 let temp = data.extractUInt16()
@@ -134,7 +134,7 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
                 }
             } else if (characteristic.uuid == CBUUID(string: "fc540012-236c-4c94-8fa9-944a3e5353fa")) {
                 let state = Int(data[0])
-                
+
                 if (state == 1) {
                     peripheral.readValue(for: batteryCharacteristic!)
                 } else if (state == 2) {

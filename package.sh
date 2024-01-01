@@ -1,11 +1,11 @@
 #!/bin/bash
 
 xcodebuild \
-    -project "ember-macos.xcodeproj" \
-    -scheme "ember-macos" \
+    -project "EmberMate.xcodeproj" \
+    -scheme "EmberMate" \
     archive \
     CODE_SIGN_IDENTITY="-" \
-    -archivePath "build/ember-macos.xcarchive"
+    -archivePath "build/EmberMate.xcarchive"
 
 plutil -convert xml1 - -o "exportOptions.plist" << EOF
     {
@@ -16,9 +16,9 @@ EOF
 
 xcodebuild \
     -exportArchive \
-    -archivePath "build/ember-macos.xcarchive" \
+    -archivePath "build/EmberMate.xcarchive" \
     -exportPath "build" \
     -exportOptionsPlist "exportOptions.plist"
 
 
-create-dmg --dmg-title='Ember-MacOS' 'build/ember-macos.app' ./
+create-dmg --dmg-title='EmberMate' 'build/EmberMate.app' ./

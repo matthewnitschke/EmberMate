@@ -1,6 +1,6 @@
 //
 //  IconButton.swift
-//  ember-macos
+//  EmberMate
 //
 //  Created by Matthew Nitschke on 12/19/23.
 //
@@ -14,7 +14,7 @@ struct IconButton: View {
     var icon: String
     var isSelected: Bool
     var onSelect: () -> Void
-    
+
     var body: some View {
         Button(action: {
             onSelect()
@@ -25,12 +25,12 @@ struct IconButton: View {
                         .font(.caption)
                 }
 
-                
+
                 Spacer()
                 Image(systemName: icon)
                     .font(.largeTitle)
                 Spacer()
-                
+
                 Text(footerText)
                     .font(.caption)
             }
