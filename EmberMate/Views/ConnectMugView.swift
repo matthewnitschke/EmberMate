@@ -1,6 +1,6 @@
 //
 //  ConnectMugView.swift
-//  ember-macos
+//  EmberMate
 //
 //  Created by Matthew Nitschke on 12/4/23.
 //
@@ -28,7 +28,7 @@ struct ConnectMugView: View {
                     .cornerRadius(9)
             } else {
                 SelectDeviceView(bluetoothManager: bluetoothManager)
-                
+
             }
         }.padding(20).frame(width: 350, height: 300)
         .background(LinearGradient(
@@ -43,7 +43,7 @@ struct ConnectMugView: View {
 struct SelectDeviceView: View {
     @ObservedObject var bluetoothManager: BluetoothManager
     @State private var selectedMug: CBPeripheral?
-    
+
     var body: some View {
         HStack {
             ForEach(bluetoothManager.peripherals, id: \.self) { peripheral in
@@ -55,16 +55,16 @@ struct SelectDeviceView: View {
                 }) {
                     VStack {
                         Spacer()
-                        
+
                         if selectedMug != nil {
                             ProgressView()
                         } else {
                             Image(systemName: "mug")
                                 .font(.largeTitle)
                         }
-                        
+
                         Spacer()
-                        
+
                         Text(peripheral.name ?? "Unknown Device")
                             .font(.caption)
                     }
@@ -76,8 +76,8 @@ struct SelectDeviceView: View {
                 .cornerRadius(9)
                 }
         }
-        
-        
+
+
         Spacer()
     }
 }

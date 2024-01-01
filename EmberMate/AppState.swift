@@ -1,6 +1,6 @@
 //
 //  AppState.swift
-//  ember-macos
+//  EmberMate
 //
 //  Created by Matthew Nitschke on 12/10/23.
 //
@@ -12,12 +12,12 @@ import UserNotifications
 
 class AppState: ObservableObject {
     var timer: Timer?
-    
+
     // this value is not persisted, only published
     @Published var selectedPreset: Preset?
-    
+
     @Published var countdown: Int?
-    
+
     @Published var timers: [String] = ["4:00", "5:00", "6:00"]
     @Published var presets: [Preset] = [
         Preset(
@@ -36,16 +36,16 @@ class AppState: ObservableObject {
             temperature: 60.0
         )
     ]
-    
+
     @AppStorage("notifyOnTemperatureReached") var notifyOnTemperatureReached: Bool = true
     @AppStorage("notifyOnLowBattery") var notifyOnLowBattery: Bool = true
-    
+
     private var cancellables: Set<AnyCancellable> = []
-    
+
     init() {
         let encoder = JSONEncoder()
         let decoder = JSONDecoder()
-        
+
         let presets = UserDefaults.standard.string(forKey: "presets")
         if let presets = presets {
             do {
@@ -67,8 +67,8 @@ class AppState: ObservableObject {
                 }
             }
             .store(in: &cancellables)
-        
-        
+
+
         let timers = UserDefaults.standard.string(forKey: "timers")
         if let timers = timers {
             do {
@@ -91,36 +91,36 @@ class AppState: ObservableObject {
             }
             .store(in: &cancellables)
     }
-    
+
     func startTimer(_ time: Int) {
         timer?.invalidate()
-        
+
         let un = UNUserNotificationCenter.current()
-        
+
         un.requestAuthorization(options: [.alert, .sound]) { (authorized, error) in
             if authorized {
                 print("Authorized")
             }
         }
-        
+
         self.countdown = time
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { t in
             self.countdown! -= 1
             if self.countdown! == 0 {
                 self.stopTimer()
-                
+
                 let content = UNMutableNotificationContent()
                 content.title = "Ember Timer Complete"
                 content.subtitle = "Your timer is complete"
                 content.sound = UNNotificationSound.default
                 content.userInfo = ["icon": "AppIcon"]
-                
+
                 let request = UNNotificationRequest(identifier: "timerDone", content: content, trigger: nil)
                 UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             }
         }
     }
-    
+
     func stopTimer() {
         timer?.invalidate()
         countdown = nil
@@ -132,14 +132,14 @@ class Preset: Identifiable, ObservableObject, Codable {
     @Published var icon: String = "mug.fill"
     @Published var name: String = "Coffee"
     @Published var temperature: Double = 55.0
-    
+
     private enum CodingKeys: String, CodingKey {
         case id
         case icon
         case name
         case temperature
     }
-    
+
     init(
         icon: String = "mug.fill",
         name: String = "Coffee",
@@ -149,7 +149,7 @@ class Preset: Identifiable, ObservableObject, Codable {
         self.name = name
         self.temperature = temperature
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -157,7 +157,7 @@ class Preset: Identifiable, ObservableObject, Codable {
         name = try container.decode(String.self, forKey: .name)
         temperature = try container.decode(Double.self, forKey: .temperature)
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)

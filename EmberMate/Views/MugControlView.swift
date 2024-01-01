@@ -1,6 +1,6 @@
 //
 //  MugControlView.swift
-//  ember-macos
+//  EmberMate
 //
 //  Created by Matthew Nitschke on 12/5/23.
 //
@@ -21,7 +21,7 @@ struct MugControlView: View {
                 Spacer()
                 Image(systemName: getBatteryIcon(emberMug.batteryLevel, isCharging: emberMug.isCharging))
             }
-            
+
             HStack {
                 Button(action: {
                     setTemperature(delta: -0.5)
@@ -31,21 +31,21 @@ struct MugControlView: View {
                         .frame(width: 30, height: 100)
                         .background(Color.black.opacity(0.29))
                 }.buttonStyle(PlainButtonStyle()).cornerRadius(9)
-                
+
                 Spacer()
-                
+
                 VStack {
                     Text(
                         emberMug.liquidState == LiquidState.empty
                             ? "Empty"
                             : getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit)
                     ).font(.largeTitle)
-                    
+
                     Text("Target: \(getFormattedTemperature(emberMug.targetTemp, unit: emberMug.temperatureUnit))")
                 }
-                
+
                 Spacer()
-                
+
                 Button(action: {
                     setTemperature(delta: 0.5)
                 }) {
@@ -55,7 +55,7 @@ struct MugControlView: View {
                         .background(Color.black.opacity(0.29))
                 }.buttonStyle(PlainButtonStyle()).cornerRadius(9)
             }
-            
+
             HStack {
                 ForEach(appState.presets, id: \.id) { preset in
                     TemperaturePresetButton(
@@ -69,11 +69,11 @@ struct MugControlView: View {
                     )
                 }
             }
-            
+
             if !appState.timers.isEmpty {
                 TimerView(appState: appState)
             }
-            
+
         }.padding(10).background(LinearGradient(
             colors: getBackgroundGradientForMugState(),
             startPoint: .top,
@@ -81,25 +81,25 @@ struct MugControlView: View {
         ))
         .environment(\.colorScheme, .dark) // Ignore OS level light mode, UI is designed for "dark" mode
     }
-    
+
     private func setTemperature(delta: Double) {
         appState.selectedPreset = nil
-        
+
         let nextTemp = round((self.emberMug.targetTemp + delta) * 2) / 2
         self.emberMug.setTargetTemp(temp: nextTemp)
     }
-    
+
     private func emptyBackgroundGradient() -> [Color] {
         return [getColor(212, 212, 212), getColor(69, 69, 69)]
     }
-    
+
     private func getBackgroundGradientForMugState() -> [Color] {
         if (emberMug.liquidState == LiquidState.empty) {
             return [getColor(212, 212, 212), getColor(69, 69, 69)]
         }
-        
+
         let currentTemp = emberMug.currentTemp
-        
+
         var val = 0.0
         if (currentTemp <= 50) {
             val = 0.0
@@ -108,7 +108,7 @@ struct MugControlView: View {
         } else {
             val = Double(currentTemp - 50)
         }
-        
+
         return getBackgroundGradient(val)
     }
 }
