@@ -36,8 +36,10 @@ struct ember_mateApp: App {
         } label: {
             HStack {
                 Image(systemName: getIconName())
-
-                if (bluetoothManager.state == .connected && emberMug.liquidState != .empty) {
+                
+                if (appState.countdown != nil) {
+                    Text(formatCountdown(appState.countdown!))
+                } else if (bluetoothManager.state == .connected && emberMug.liquidState != .empty) {
                     Text(getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit))
                 }
             }
@@ -70,6 +72,10 @@ struct ember_mateApp: App {
     }
 
     func getIconName() -> String {
+        if (appState.countdown != nil) {
+            return "clock.fill"
+        }
+        
         if (bluetoothManager.state == .reConnecting || bluetoothManager.state == .disconnected) {
             // "empty" state for a reconnecting mug
             // ideally this would be a mug with a slash in it
@@ -86,5 +92,15 @@ struct ember_mateApp: App {
         }
 
         return "mug.fill"
+    }
+    
+    func formatCountdown(_ countdown: Int) -> String {
+        let roundedMinutes = countdown.dividedReportingOverflow(by: 60)
+        let minutes = roundedMinutes.partialValue
+        
+        if (minutes == 0) {
+            return ">1min"
+        }
+        return "\(minutes)min"
     }
 }
