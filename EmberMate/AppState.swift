@@ -10,6 +10,15 @@ import Foundation
 import Combine
 import UserNotifications
 
+extension UserDefaults {
+    @objc dynamic var notifyOnTemperatureReached: Bool {
+        bool(forKey: "notifyOnTemperatureReached")
+    }
+    @objc dynamic var notifyOnLowBattery: Bool {
+        bool(forKey: "notifyOnLowBattery")
+    }
+}
+
 class AppState: ObservableObject {
     var timer: Timer?
 
@@ -90,18 +99,35 @@ class AppState: ObservableObject {
                 }
             }
             .store(in: &cancellables)
+        
+        let defaults = UserDefaults.standard
+        
+        Publishers.CombineLatest(
+            defaults.publisher(for: \.notifyOnTemperatureReached).prepend(notifyOnTemperatureReached),
+            defaults.publisher(for: \.notifyOnLowBattery).prepend(notifyOnLowBattery)
+        )
+        .map { $0 || $1 }
+        .removeDuplicates()
+        .sink { notify in
+            guard notify else { return }
+            
+            self.requestNotificationAuthorization()
+        }
+        .store(in: &cancellables)
     }
 
-    func startTimer(_ time: Int) {
-        timer?.invalidate()
-
-        let un = UNUserNotificationCenter.current()
-
-        un.requestAuthorization(options: [.alert, .sound]) { (authorized, error) in
+    func requestNotificationAuthorization() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (authorized, error) in
             if authorized {
                 print("Authorized")
             }
         }
+    }
+    
+    func startTimer(_ time: Int) {
+        timer?.invalidate()
+        
+        requestNotificationAuthorization()
 
         self.countdown = time
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { t in
