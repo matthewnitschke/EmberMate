@@ -17,22 +17,23 @@ class NotificationAdapter {
     private var cancellables: Set<AnyCancellable> = []
 
     private var previousLiquidState: LiquidState?
-    private var shouldNotifyOnStable: Bool = false
+    private var lastNotifiedTemp: Double?
 
     init(appState: AppState, emberMug: EmberMug) {
         self.appState = appState
         self.emberMug = emberMug
 
         self.emberMug.$liquidState
-            .sink { newData in
-                if (self.shouldNotifyOnStable && newData == .stableTemperature) {
-                    self.shouldNotifyOnStable = false
+            .combineLatest(self.emberMug.$targetTemp)
+            .sink { (newState, newTemp) in
+                if (newState == .stableTemperature && newTemp != self.lastNotifiedTemp) {
                     self.notifyTemperatureReached()
-                } else if (self.previousLiquidState == .empty && newData == .filling) {
-                    self.shouldNotifyOnStable = true
+                    self.lastNotifiedTemp = newTemp
+                } else if (self.previousLiquidState == .empty && newState == .filling) {
+                    self.lastNotifiedTemp = nil
                 }
 
-                self.previousLiquidState = newData
+                self.previousLiquidState = newState
             }
             .store(in: &cancellables)
 
