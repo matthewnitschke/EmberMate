@@ -19,6 +19,8 @@ class NotificationAdapter {
     private var previousLiquidState: LiquidState?
     private var lastNotifiedTemp: Double?
 
+    private var wasLowBattery: Bool = false
+    
     init(appState: AppState, emberMug: EmberMug) {
         self.appState = appState
         self.emberMug = emberMug
@@ -39,8 +41,13 @@ class NotificationAdapter {
 
         self.emberMug.$batteryLevel
             .sink { newData in
-                if (newData == 15 && !self.emberMug.isCharging) {
-                    self.notifyLowBattery()
+                if newData <= 15 {
+                    if !self.wasLowBattery && !self.emberMug.isCharging {
+                        self.notifyLowBattery()
+                    }
+                    self.wasLowBattery = true
+                } else {
+                    self.wasLowBattery = false
                 }
             }
             .store(in: &cancellables)
