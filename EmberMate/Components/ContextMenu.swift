@@ -9,17 +9,20 @@ import Foundation
 
 import Cocoa
 import UserNotifications
+import SwiftUICore
+import SwiftUI
 
 class ContextMenu: NSObject, NSMenuDelegate {
-
     let menu = NSMenu()
 
     private var bluetoothManager: BluetoothManager
     private var emberMug: EmberMug
+    private var openSettings: OpenSettingsAction
 
-    init(bluetoothManager: BluetoothManager, emberMug: EmberMug) {
+    init(bluetoothManager: BluetoothManager, emberMug: EmberMug, openSettings: OpenSettingsAction) {
         self.bluetoothManager = bluetoothManager
         self.emberMug = emberMug
+        self.openSettings = openSettings
 
         super.init()
 
@@ -34,8 +37,7 @@ class ContextMenu: NSObject, NSMenuDelegate {
     }
 
     @objc open func preferencesClicked(_ sender: NSMenuItem) {
-        NSApp.activate(ignoringOtherApps: true)
-        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        self.openSettings()
     }
 
     @objc open func disconnectClicked(_ sender: NSMenuItem) {
