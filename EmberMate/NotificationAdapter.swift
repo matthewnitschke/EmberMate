@@ -25,21 +25,23 @@ class NotificationAdapter {
         self.appState = appState
         self.emberMug = emberMug
 
-        self.emberMug.$liquidState
-            .combineLatest(self.emberMug.$targetTemp)
-            .sink { (newState, newTemp) in
-                if (newState == .stableTemperature && newTemp != self.lastNotifiedTemp) {
-                    self.notifyTemperatureReached()
-                    self.lastNotifiedTemp = newTemp
-                } else if (self.previousLiquidState == .empty && newState == .filling) {
-                    self.lastNotifiedTemp = nil
-                }
-
-                self.previousLiquidState = newState
+        Publishers.CombineLatest(
+            self.emberMug.$liquidState.dropFirst(),
+            self.emberMug.$targetTemp.dropFirst()
+        ).sink { (newState, newTemp) in
+            if (newState == .stableTemperature && newTemp != self.lastNotifiedTemp) {
+                self.notifyTemperatureReached()
+                self.lastNotifiedTemp = newTemp
+            } else if (self.previousLiquidState == .empty && newState == .filling) {
+                self.lastNotifiedTemp = nil
             }
-            .store(in: &cancellables)
+            
+            self.previousLiquidState = newState
+        }
+        .store(in: &cancellables)
 
         self.emberMug.$batteryLevel
+            .dropFirst()
             .sink { newData in
                 if newData <= 15 {
                     if !self.wasLowBattery && !self.emberMug.isCharging {
