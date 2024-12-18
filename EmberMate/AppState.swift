@@ -10,15 +10,6 @@ import Foundation
 import Combine
 import UserNotifications
 
-extension UserDefaults {
-    @objc dynamic var notifyOnTemperatureReached: Bool {
-        bool(forKey: "notifyOnTemperatureReached")
-    }
-    @objc dynamic var notifyOnLowBattery: Bool {
-        bool(forKey: "notifyOnLowBattery")
-    }
-}
-
 class AppState: ObservableObject {
     var timer: Timer?
 
@@ -100,26 +91,31 @@ class AppState: ObservableObject {
             }
             .store(in: &cancellables)
         
-        let defaults = UserDefaults.standard
-        
-        Publishers.CombineLatest(
-            defaults.publisher(for: \.notifyOnTemperatureReached).prepend(notifyOnTemperatureReached),
-            defaults.publisher(for: \.notifyOnLowBattery).prepend(notifyOnLowBattery)
-        )
-        .map { $0 || $1 }
-        .removeDuplicates()
-        .sink { notify in
-            guard notify else { return }
-            
-            self.requestNotificationAuthorization()
-        }
-        .store(in: &cancellables)
+        requestNotificationAuthorization(provisional: true)
     }
 
-    func requestNotificationAuthorization() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (authorized, error) in
-            if authorized {
-                print("Authorized")
+    private func requestNotificationAuthorization(provisional: Bool) {
+        Task { @MainActor in
+            let settings = await UNUserNotificationCenter.current().notificationSettings()
+            
+            guard settings.authorizationStatus == .notDetermined
+               || !provisional && settings.authorizationStatus == .provisional
+            else {
+                return
+            }
+            
+            do {
+                var options: UNAuthorizationOptions = [.alert, .sound]
+                if provisional {
+                    options.insert(.provisional)
+                }
+                
+                let authorized = try await UNUserNotificationCenter.current()
+                    .requestAuthorization(options: options)
+                
+                print("Notifications \(authorized ? "" : "not ")authorized")
+            } catch {
+                print("Notifications not authorized: \(error)")
             }
         }
     }
@@ -127,8 +123,8 @@ class AppState: ObservableObject {
     func startTimer(_ time: Int) {
         timer?.invalidate()
         
-        requestNotificationAuthorization()
-
+        requestNotificationAuthorization(provisional: false)
+        
         self.countdown = time
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { t in
             self.countdown! -= 1
