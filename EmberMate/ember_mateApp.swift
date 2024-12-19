@@ -16,6 +16,8 @@ struct ember_mateApp: App {
 
     @State private var isMenuPresented = false
     @State private var statusItem: NSStatusItem?
+    
+    @Environment(\.openSettings) private var openSettings
 
     private var notificationAdapter: NotificationAdapter
 
@@ -49,7 +51,7 @@ struct ember_mateApp: App {
                 self.statusItem = statusItem
 
                 NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { event in
-                    let contextMenu = ContextMenu(bluetoothManager: bluetoothManager, emberMug: emberMug)
+                    let contextMenu = ContextMenu(bluetoothManager: bluetoothManager, emberMug: emberMug, openSettings: openSettings)
 
                     statusItem.menu = contextMenu.menu
                     statusItem.button?.performClick(nil)
@@ -58,7 +60,6 @@ struct ember_mateApp: App {
                     return event
                 }
             }
-
         }.menuBarExtraStyle(.window)
 
         Settings {
