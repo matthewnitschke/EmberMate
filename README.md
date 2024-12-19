@@ -17,12 +17,14 @@ A menubar application for controlling ember mugs
 
 - Download the latest `EmberMate.dmg` file from the [Releases](https://github.com/matthewnitschke/EmberMate/releases) page
 - Extract the zip file and drag the .app (will be called EmberMate) to your Applications folder
-- IMPORTANT! Ctrl+Click the application and click "Open", doing so will prompt a dialog, click "Open" again
+- IMPORTANT! You will get a popup saying that EmberMate cannot be opened. See the below section for why this, but the setting can be overwritten by going to `System Settings` -> `Privacy & Security` -> `Open Anyway`
 
 ## Why does apple think EmberMate is malicious software?
 
-![popup](https://github.com/matthewnitschke/EmberMate/assets/6363089/99c1c338-cb6a-4311-b4e4-2b5055b49bce)
+<img width="501" alt="NotOpened" src="https://github.com/user-attachments/assets/dbbec166-c407-42ac-a66b-77d2c54b03d4" />
 
 This message is displayed because the `EmberMate` application is not what you would call "signed". Apple charges developers yearly to sign applications, and this is something I do not want to pay for at this time
 
-You can force allow opening the application by `ctrl+clicking` the application icon, and selecting "Open" from the dropdown menu
+You can override this by navigating to "System Settings" -> "Privacy & Security" and clicking "Open Anyway" in the Security section
+
+![OpenAnyway](https://github.com/user-attachments/assets/e3304f98-3e88-4289-a799-3df67d26a848)
