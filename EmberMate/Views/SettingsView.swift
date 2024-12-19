@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import AppKit
 import LaunchAtLogin
+import UserNotifications
 
 struct SettingsView: View {
     var appState: AppState
@@ -40,7 +41,9 @@ struct GeneralSettingsView: View {
     @ObservedObject var emberMug: EmberMug
     @ObservedObject var appState: AppState
     @ObservedObject var bluetoothManager: BluetoothManager
-
+    
+    @Environment(\.openURL) var openURL
+    
     var body: some View {
         Form {
             Section {
@@ -68,11 +71,40 @@ struct GeneralSettingsView: View {
 
                 Section {
                     LaunchAtLogin.Toggle()
-                    Toggle("Notify when temperature is reached", isOn: appState.$notifyOnTemperatureReached)
-                    Toggle("Notify on low battery (15%)", isOn: appState.$notifyOnLowBattery)
+                }
+                
+                Section {
+                    if appState.notificationsDisabled {
+                        LabeledContent {
+                            Button("System Settings") {
+                                self.openURL(.notificationSettings)
+                            }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                Text("Notifications are disabled")
+                            }
+                        }
+                    }
+                    
+                    Toggle(isOn: appState.$notifyOnTemperatureReached) {
+                        Text("Notify when temperature is reached")
+                            .opacity(appState.notificationsDisabled ? 0.5 : 1)
+                    }
+                    .disabled(appState.notificationsDisabled)
+                    
+                    Toggle(isOn: appState.$notifyOnLowBattery) {
+                        Text("Notify on low battery (15%)")
+                            .opacity(appState.notificationsDisabled ? 0.5 : 1)
+                    }
+                        .disabled(appState.notificationsDisabled)
                 }
             }
-        }.formStyle(.grouped)
+        }
+        .formStyle(.grouped)
+        .task {
+            await appState.updateNotificationsDisabled()
+        }
     }
 }
 
@@ -187,4 +219,18 @@ extension Array: RawRepresentable where Element: Codable {
         }
         return result
     }
+}
+
+extension URL {
+    static let notificationSettings: URL = {
+        let url = URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings.extension")!
+        
+        guard let bundleId = Bundle.main.bundleIdentifier else {
+            return url
+        }
+        
+        return url.appending(queryItems: [
+            .init(name: "id", value: bundleId)
+        ])
+    }()
 }

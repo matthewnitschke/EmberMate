@@ -17,29 +17,39 @@ class NotificationAdapter {
     private var cancellables: Set<AnyCancellable> = []
 
     private var previousLiquidState: LiquidState?
-    private var shouldNotifyOnStable: Bool = false
+    private var lastNotifiedTemp: Double?
 
+    private var wasLowBattery: Bool = false
+    
     init(appState: AppState, emberMug: EmberMug) {
         self.appState = appState
         self.emberMug = emberMug
 
-        self.emberMug.$liquidState
-            .sink { newData in
-                if (self.shouldNotifyOnStable && newData == .stableTemperature) {
-                    self.shouldNotifyOnStable = false
-                    self.notifyTemperatureReached()
-                } else if (self.previousLiquidState == .empty && newData == .filling) {
-                    self.shouldNotifyOnStable = true
-                }
-
-                self.previousLiquidState = newData
+        Publishers.CombineLatest(
+            self.emberMug.$liquidState.dropFirst(),
+            self.emberMug.$targetTemp.dropFirst()
+        ).sink { (newState, newTemp) in
+            if (newState == .stableTemperature && newTemp != self.lastNotifiedTemp) {
+                self.notifyTemperatureReached()
+                self.lastNotifiedTemp = newTemp
+            } else if (self.previousLiquidState == .empty && newState == .filling) {
+                self.lastNotifiedTemp = nil
             }
-            .store(in: &cancellables)
+            
+            self.previousLiquidState = newState
+        }
+        .store(in: &cancellables)
 
         self.emberMug.$batteryLevel
+            .dropFirst()
             .sink { newData in
-                if (newData == 15 && !self.emberMug.isCharging) {
-                    self.notifyLowBattery()
+                if newData <= 15 {
+                    if !self.wasLowBattery && !self.emberMug.isCharging {
+                        self.notifyLowBattery()
+                    }
+                    self.wasLowBattery = true
+                } else {
+                    self.wasLowBattery = false
                 }
             }
             .store(in: &cancellables)

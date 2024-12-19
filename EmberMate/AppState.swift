@@ -37,6 +37,8 @@ class AppState: ObservableObject {
         )
     ]
 
+    @Published var notificationsDisabled = false
+    
     @AppStorage("notifyOnTemperatureReached") var notifyOnTemperatureReached: Bool = true
     @AppStorage("notifyOnLowBattery") var notifyOnLowBattery: Bool = true
 
@@ -90,19 +92,51 @@ class AppState: ObservableObject {
                 }
             }
             .store(in: &cancellables)
+        
+        Task { @MainActor in
+            await requestNotificationAuthorization(provisional: true)
+            await updateNotificationsDisabled()
+        }
+    }
+    
+    @MainActor
+    func updateNotificationsDisabled() async {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        self.notificationsDisabled = settings.authorizationStatus == .denied
     }
 
+    @MainActor
+    private func requestNotificationAuthorization(provisional: Bool) async {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        
+        guard settings.authorizationStatus == .notDetermined
+            || !provisional && settings.authorizationStatus == .provisional
+        else {
+            return
+        }
+        
+        do {
+            var options: UNAuthorizationOptions = [.alert, .sound]
+            if provisional {
+                options.insert(.provisional)
+            }
+            
+            let authorized = try await UNUserNotificationCenter.current()
+                .requestAuthorization(options: options)
+            
+            print("Notifications \(authorized ? "" : "not ")authorized")
+        } catch {
+            print("Notifications not authorized: \(error)")
+        }
+    }
+    
     func startTimer(_ time: Int) {
         timer?.invalidate()
-
-        let un = UNUserNotificationCenter.current()
-
-        un.requestAuthorization(options: [.alert, .sound]) { (authorized, error) in
-            if authorized {
-                print("Authorized")
-            }
+        
+        Task { @MainActor in
+            await requestNotificationAuthorization(provisional: false)
         }
-
+        
         self.countdown = time
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { t in
             self.countdown! -= 1

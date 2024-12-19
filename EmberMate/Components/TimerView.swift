@@ -11,10 +11,21 @@ import SwiftUI
 struct TimerView: View {
     @ObservedObject var appState: AppState
 
+    @Environment(\.openURL) var openURL
+    
     var body: some View {
         HStack(alignment: .center) {
-            Image(systemName: "timer")
-                .font(.system(size: 20))
+            if appState.notificationsDisabled {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 20))
+                    .help("Notifications are disabled. Click to open System Settings.")
+                    .onTapGesture {
+                        self.openURL(.notificationSettings)
+                    }
+            } else {
+                Image(systemName: "timer")
+                    .font(.system(size: 20))
+            }
             Text("Timer")
                 .font(.system(size: 14))
             Spacer()
@@ -41,6 +52,9 @@ struct TimerView: View {
         .padding(10)
         .background(Color.black.opacity(0.29))
         .cornerRadius(9)
+        .task {
+            await appState.updateNotificationsDisabled()
+        }
     }
 }
 
