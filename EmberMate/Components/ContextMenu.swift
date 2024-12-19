@@ -37,6 +37,7 @@ class ContextMenu: NSObject, NSMenuDelegate {
     }
 
     @objc open func preferencesClicked(_ sender: NSMenuItem) {
+        NSApp.activate(ignoringOtherApps: true)
         self.openSettings()
     }
 
