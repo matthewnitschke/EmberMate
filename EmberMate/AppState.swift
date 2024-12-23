@@ -18,8 +18,8 @@ class AppState: ObservableObject {
 
     @Published var countdown: Int?
 
-    @Published var timers: [String] = ["4:00", "5:00", "6:00"]
-    @Published var presets: [Preset] = [
+    @AppStorage("timers") var timers: [String] = ["4:00", "5:00", "6:00"]
+    @AppStorage("presets") var presets: [Preset] = [
         Preset(
             icon: "cup.and.saucer.fill",
             name: "Latte",
@@ -45,54 +45,6 @@ class AppState: ObservableObject {
     private var cancellables: Set<AnyCancellable> = []
 
     init() {
-        let encoder = JSONEncoder()
-        let decoder = JSONDecoder()
-
-        let presets = UserDefaults.standard.string(forKey: "presets")
-        if let presets = presets {
-            do {
-                self.presets = try decoder.decode([Preset].self, from: presets.data(using: .utf8)!)
-            } catch {
-                print("Error decoding presets: \(error)")
-            }
-        }
-        self.$presets
-            .sink { newData in
-                do {
-                    let presetData = try encoder.encode(newData)
-                    if let jsonString = String(data: presetData, encoding: .utf8) {
-                        print("Saving: \(jsonString)")
-                        UserDefaults.standard.set(jsonString, forKey: "presets")
-                    }
-                } catch {
-                    print("Error encoding presets: \(error)")
-                }
-            }
-            .store(in: &cancellables)
-
-
-        let timers = UserDefaults.standard.string(forKey: "timers")
-        if let timers = timers {
-            do {
-                self.timers = try decoder.decode([String].self, from: timers.data(using: .utf8)!)
-            } catch {
-                print("Error decoding timers: \(error)")
-            }
-        }
-        self.$timers
-            .sink { newData in
-                do {
-                    let timerData = try encoder.encode(newData)
-                    if let jsonString = String(data: timerData, encoding: .utf8) {
-                        print("Saving: \(jsonString)")
-                        UserDefaults.standard.set(jsonString, forKey: "timers")
-                    }
-                } catch {
-                    print("Error encoding timers: \(error)")
-                }
-            }
-            .store(in: &cancellables)
-        
         Task { @MainActor in
             await requestNotificationAuthorization(provisional: true)
             await updateNotificationsDisabled()
