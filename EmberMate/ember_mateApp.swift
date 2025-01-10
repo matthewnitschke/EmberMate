@@ -17,7 +17,7 @@ struct ember_mateApp: App {
     @State private var isMenuPresented = false
     @State private var statusItem: NSStatusItem?
     
-    @Environment(\.openSettings) private var openSettings
+    @Environment(\.openSettings_backport) private var openSettings
 
     private var notificationAdapter: NotificationAdapter
 
@@ -103,5 +103,26 @@ struct ember_mateApp: App {
             return ">1min"
         }
         return "\(minutes)min"
+    }
+}
+
+private struct OpenSettingsBackportKey: EnvironmentKey {
+    static let defaultValue: () -> Void = {
+        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+    }
+}
+
+extension EnvironmentValues {
+    fileprivate var openSettings_backport: () -> Void {
+        get {
+            if #available(macOS 14.0, *) {
+                return { [openSettings] in
+                    openSettings()
+                }
+            } else {
+                return self[OpenSettingsBackportKey.self]
+            }
+        }
+        set { self[OpenSettingsBackportKey.self] = newValue }
     }
 }
