@@ -17,9 +17,9 @@ class ContextMenu: NSObject, NSMenuDelegate {
 
     private var bluetoothManager: BluetoothManager
     private var emberMug: EmberMug
-    private var openSettings: OpenSettingsAction
+    private var openSettings: () -> Void
 
-    init(bluetoothManager: BluetoothManager, emberMug: EmberMug, openSettings: OpenSettingsAction) {
+    init(bluetoothManager: BluetoothManager, emberMug: EmberMug, openSettings: @escaping () -> Void) {
         self.bluetoothManager = bluetoothManager
         self.emberMug = emberMug
         self.openSettings = openSettings
