@@ -28,7 +28,7 @@ struct SettingsView: View {
                 .tabItem {
                     Label("General", systemImage: "gear")
                 }
-            PresetsSettingsView(appState: appState)
+            PresetsSettingsView(appState: appState, emberMug: emberMug)
                 .tabItem {
                     Label("Presets", systemImage: "square.and.arrow.down")
                 }
@@ -47,24 +47,33 @@ struct GeneralSettingsView: View {
     var body: some View {
         Form {
             Section {
-                HStack {
-                    if (bluetoothManager.state == .disconnected) {
-                        Image(systemName: "mug")
-                            .font(.largeTitle)
-                        Text("No Device Connected")
-                    } else {
-                        Image(systemName: "mug.fill")
-                            .font(.largeTitle)
-                        VStack(alignment: .leading) {
-                            Text(emberMug.peripheral?.name ?? "Unknown Device")
-                            HStack(spacing: 3) {
-                                Image(systemName: getBatteryIcon(emberMug.batteryLevel, isCharging: emberMug.isCharging))
-                                Text("\(emberMug.batteryLevel)%")
-                            }.foregroundColor(.gray)
+                Section {
+                    HStack {
+                        if (bluetoothManager.state == .disconnected) {
+                            Image(systemName: "mug")
+                                .font(.largeTitle)
+                            Text("No Device Connected")
+                        } else {
+                            Image(systemName: "mug.fill")
+                                .font(.largeTitle)
+                            VStack(alignment: .leading) {
+                                Text(emberMug.peripheral?.name ?? "Unknown Device")
+                                HStack(spacing: 3) {
+                                    Image(systemName: getBatteryIcon(emberMug.batteryLevel, isCharging: emberMug.isCharging))
+                                    Text("\(emberMug.batteryLevel)%")
+                                }.foregroundColor(.gray)
+                            }
+                            Spacer()
+                            Button("Disconnect") {
+                                bluetoothManager.disconnect()
+                            }
                         }
-                        Spacer()
-                        Button("Disconnect") {
-                            bluetoothManager.disconnect()
+                    }
+                    
+                    HStack {
+                        Picker("Measurement Unit", selection: $emberMug.temperatureUnit) {
+                            Text("℉").tag(TemperatureUnit.fahrenheit)
+                            Text("℃").tag(TemperatureUnit.celcius)
                         }
                     }
                 }
@@ -110,6 +119,7 @@ struct GeneralSettingsView: View {
 
 struct PresetsSettingsView: View {
     @ObservedObject var appState: AppState
+    @ObservedObject var emberMug: EmberMug
 
     var images: [String] = [
         "mug.fill",
@@ -134,9 +144,7 @@ struct PresetsSettingsView: View {
                         TextField("Name", text: preset.name)
                             .labelsHidden()
 
-                        TextField("Temperature", value: preset.temperature, format: .number)
-                            .labelsHidden()
-                            .multilineTextAlignment(.trailing)
+                        TemperatureInput(value: preset.temperature, unit: $emberMug.temperatureUnit)
 
                         Picker(
                             selection: preset.icon,
