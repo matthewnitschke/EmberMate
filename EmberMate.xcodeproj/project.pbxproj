@@ -22,6 +22,7 @@
 		1A86E97C2B32A85A00ED0696 /* IconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A86E97B2B32A85A00ED0696 /* IconButton.swift */; };
 		1AA35E2C2B22CC0E00B144C0 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA35E2B2B22CC0E00B144C0 /* Utils.swift */; };
 		1AD754482B1ED69E00E54851 /* ConnectMugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD754472B1ED69E00E54851 /* ConnectMugView.swift */; };
+		1AD8485A2D46C4C000AD844D /* TemperatureInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD848592D46C4B600AD844D /* TemperatureInput.swift */; };
 		1AE494212B1FE69D0097A4F1 /* MugControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE494202B1FE69D0097A4F1 /* MugControlView.swift */; };
 		1AF9BE722B2E2D35002C930D /* NotificationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF9BE712B2E2D35002C930D /* NotificationAdapter.swift */; };
 		1AF9BE762B2E3BCE002C930D /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 1AF9BE752B2E3BCE002C930D /* LaunchAtLogin */; };
@@ -44,6 +45,7 @@
 		1A86E97B2B32A85A00ED0696 /* IconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconButton.swift; sourceTree = "<group>"; };
 		1AA35E2B2B22CC0E00B144C0 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		1AD754472B1ED69E00E54851 /* ConnectMugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectMugView.swift; sourceTree = "<group>"; };
+		1AD848592D46C4B600AD844D /* TemperatureInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureInput.swift; sourceTree = "<group>"; };
 		1AE494202B1FE69D0097A4F1 /* MugControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MugControlView.swift; sourceTree = "<group>"; };
 		1AE785402B2A975C00FD31ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1AF9BE712B2E2D35002C930D /* NotificationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationAdapter.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 		1AF9BE732B2E2E59002C930D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				1AD848592D46C4B600AD844D /* TemperatureInput.swift */,
 				1A42A73F2B267CC400233E50 /* SettingsView.swift */,
 				1AE494202B1FE69D0097A4F1 /* MugControlView.swift */,
 				1AD754472B1ED69E00E54851 /* ConnectMugView.swift */,
@@ -212,6 +215,7 @@
 				1A42A7472B269DC400233E50 /* AppState.swift in Sources */,
 				1AF9BE722B2E2D35002C930D /* NotificationAdapter.swift in Sources */,
 				1A42A7402B267CC400233E50 /* SettingsView.swift in Sources */,
+				1AD8485A2D46C4C000AD844D /* TemperatureInput.swift in Sources */,
 				1A0489DC2B2022B000426D46 /* ContextMenu.swift in Sources */,
 				1A31E59B2B1ED1D40082AD12 /* BluetoothManager.swift in Sources */,
 				1A42A7452B269A3900233E50 /* TimerView.swift in Sources */,

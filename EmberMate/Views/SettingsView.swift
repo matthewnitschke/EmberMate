@@ -28,7 +28,7 @@ struct SettingsView: View {
                 .tabItem {
                     Label("General", systemImage: "gear")
                 }
-            PresetsSettingsView(appState: appState)
+            PresetsSettingsView(appState: appState, emberMug: emberMug)
                 .tabItem {
                     Label("Presets", systemImage: "square.and.arrow.down")
                 }
@@ -119,6 +119,7 @@ struct GeneralSettingsView: View {
 
 struct PresetsSettingsView: View {
     @ObservedObject var appState: AppState
+    @ObservedObject var emberMug: EmberMug
 
     var images: [String] = [
         "mug.fill",
@@ -143,9 +144,7 @@ struct PresetsSettingsView: View {
                         TextField("Name", text: preset.name)
                             .labelsHidden()
 
-                        TextField("Temperature", value: preset.temperature, format: .number)
-                            .labelsHidden()
-                            .multilineTextAlignment(.trailing)
+                        TemperatureInput(value: preset.temperature, unit: $emberMug.temperatureUnit)
 
                         Picker(
                             selection: preset.icon,
