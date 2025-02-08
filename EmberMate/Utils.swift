@@ -23,6 +23,10 @@ func getFormattedTemperature(_ temp: Double, unit: TemperatureUnit) -> String {
     return String(format: "%.0f°", (temp * 9/5) + 32)
 }
 
+func getFormattedBatteryLevel(_ batteryLevel: Int) -> String {
+    return String(format: "%d%%", batteryLevel)
+}
+
 func formatTime(_ seconds: Int) -> String {
     let minutes = seconds / 60
     let remainingSeconds = seconds % 60

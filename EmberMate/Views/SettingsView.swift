@@ -106,7 +106,13 @@ struct GeneralSettingsView: View {
                         Text("Notify on low battery (15%)")
                             .opacity(appState.notificationsDisabled ? 0.5 : 1)
                     }
-                        .disabled(appState.notificationsDisabled)
+                    .disabled(appState.notificationsDisabled)
+                }
+                
+                Section {
+                    Toggle(isOn: appState.$showBatteryLevelWhenCharging) {
+                        Text("Show battery level in menubar when charging")
+                    }
                 }
             }
         }
