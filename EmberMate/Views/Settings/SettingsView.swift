@@ -56,13 +56,17 @@ struct GeneralSettingsView: View {
                         }
                     }
                 }
+                
+                if (bluetoothManager.state == .connected) {
+                    Picker("Measurement Unit", selection: $emberMug.temperatureUnit) {
+                        Text("℉").tag(TemperatureUnit.fahrenheit)
+                        Text("℃").tag(TemperatureUnit.celcius)
+                    }
+                    ColorPicker("LED Color", selection: $emberMug.color)
+                }
             }
             
             Section {
-                Picker("Measurement Unit", selection: $emberMug.temperatureUnit) {
-                    Text("℉").tag(TemperatureUnit.fahrenheit)
-                    Text("℃").tag(TemperatureUnit.celcius)
-                }
                 LaunchAtLogin.Toggle()
             }
             

@@ -28,3 +28,7 @@ This message is displayed because the `EmberMate` application is not what you wo
 You can override this by navigating to "System Settings" -> "Privacy & Security" and clicking "Open Anyway" in the Security section
 
 ![OpenAnyway](https://github.com/user-attachments/assets/e3304f98-3e88-4289-a799-3df67d26a848)
+
+## Credits
+
+Huge thanks to orlopau and their [ember-mug](https://github.com/orlopau/ember-mug) repo for reverse engineering the ember mug bluetooth api
