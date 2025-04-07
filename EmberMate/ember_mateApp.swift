@@ -34,7 +34,10 @@ struct ember_mateApp: App {
 
     var body: some Scene {
         MenuBarExtra() {
-            AppView(emberMug: emberMug, appState: appState, bluetoothManager: bluetoothManager)
+            AppView()
+                .environmentObject(emberMug)
+                .environmentObject(appState)
+                .environmentObject(bluetoothManager)
         } label: {
             HStack {
                 Image(systemName: getIconName())
@@ -48,7 +51,6 @@ struct ember_mateApp: App {
                 }
             }
         }.menuBarExtraAccess(isPresented: $isMenuPresented) { statusItem in
-
             if (self.statusItem == nil) {
                 self.statusItem = statusItem
 
@@ -65,12 +67,12 @@ struct ember_mateApp: App {
         }.menuBarExtraStyle(.window)
 
         Settings {
-            SettingsView(
-                appState: appState,
-                emberMug: emberMug,
-                bluetoothManager: bluetoothManager
-            )
+            SettingsView()
                 .frame(width: 400, height: 510)
+                .environmentObject(emberMug)
+                .environmentObject(appState)
+                .environmentObject(bluetoothManager)
+            
         }
     }
 

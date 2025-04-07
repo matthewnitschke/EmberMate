@@ -8,6 +8,7 @@
 import Foundation
 import CoreBluetooth
 import Combine
+import SwiftUI
 
 enum LiquidState: Int {
     case empty = 1
@@ -29,6 +30,7 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     @Published var targetTemp: Double = 0.0
     @Published var liquidState: LiquidState = LiquidState.empty
     @Published var temperatureUnit: TemperatureUnit = TemperatureUnit.celcius
+    @Published var color: Color = Color.white
 
     var peripheral: CBPeripheral?
 
@@ -37,6 +39,7 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     private var batteryCharacteristic: CBCharacteristic?
     private var liquidStateCharacteristic: CBCharacteristic?
     private var temperatureUnitCharacteristic: CBCharacteristic?
+    private var colorCharacteristic: CBCharacteristic?
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -48,6 +51,13 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
                 if (newData != self.temperatureUnit) {
                     self.setTemperatureUnit(newData)
                 }
+            }
+            .store(in: &cancellables)
+        
+        self.$color
+            .debounce(for: .milliseconds(250), scheduler: RunLoop.main)
+            .sink { newData in
+                self.setColor(newData)
             }
             .store(in: &cancellables)
     }
@@ -72,6 +82,15 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     func setTemperatureUnit(_ unit: TemperatureUnit) {
         let data = Data([UInt8(unit.rawValue)])
         peripheral?.writeValue(data, for: temperatureUnitCharacteristic!, type: .withResponse)
+    }
+    
+    func setColor(_ color: Color) {
+        let parts = NSColor(color).cgColor.components!
+        let red = UInt8(parts[0] * 255)
+        let green = UInt8(parts[1] * 255)
+        let blue = UInt8(parts[2] * 255)
+        let alpha = UInt8(parts[3] * 255)
+        peripheral?.writeValue(Data([red, green, blue, alpha]), for: colorCharacteristic!, type: .withResponse)
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
@@ -98,6 +117,8 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
                 liquidStateCharacteristic = characteristic
             case CBUUID(string: "fc540004-236c-4c94-8fa9-944a3e5353fa"):
                 temperatureUnitCharacteristic = characteristic
+            case CBUUID(string: "fc540014-236c-4c94-8fa9-944a3e5353fa"):
+                colorCharacteristic = characteristic
             case CBUUID(string: "fc540012-236c-4c94-8fa9-944a3e5353fa"):
                 // enable notifications for the event characteristic
                 peripheral.setNotifyValue(true, for: characteristic)
@@ -132,6 +153,12 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
                 if let unit = TemperatureUnit(rawValue: Int(data[0])) {
                     temperatureUnit = unit
                 }
+            } else if (characteristic == colorCharacteristic) {
+                let red = Double(data[0])
+                let green = Double(data[1])
+                let blue = Double(data[2])
+                let alpha = Double(data[3])
+                color = Color(red: red/255, green: green/255, blue: blue/255, opacity: alpha/255)
             } else if (characteristic.uuid == CBUUID(string: "fc540012-236c-4c94-8fa9-944a3e5353fa")) {
                 let state = Int(data[0])
 
