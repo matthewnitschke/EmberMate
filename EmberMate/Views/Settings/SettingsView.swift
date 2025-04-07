@@ -93,7 +93,11 @@ struct GeneralSettingsView: View {
                     .disabled(appState.notificationsDisabled)
             }
         
-            
+            Section {
+                Toggle(isOn: appState.$showBatteryLevelWhenCharging) {
+                    Text("Show battery level in menubar when charging")
+                }
+            }
             
         }
         .formStyle(.grouped)

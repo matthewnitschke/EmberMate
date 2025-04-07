@@ -46,6 +46,8 @@ struct ember_mateApp: App {
                     Text(formatCountdown(appState.countdown!))
                 } else if (bluetoothManager.state == .connected && emberMug.liquidState != .empty) {
                     Text(getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit))
+                } else if (bluetoothManager.state == .connected && emberMug.liquidState == .empty && emberMug.batteryLevel != 100 && emberMug.isCharging && appState.showBatteryLevelWhenCharging) {
+                    Text(getFormattedBatteryLevel(emberMug.batteryLevel))
                 }
             }
         }.menuBarExtraAccess(isPresented: $isMenuPresented) { statusItem in
