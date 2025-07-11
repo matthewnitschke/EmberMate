@@ -43,7 +43,7 @@ class NotificationAdapter {
         self.emberMug.$batteryLevel
             .dropFirst()
             .sink { newData in
-                if newData <= 15 {
+                if newData <= appState.notifyOnLowBattery.rawValue {
                     if !self.wasLowBattery && !self.emberMug.isCharging {
                         self.notifyLowBattery()
                     }
@@ -67,22 +67,22 @@ class NotificationAdapter {
         content.sound = UNNotificationSound.default
         content.userInfo = ["icon": "AppIcon"]
 
-        let request = UNNotificationRequest(identifier: "timerDone", content: content, trigger: nil)
+        let request = UNNotificationRequest(identifier: "tempReached", content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
 
     func notifyLowBattery() {
-        if (!appState.notifyOnLowBattery) {
+        if appState.notifyOnLowBattery == .off {
             return
         }
 
         let content = UNMutableNotificationContent()
         content.title = "Mug has low battery"
-        content.subtitle = "Your mug has reached 15% battery level. Charge to prevent the heater turning off"
+        content.subtitle = "Your mug has reached \(appState.notifyOnLowBattery) battery level. Charge to prevent the heater turning off"
         content.sound = UNNotificationSound.default
         content.userInfo = ["icon": "AppIcon"]
 
-        let request = UNNotificationRequest(identifier: "timerDone", content: content, trigger: nil)
+        let request = UNNotificationRequest(identifier: "lowBattery", content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
 }

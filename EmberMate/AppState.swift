@@ -40,9 +40,9 @@ class AppState: ObservableObject {
     @Published var notificationsDisabled = false
     
     @AppStorage("notifyOnTemperatureReached") var notifyOnTemperatureReached: Bool = true
-    @AppStorage("notifyOnLowBattery") var notifyOnLowBattery: Bool = true
+    @AppStorage("notifyOnLowBattery") var notifyOnLowBattery: LowBatteryLevel = .on(15)
     @AppStorage("showBatteryLevelWhenCharging") var showBatteryLevelWhenCharging: Bool = false
-
+    
     private var cancellables: Set<AnyCancellable> = []
 
     init() {
@@ -151,5 +151,40 @@ class Preset: Identifiable, ObservableObject, Codable {
         try container.encode(icon, forKey: .icon)
         try container.encode(name, forKey: .name)
         try container.encode(temperature, forKey: .temperature)
+    }
+}
+
+extension AppState {
+    enum LowBatteryLevel: RawRepresentable, CustomStringConvertible, Hashable {
+        case off
+        case on(Int)
+        
+        var rawValue: Int {
+            switch self {
+            case .off: 0
+            case .on(let value): value
+            }
+        }
+        
+        init(rawValue: Int) {
+            if rawValue <= 0 {
+                self = .off
+            } else if rawValue >= 100 {
+                self = .on(100)
+            } else {
+                self = .on(rawValue)
+            }
+        }
+        
+        var description: String {
+            switch self {
+            case .off: "Off"
+            case .on(let value): getFormattedBatteryLevel(value)
+            }
+        }
+        
+        static var notificationLevels: [LowBatteryLevel] {
+            [.off] + stride(from: 5, through: 20, by: 5).map { .on($0) }
+        }
     }
 }
