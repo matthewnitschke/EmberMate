@@ -40,15 +40,24 @@ class AppState: ObservableObject {
     @Published var notificationsDisabled = false
     
     @AppStorage("notifyOnTemperatureReached") var notifyOnTemperatureReached: Bool = true
-    @AppStorage("notifyOnLowBattery") var notifyOnLowBattery: LowBatteryLevel = .on(15)
+    @AppStorage("notifyAtBatteryPercentage") var notifyAtBatteryPercentage: LowBatteryLevel = .default
     @AppStorage("showBatteryLevelWhenCharging") var showBatteryLevelWhenCharging: Bool = false
     
     private var cancellables: Set<AnyCancellable> = []
 
     init() {
         Task { @MainActor in
+            migrateUserDefaults()
             await requestNotificationAuthorization(provisional: true)
             await updateNotificationsDisabled()
+        }
+    }
+    
+    @MainActor
+    func migrateUserDefaults() {
+        if let oldValue = UserDefaults.standard.object(forKey: "notifyOnLowBattery") as? Bool {
+            self.notifyAtBatteryPercentage = oldValue ? .default : .off
+            UserDefaults.standard.removeObject(forKey: "notifyOnLowBattery")
         }
     }
     
@@ -155,36 +164,32 @@ class Preset: Identifiable, ObservableObject, Codable {
 }
 
 extension AppState {
-    enum LowBatteryLevel: RawRepresentable, CustomStringConvertible, Hashable {
-        case off
-        case on(Int)
+    enum LowBatteryLevel: Int, CaseIterable, CustomStringConvertible {
+        static let `default` = LowBatteryLevel.fifteen
         
-        var rawValue: Int {
-            switch self {
-            case .off: 0
-            case .on(let value): value
-            }
-        }
+        case off     = 0
+        case five    = 5
+        case ten     = 10
+        case fifteen = 15
+        case twenty  = 20
         
-        init(rawValue: Int) {
-            if rawValue <= 0 {
-                self = .off
-            } else if rawValue >= 100 {
-                self = .on(100)
-            } else {
-                self = .on(rawValue)
+        init?(rawValue: Int) {
+            switch rawValue {
+            case 0: self = .off
+            case 5: self = .five
+            case 10: self = .ten
+            case 15: self = .fifteen
+            case 20: self = .twenty
+            default: self = LowBatteryLevel.default
             }
         }
         
         var description: String {
-            switch self {
-            case .off: "Off"
-            case .on(let value): getFormattedBatteryLevel(value)
+            if self == .off {
+                return "Off"
             }
-        }
-        
-        static var notificationLevels: [LowBatteryLevel] {
-            [.off] + stride(from: 5, through: 20, by: 5).map { .on($0) }
+            
+            return getFormattedBatteryLevel(self.rawValue)
         }
     }
 }
