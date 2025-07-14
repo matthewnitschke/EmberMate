@@ -13,7 +13,7 @@ import UserNotifications
 
 struct SettingsView: View {
     @State var internalTime: String?
-    
+
     var body: some View {
         TabView {
             GeneralSettingsView()
@@ -95,21 +95,15 @@ struct GeneralSettingsView: View {
                     Text("Notify on low battery (15%)")
                         .opacity(appState.notificationsDisabled ? 0.5 : 1)
                 }
-                .disabled(appState.notificationsDisabled)
+                    .disabled(appState.notificationsDisabled)
             }
-            
+        
             Section {
                 Toggle(isOn: appState.$showBatteryLevelWhenCharging) {
                     Text("Show battery level in menubar when charging")
                 }
-                
-                Picker("Battery display in controls", selection: appState.$controlsBattery) {
-                    ForEach(BatteryView.DisplayMode.allCases, id: \.rawValue) {
-                        Text($0.rawValue.capitalized)
-                            .tag($0)
-                    }
-                }
             }
+            
         }
         .formStyle(.grouped)
         .task {
@@ -121,7 +115,7 @@ struct GeneralSettingsView: View {
 struct PresetsSettingsView: View {
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var emberMug: EmberMug
-    
+
     var body: some View {
         Form {
             Section {
@@ -141,7 +135,7 @@ struct PresetsSettingsView: View {
                     }
                 }
             }
-            
+
             Section {
                 if (!appState.timers.isEmpty) {
                     ForEach(appState.timers.indices, id: \.self) { index in
@@ -151,7 +145,7 @@ struct PresetsSettingsView: View {
                             }) {
                                 Image(systemName: "trash")
                             }.buttonStyle(.plain)
-                            
+
                             TextField("Duration", text: Binding(
                                 get: {
                                     // zombie child render issue, ensure that [index] always referes to a value
@@ -177,7 +171,7 @@ struct PresetsSettingsView: View {
                     }
                 }
             }
-            
+
         }
         .formStyle(.grouped)
     }
@@ -192,7 +186,7 @@ extension Array: RawRepresentable where Element: Codable {
         }
         self = result
     }
-    
+
     public var rawValue: String {
         guard let data = try? JSONEncoder().encode(self),
               let result = String(data: data, encoding: .utf8)

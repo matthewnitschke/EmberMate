@@ -20,7 +20,7 @@ struct MugControlView: View {
                     .font(.caption)
                 Spacer()
                 BatteryView(
-                    display: appState.controlsBattery,
+                    display: .both,
                     batteryLevel: emberMug.batteryLevel,
                     isCharging: emberMug.isCharging,
                     textFont: .caption
