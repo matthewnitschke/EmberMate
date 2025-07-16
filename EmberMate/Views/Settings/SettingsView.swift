@@ -45,10 +45,11 @@ struct GeneralSettingsView: View {
                             .font(.largeTitle)
                         VStack(alignment: .leading) {
                             Text(emberMug.peripheral?.name ?? "Unknown Device")
-                            HStack(spacing: 3) {
-                                Image(systemName: getBatteryIcon(emberMug.batteryLevel, isCharging: emberMug.isCharging))
-                                Text("\(emberMug.batteryLevel)%")
-                            }.foregroundColor(.gray)
+                            BatteryView(
+                                display: .both,
+                                batteryLevel: emberMug.batteryLevel,
+                                isCharging: emberMug.isCharging
+                            ).foregroundColor(.gray)
                         }
                         Spacer()
                         Button("Disconnect") {

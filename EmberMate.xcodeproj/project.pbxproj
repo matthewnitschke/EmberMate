@@ -27,6 +27,7 @@
 		1AE494212B1FE69D0097A4F1 /* MugControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE494202B1FE69D0097A4F1 /* MugControlView.swift */; };
 		1AF9BE722B2E2D35002C930D /* NotificationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF9BE712B2E2D35002C930D /* NotificationAdapter.swift */; };
 		1AF9BE762B2E3BCE002C930D /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 1AF9BE752B2E3BCE002C930D /* LaunchAtLogin */; };
+		9ACBA62B2E215F9D00D699B7 /* BatteryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACBA62A2E215F9B00D699B7 /* BatteryView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,7 @@
 		1AE494202B1FE69D0097A4F1 /* MugControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MugControlView.swift; sourceTree = "<group>"; };
 		1AE785402B2A975C00FD31ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1AF9BE712B2E2D35002C930D /* NotificationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationAdapter.swift; sourceTree = "<group>"; };
+		9ACBA62A2E215F9B00D699B7 /* BatteryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +139,7 @@
 				1AE494202B1FE69D0097A4F1 /* MugControlView.swift */,
 				1AD754472B1ED69E00E54851 /* ConnectMugView.swift */,
 				1A31E5982B1ED1B00082AD12 /* AppView.swift */,
+				9ACBA62A2E215F9B00D699B7 /* BatteryView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -223,6 +226,7 @@
 				1A5DCBF22D488278002A1504 /* PresetEntry.swift in Sources */,
 				1A31E59D2B1ED1E60082AD12 /* EmberMug.swift in Sources */,
 				1AE494212B1FE69D0097A4F1 /* MugControlView.swift in Sources */,
+				9ACBA62B2E215F9D00D699B7 /* BatteryView.swift in Sources */,
 				1A86E97C2B32A85A00ED0696 /* IconButton.swift in Sources */,
 				1A42A7472B269DC400233E50 /* AppState.swift in Sources */,
 				1AF9BE722B2E2D35002C930D /* NotificationAdapter.swift in Sources */,

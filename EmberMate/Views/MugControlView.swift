@@ -19,7 +19,12 @@ struct MugControlView: View {
                 Text(emberMug.peripheral?.name ?? "")
                     .font(.caption)
                 Spacer()
-                Image(systemName: getBatteryIcon(emberMug.batteryLevel, isCharging: emberMug.isCharging))
+                BatteryView(
+                    display: .both,
+                    batteryLevel: emberMug.batteryLevel,
+                    isCharging: emberMug.isCharging,
+                    textFont: .caption
+                )
             }
 
             HStack {
