@@ -91,11 +91,16 @@ struct GeneralSettingsView: View {
                 }
                 .disabled(appState.notificationsDisabled)
                 
-                Toggle(isOn: appState.$notifyOnLowBattery) {
-                    Text("Notify on low battery (15%)")
+                Picker(selection: appState.$notifyAtBatteryPercentage) {
+                    ForEach(AppState.LowBatteryLevel.allCases, id: \.rawValue) { level in
+                        Text(level.description)
+                            .tag(level)
+                    }
+                } label: {
+                    Text("Notify at battery percentage")
                         .opacity(appState.notificationsDisabled ? 0.5 : 1)
                 }
-                    .disabled(appState.notificationsDisabled)
+                .disabled(appState.notificationsDisabled)
             }
         
             Section {

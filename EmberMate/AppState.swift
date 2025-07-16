@@ -40,15 +40,24 @@ class AppState: ObservableObject {
     @Published var notificationsDisabled = false
     
     @AppStorage("notifyOnTemperatureReached") var notifyOnTemperatureReached: Bool = true
-    @AppStorage("notifyOnLowBattery") var notifyOnLowBattery: Bool = true
+    @AppStorage("notifyAtBatteryPercentage") var notifyAtBatteryPercentage: LowBatteryLevel = .default
     @AppStorage("showBatteryLevelWhenCharging") var showBatteryLevelWhenCharging: Bool = false
-
+    
     private var cancellables: Set<AnyCancellable> = []
 
     init() {
         Task { @MainActor in
+            migrateUserDefaults()
             await requestNotificationAuthorization(provisional: true)
             await updateNotificationsDisabled()
+        }
+    }
+    
+    @MainActor
+    func migrateUserDefaults() {
+        if let oldValue = UserDefaults.standard.object(forKey: "notifyOnLowBattery") as? Bool {
+            self.notifyAtBatteryPercentage = oldValue ? .default : .off
+            UserDefaults.standard.removeObject(forKey: "notifyOnLowBattery")
         }
     }
     
@@ -151,5 +160,36 @@ class Preset: Identifiable, ObservableObject, Codable {
         try container.encode(icon, forKey: .icon)
         try container.encode(name, forKey: .name)
         try container.encode(temperature, forKey: .temperature)
+    }
+}
+
+extension AppState {
+    enum LowBatteryLevel: Int, CaseIterable, CustomStringConvertible {
+        static let `default` = LowBatteryLevel.fifteen
+        
+        case off     = 0
+        case five    = 5
+        case ten     = 10
+        case fifteen = 15
+        case twenty  = 20
+        
+        init?(rawValue: Int) {
+            switch rawValue {
+            case 0: self = .off
+            case 5: self = .five
+            case 10: self = .ten
+            case 15: self = .fifteen
+            case 20: self = .twenty
+            default: self = LowBatteryLevel.default
+            }
+        }
+        
+        var description: String {
+            if self == .off {
+                return "Off"
+            }
+            
+            return getFormattedBatteryLevel(self.rawValue)
+        }
     }
 }
