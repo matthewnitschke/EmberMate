@@ -10,82 +10,170 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Material(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        color: Colors.transparent,
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromRGBO(212, 212, 212, 1),
+                Color.fromRGBO(69, 69, 69, 1)
+              ]
+            )
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(9.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 10,
               children: [
-                Text('EmberCup 2'), 
-                SFIcon(
-                  SFIcons.sf_battery_100percent,
-                  fontSize: 13,
-                  color: Colors.white,
-                )
-              ],
-            ),
-        
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Button(child: SFIcon(SFIcons.sf_chevron_left)),
-                Text('Empty'),
-                Button(child: SFIcon(SFIcons.sf_chevron_right))
-              ],
-            ),
-        
-            Container(
-              padding: EdgeInsets.all(8),
-              height: 100,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(16),
-                      onTap: () {},
-                      child: Container(
-                        // color: Colors.grey,
-                        child: Center(
-                          child: SFIcon(SFIcons.sf_cup_and_saucer),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'EmberCup 2', 
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11
+                      ),
+                    ), 
+                    SFIcon(
+                      SFIcons.sf_battery_100percent,
+                      fontSize: 13,
+                      color: Colors.white,
+                    )
+                  ],
+                ),
+            
+                SizedBox(
+                  height: 100,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Button(
+                        width: 30,
+                        child: SFIcon(
+                          SFIcons.sf_chevron_left,
+                          fontSize: 16,
+                          color: Colors.white,
                         ),
                       ),
-                    )
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Empty', 
+                            style: TextStyle(fontSize: 25, color: Colors.white)
+                          ),
+                          Text(
+                            'Target: 55°',
+                            style: TextStyle(color: Colors.white)
+                          )
+                        ],
+                      ),
+                      Button(
+                        width: 30,
+                        child: SFIcon(
+                          SFIcons.sf_chevron_right,
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      )
+                    ],
                   ),
-                ]
-              )
-            )
-          ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 8,
+                  children: [
+                    Button(
+                      width: 90,
+                      height: 90,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Latte', style: TextStyle(fontSize: 10, color: Colors.white)),
+                            SFIcon(
+                              SFIcons.sf_cup_and_saucer_fill,
+                              color: Colors.white,
+                              fontSize: 26,
+                            ),
+                            Text('52°', style: TextStyle(fontSize: 10, color: Colors.white))
+                          ],
+                        ),
+                      )
+                    ),
+                    Button(
+                      width: 90,
+                      height: 90,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Coffee', style: TextStyle(fontSize: 10, color: Colors.white)),
+                            SFIcon(
+                              SFIcons.sf_mug_fill,
+                              color: Colors.white,
+                              fontSize: 26,
+                            ),
+                            Text('55°', style: TextStyle(fontSize: 10, color: Colors.white))
+                          ],
+                        ),
+                      )
+                    ),
+                  ],
+                ),
+
+                Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: .29), 
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        spacing: 8, 
+                        children: [
+                          SFIcon(SFIcons.sf_timer, color: Colors.white, fontSize: 26),
+                          Text('Timer', style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                      Row(
+                        spacing: 8,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Button(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 9),
+                              child: Text('4:00', style: TextStyle(color: Colors.white)),
+                            )
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                )
+
+                
+            
+
+              ],
+            ),
+          ),
         ),
       )
     );
-    // return MaterialApp(
-    //   title: 'Flutter Demo',
-    //   theme: ThemeData(
-    //     // This is the theme of your application.
-    //     //
-    //     // TRY THIS: Try running your application with "flutter run". You'll see
-    //     // the application has a purple toolbar. Then, without quitting the app,
-    //     // try changing the seedColor in the colorScheme below to Colors.green
-    //     // and then invoke "hot reload" (save your changes or press the "hot
-    //     // reload" button in a Flutter-supported IDE, or press "r" if you used
-    //     // the command line to start the app).
-    //     //
-    //     // Notice that the counter didn't reset back to zero; the application
-    //     // state is not lost during the reload. To reset the state, use hot
-    //     // restart instead.
-    //     //
-    //     // This works for code too, not just values: Most code changes can be
-    //     // tested with just a hot reload.
-    //     colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-    //   ),
-    //   home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    // );
   }
 }
 
