@@ -1,8 +1,8 @@
 import 'package:ember_mate/providers/ember_discovery_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ember_mate/mug_control_page.dart';
-import 'package:ember_mate/connect_mug_page.dart';
+import 'package:ember_mate/pages/mug_control_page.dart';
+import 'package:ember_mate/pages/connect_mug_page.dart';
 import 'package:ember_mate/providers/ember_provider.dart';
 
 void main() {

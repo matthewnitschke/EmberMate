@@ -2,8 +2,8 @@ import 'package:ember_mate/providers/ember_discovery_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sficon/flutter_sficon.dart';
 import 'package:provider/provider.dart';
-import 'package:ember_mate/button.dart';
-import 'package:ember_mate/gradient_background.dart';
+import 'package:ember_mate/components/button.dart';
+import 'package:ember_mate/components/gradient_background.dart';
 import 'package:ember_mate/providers/ember_provider.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -26,7 +26,6 @@ class _ConnectMugPageState extends State<ConnectMugPage> {
 
   @override
   void dispose() {
-    // Stop scanning when leaving page
     context.read<EmberDiscoveryProvider>().stopScanning();
     super.dispose();
   }
@@ -35,7 +34,7 @@ class _ConnectMugPageState extends State<ConnectMugPage> {
     final service = await context.read<EmberDiscoveryProvider>().connect(device);
     if (service == null || !mounted) return;
 
-    await context.read<EmberProvider>().connect(service);
+    await context.read<EmberProvider>().connect(device, service);
 
     if (!mounted) return;
     Navigator.of(context).pop();

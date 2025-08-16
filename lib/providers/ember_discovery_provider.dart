@@ -11,6 +11,8 @@ class EmberDiscoveryProvider extends ChangeNotifier{
   bool get isScanning => _isScanning;
 
   EmberDiscoveryProvider() {
+    FlutterBluePlus.setLogLevel(LogLevel.none);
+    
     FlutterBluePlus.isScanning.listen((isScanning) {
       _isScanning = isScanning;
       notifyListeners();

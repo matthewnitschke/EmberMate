@@ -30,6 +30,9 @@ class EmberProvider extends ChangeNotifier {
   LiquidState get liquidState => _liquidStateChar.value ?? LiquidState.empty;
   TemperatureUnit get temperatureUnit => _temperatureUnitChar.value ?? TemperatureUnit.celsius;
   List<int> get color => _colorChar.value ?? [255, 255, 255, 255];
+
+  String get name => _name;
+  String _name = 'Ember';
   
   set targetTemperature(double value) {
     if (value < 50 || value > 63) return;
@@ -47,7 +50,7 @@ class EmberProvider extends ChangeNotifier {
 
   final _targetTempChar = EmberCharacteristic<double>(
     uuid: "fc540003-236c-4c94-8fa9-944a3e5353fa",
-    stateIndex: 4,
+    updateStates: [4],
     onRead: (data) {
       if (data.length != 2) return 0.0;
       int tempRaw = (data[1] << 8) | data[0];
@@ -64,7 +67,7 @@ class EmberProvider extends ChangeNotifier {
 
   final _currentTempChar = EmberCharacteristic<double>(
     uuid: "fc540002-236c-4c94-8fa9-944a3e5353fa",
-    stateIndex: 5,
+    updateStates: [5],
     onRead: (data) {
       if (data.length != 2) return 0.0;
       int tempRaw = (data[1] << 8) | data[0];
@@ -74,7 +77,7 @@ class EmberProvider extends ChangeNotifier {
 
   final _batteryChar = EmberCharacteristic<int>(
     uuid: "fc540007-236c-4c94-8fa9-944a3e5353fa",
-    stateIndex: 1,
+    updateStates: [1],
     onRead: (data) {
       if (data.isEmpty) return 0;
       return data[0];
@@ -83,16 +86,16 @@ class EmberProvider extends ChangeNotifier {
 
   final _isChargingChar = EmberCharacteristic<bool>(
     uuid: "fc540007-236c-4c94-8fa9-944a3e5353fa",
-    stateIndex: 1,
+    updateStates: [1, 2, 3],
     onRead: (data) {
-      if (data.length != 2) return false;
+      if (data.length < 2) return false;
       return data[1] == 1;
     },
   );
 
   final _liquidStateChar = EmberCharacteristic<LiquidState>(
     uuid: "fc540008-236c-4c94-8fa9-944a3e5353fa",
-    stateIndex: 8,
+    updateStates: [8],
     onRead: (data) {
       if (data.isEmpty) return LiquidState.empty;
       switch (data[0]) {
@@ -137,7 +140,9 @@ class EmberProvider extends ChangeNotifier {
     },
   );
 
-  Future<void> connect(BluetoothService service) async {
+  Future<void> connect(BluetoothDevice device, BluetoothService service) async {
+    _name = device.platformName;
+
     final eventCharacteristic = service.characteristics.firstWhere(
       (c) => c.uuid == Guid("fc540012-236c-4c94-8fa9-944a3e5353fa")
     );
@@ -146,12 +151,12 @@ class EmberProvider extends ChangeNotifier {
       (value) {
         if (value.isEmpty) return;
 
-        final char = EmberCharacteristic.all.firstWhereOrNull(
-          (c) => c.stateIndex == value[0],
+        final char = EmberCharacteristic.all.where(
+          (c) => c.updateStates.contains(value[0])
         );
-        if (char == null) return;
+        if (char.isEmpty) return;
 
-        char.readValue().then((_) => notifyListeners());
+        Future.wait(char.map((c) => c.readValue())).then((_) => notifyListeners());
       }
     );
 
@@ -168,10 +173,9 @@ class EmberProvider extends ChangeNotifier {
   }
 }
 
-
 class EmberCharacteristic<T> {
   final String uuid;
-  final int? stateIndex;
+  final List<int> updateStates;
 
   final T? Function(List<int> data) onRead;
   final List<int> Function(T value)? onWrite;
@@ -186,7 +190,7 @@ class EmberCharacteristic<T> {
   EmberCharacteristic({
     required this.uuid,
     required this.onRead,
-    this.stateIndex,
+    this.updateStates = const [],
     this.onWrite,
   }) {
     _all.add(this);

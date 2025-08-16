@@ -1,5 +1,6 @@
-import 'package:ember_mate/button.dart';
-import 'package:ember_mate/gradient_background.dart';
+import 'package:ember_mate/components/battery_icon.dart';
+import 'package:ember_mate/components/button.dart';
+import 'package:ember_mate/components/gradient_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sficon/flutter_sficon.dart';
 import 'package:provider/provider.dart';
@@ -28,12 +29,8 @@ class MugControlPage extends StatelessWidget {
                       color: Colors.white,
                       fontSize: 11
                     ),
-                  ), 
-                  SFIcon(
-                    SFIcons.sf_battery_100percent,
-                    fontSize: 13,
-                    color: Colors.white,
-                  )
+                  ),
+                  BatteryIcon(),
                 ],
               ),
           
