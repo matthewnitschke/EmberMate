@@ -5,13 +5,15 @@ class Button extends StatelessWidget {
   double? width;
   double? height;
   bool? isSelected;
+  VoidCallback? onTap;
 
   Button({
     super.key, 
     required this.child,
     this.width,
     this.height,
-    this.isSelected
+    this.isSelected,
+    this.onTap,
   });
 
   @override
@@ -23,7 +25,7 @@ class Button extends StatelessWidget {
         color: Colors.black.withValues(alpha: 0.29),
         borderRadius: BorderRadius.circular(8),
         child: InkWell(
-          onTap: () {},
+          onTap: onTap ?? () {},
           highlightColor: Colors.black.withValues(alpha: .7),
           borderRadius: BorderRadius.circular(8),
           splashColor: Colors.transparent,
