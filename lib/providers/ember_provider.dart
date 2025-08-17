@@ -1,14 +1,23 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'dart:async';
 
 enum LiquidState {
-  empty,
-  filling,
-  cooling,
-  heating,
-  stableTemperature;
+  empty(1),
+  filling(2),
+  cooling(4),
+  heating(5),
+  stableTemperature(6);
+
+  const LiquidState(this.value);
+  final int value;
+
+  static LiquidState fromValue(int value) {
+    return LiquidState.values.firstWhere(
+      (state) => state.value == value,
+      orElse: () => LiquidState.empty,
+    );
+  }
 }
 
 enum TemperatureUnit {
@@ -17,202 +26,213 @@ enum TemperatureUnit {
 
   const TemperatureUnit(this.value);
   final int value;
+
+  static TemperatureUnit fromValue(int value) {
+    return TemperatureUnit.values.firstWhere(
+      (unit) => unit.value == value,
+      orElse: () => TemperatureUnit.celsius,
+    );
+  }
 }
 
 class EmberProvider extends ChangeNotifier {
-  StreamSubscription? _eventSubscription;
-  
-  double get targetTemperature => _targetTempChar.value ?? 0.0;
 
-  double get currentTemperature => _currentTempChar.value ?? 0.0;
-  int get batteryLevel => _batteryChar.value ?? 0;
-  bool get isCharging => _isChargingChar.value ?? false;
-  LiquidState get liquidState => _liquidStateChar.value ?? LiquidState.empty;
-  TemperatureUnit get temperatureUnit => _temperatureUnitChar.value ?? TemperatureUnit.celsius;
-  List<int> get color => _colorChar.value ?? [255, 255, 255, 255];
-
-  String get name => _name;
+  int _batteryLevel = 0;
+  bool _isCharging = false;
+  double _currentTemp = 0.0;
+  double _targetTemp = 0.0;
+  LiquidState _liquidState = LiquidState.empty;
+  TemperatureUnit _temperatureUnit = TemperatureUnit.celsius;
+  List<int> _color = [255, 255, 255, 255];
   String _name = 'Ember';
-  
-  set targetTemperature(double value) {
+
+  int get batteryLevel => _batteryLevel;
+  bool get isCharging => _isCharging;
+  double get currentTemp => _currentTemp;
+  double get targetTemp => _targetTemp;
+  LiquidState get liquidState => _liquidState;
+  TemperatureUnit get temperatureUnit => _temperatureUnit;
+  List<int> get color => _color;
+  String get name => _name;
+
+  set targetTemp(double value) {
     if (value < 50 || value > 63) return;
-    _targetTempChar.writeValue(value);
+    _targetTemp = value;
+    _setTargetTemp(value);
     notifyListeners();
   }
+
   set temperatureUnit(TemperatureUnit value) {
-    _temperatureUnitChar.writeValue(value);
+    _temperatureUnit = value;
+    _setTemperatureUnit(value);
     notifyListeners();
   }
+
   set color(List<int> value) {
-    _colorChar.writeValue(value);
+    _color = value;
+    _setColor(value);
     notifyListeners();
   }
 
-  final _targetTempChar = EmberCharacteristic<double>(
-    uuid: "fc540003-236c-4c94-8fa9-944a3e5353fa",
-    updateStates: [4],
-    onRead: (data) {
-      if (data.length != 2) return 0.0;
-      int tempRaw = (data[1] << 8) | data[0];
-      return tempRaw / 100.0;
-    },
-    onWrite: (value) {
-      final temp = (value * 100).toInt();
-      return [
-        temp & 0xFF,
-        (temp >> 8) & 0xFF,
-      ];
-    }
-  );
+  BluetoothCharacteristic? _targetTempCharacteristic;
+  BluetoothCharacteristic? _currentTempCharacteristic;
+  BluetoothCharacteristic? _batteryCharacteristic;
+  BluetoothCharacteristic? _liquidStateCharacteristic;
+  BluetoothCharacteristic? _temperatureUnitCharacteristic;
+  BluetoothCharacteristic? _colorCharacteristic;
+  BluetoothCharacteristic? _eventCharacteristic;
 
-  final _currentTempChar = EmberCharacteristic<double>(
-    uuid: "fc540002-236c-4c94-8fa9-944a3e5353fa",
-    updateStates: [5],
-    onRead: (data) {
-      if (data.length != 2) return 0.0;
-      int tempRaw = (data[1] << 8) | data[0];
-      return tempRaw / 100.0;
-    },
-  );
+  StreamSubscription? _eventSubscription;
 
-  final _batteryChar = EmberCharacteristic<int>(
-    uuid: "fc540007-236c-4c94-8fa9-944a3e5353fa",
-    updateStates: [1],
-    onRead: (data) {
-      if (data.isEmpty) return 0;
-      return data[0];
-    },
-  );
+  void _setTargetTemp(double temp) {
+    if (_targetTempCharacteristic == null) return;
+    
+    final uintVal = (temp * 100).toInt();
+    final byte1 = uintVal & 0xFF;
+    final byte2 = (uintVal >> 8) & 0xFF;
+    
+    final data = [byte1, byte2];
+    _targetTempCharacteristic!.write(data);
+  }
 
-  final _isChargingChar = EmberCharacteristic<bool>(
-    uuid: "fc540007-236c-4c94-8fa9-944a3e5353fa",
-    updateStates: [1, 2, 3],
-    onRead: (data) {
-      if (data.length < 2) return false;
-      return data[1] == 1;
-    },
-  );
+  void _setTemperatureUnit(TemperatureUnit unit) {
+    if (_temperatureUnitCharacteristic == null) return;
+    
+    final data = [unit.value];
+    _temperatureUnitCharacteristic!.write(data);
+  }
 
-  final _liquidStateChar = EmberCharacteristic<LiquidState>(
-    uuid: "fc540008-236c-4c94-8fa9-944a3e5353fa",
-    updateStates: [8],
-    onRead: (data) {
-      if (data.isEmpty) return LiquidState.empty;
-      switch (data[0]) {
-        case 1: return LiquidState.empty;
-        case 2: return LiquidState.filling;
-        case 4: return LiquidState.cooling;
-        case 5: return LiquidState.heating;
-        case 6: return LiquidState.stableTemperature;
-        default: return LiquidState.empty;
-      }
-    },
-  );
-
-  final _temperatureUnitChar = EmberCharacteristic<TemperatureUnit>(
-    uuid: "fc540004-236c-4c94-8fa9-944a3e5353fa",
-    onRead: (data) {
-      if (data.isEmpty) return TemperatureUnit.celsius;
-      switch (data[0]) {
-        case 0: return TemperatureUnit.celsius;
-        case 1: return TemperatureUnit.fahrenheit;
-        default: return TemperatureUnit.celsius;
-      }
-    },
-    onWrite: (value) {
-      return [value.value];
-    },
-  );
-
-  final _colorChar = EmberCharacteristic<List<int>>(
-    uuid: "fc540014-236c-4c94-8fa9-944a3e5353fa",
-    onRead: (data) {
-      if (data.length >= 4) {
-        return [data[0], data[1], data[2], data[3]];
-      }
-      return [255, 255, 255, 255]; // Default white
-    },
-    onWrite: (value) {
-      if (value.length >= 4) {
-        return [value[0], value[1], value[2], value[3]];
-      }
-      return [255, 255, 255, 255];
-    },
-  );
+  void _setColor(List<int> color) {
+    if (_colorCharacteristic == null) return;
+    
+    final red = color.isNotEmpty ? color[0] : 255;
+    final green = color.length > 1 ? color[1] : 255;
+    final blue = color.length > 2 ? color[2] : 255;
+    final alpha = color.length > 3 ? color[3] : 255;
+    
+    final data = [red, green, blue, alpha];
+    _colorCharacteristic!.write(data);
+  }
 
   Future<void> connect(BluetoothDevice device, BluetoothService service) async {
     _name = device.platformName;
-
-    final eventCharacteristic = service.characteristics.firstWhere(
-      (c) => c.uuid == Guid("fc540012-236c-4c94-8fa9-944a3e5353fa")
-    );
-    await eventCharacteristic.setNotifyValue(true);
-    _eventSubscription = eventCharacteristic.onValueReceived.listen(
-      (value) {
-        if (value.isEmpty) return;
-
-        final char = EmberCharacteristic.all.where(
-          (c) => c.updateStates.contains(value[0])
-        );
-        if (char.isEmpty) return;
-
-        Future.wait(char.map((c) => c.readValue())).then((_) => notifyListeners());
+    
+    for (final characteristic in service.characteristics) {
+      switch (characteristic.uuid.toString().toLowerCase()) {
+        case "fc540003-236c-4c94-8fa9-944a3e5353fa":
+          _targetTempCharacteristic = characteristic;
+        case "fc540002-236c-4c94-8fa9-944a3e5353fa":
+          _currentTempCharacteristic = characteristic;
+        case "fc540007-236c-4c94-8fa9-944a3e5353fa":
+          _batteryCharacteristic = characteristic;
+        case "fc540008-236c-4c94-8fa9-944a3e5353fa":
+          _liquidStateCharacteristic = characteristic;
+        case "fc540004-236c-4c94-8fa9-944a3e5353fa":
+          _temperatureUnitCharacteristic = characteristic;
+        case "fc540014-236c-4c94-8fa9-944a3e5353fa":
+          _colorCharacteristic = characteristic;
+        case "fc540012-236c-4c94-8fa9-944a3e5353fa":
+          _eventCharacteristic = characteristic;
+          // Enable notifications for the event characteristic
+          await characteristic.setNotifyValue(true);
+        default:
+          print("Unregistered characteristic ${characteristic.uuid}");
       }
-    );
 
-    for (var char in EmberCharacteristic.all) {
-      char.setup(service);
+      try {
+        await _readCharacteristicValue(characteristic);
+      } catch (e) {
+        print("Error reading characteristic ${characteristic.uuid}: $e");
+      }
     }
+
+    // Set up event listener (mirroring Swift didUpdateValueFor)
+    if (_eventCharacteristic != null) {
+      _eventSubscription = _eventCharacteristic!.onValueReceived.listen(
+        (data) => _handleEventUpdate(data),
+      );
+    }
+
     notifyListeners();
+  }
+
+  Future<void> _readCharacteristicValue(BluetoothCharacteristic? characteristic) async {
+    if (characteristic == null) return;
+    try {
+      final data = await characteristic.read();
+      _updateValueForCharacteristic(characteristic, data);
+    } catch (e) {
+      print("Error reading characteristic ${characteristic.uuid}: $e");
+    }
+  }
+
+  void _updateValueForCharacteristic(BluetoothCharacteristic characteristic, List<int> data) {
+    if (data.isEmpty) return;
+
+    if (characteristic == _targetTempCharacteristic) {
+      if (data.length >= 2) {
+        final temp = (data[1] << 8) | data[0];
+        _targetTemp = temp / 100.0;
+      }
+    } else if (characteristic == _currentTempCharacteristic) {
+      if (data.length >= 2) {
+        final temp = (data[1] << 8) | data[0];
+        _currentTemp = temp / 100.0;
+      }
+    } else if (characteristic == _batteryCharacteristic) {
+      if (data.length >= 2) {
+        _batteryLevel = data[0];
+        _isCharging = data[1] == 1;
+      }
+    } else if (characteristic == _liquidStateCharacteristic) {
+      if (data.isNotEmpty) {
+        _liquidState = LiquidState.fromValue(data[0]);
+      }
+    } else if (characteristic == _temperatureUnitCharacteristic) {
+      if (data.isNotEmpty) {
+        _temperatureUnit = TemperatureUnit.fromValue(data[0]);
+      }
+    } else if (characteristic == _colorCharacteristic) {
+      if (data.length >= 4) {
+        _color = [data[0], data[1], data[2], data[3]];
+      }
+    }
+
+    notifyListeners();
+  }
+
+  void _handleEventUpdate(List<int> data) {
+    if (data.isEmpty) return;
+
+    final state = data[0];
+
+    switch (state) {
+      case 1:
+        _readCharacteristicValue(_batteryCharacteristic!);
+        break;
+      case 2:
+        _isCharging = true;
+        notifyListeners();
+        break;
+      case 3:
+        _isCharging = false;
+        notifyListeners();
+        break;
+      case 4:
+        _readCharacteristicValue(_targetTempCharacteristic);
+        break;
+      case 5:
+        _readCharacteristicValue(_currentTempCharacteristic);
+        break;
+      case 8:
+        _readCharacteristicValue(_liquidStateCharacteristic);
+        break;
+    }
   }
 
   @override
   void dispose() {
     _eventSubscription?.cancel();
     super.dispose();
-  }
-}
-
-class EmberCharacteristic<T> {
-  final String uuid;
-  final List<int> updateStates;
-
-  final T? Function(List<int> data) onRead;
-  final List<int> Function(T value)? onWrite;
-
-  T? value;
-
-  static final _all = <EmberCharacteristic>[];
-  static List<EmberCharacteristic> get all => _all;
-
-  BluetoothCharacteristic? _characteristic;
-
-  EmberCharacteristic({
-    required this.uuid,
-    required this.onRead,
-    this.updateStates = const [],
-    this.onWrite,
-  }) {
-    _all.add(this);
-  }
-
-  Future<void> setup(BluetoothService service) async {
-    _characteristic = service.characteristics.firstWhere(
-      (c) => c.uuid == Guid(uuid),
-    );
-
-    await readValue(); // read the initial value
-  }
-
-  Future<void> readValue() async {
-    value = onRead(await _characteristic!.read());
-  }
-
-  Future<void> writeValue(T value) async {
-    this.value = value;
-
-    if (onWrite == null) return;
-    final data = onWrite!(value);
-    await _characteristic!.write(data);
   }
 }

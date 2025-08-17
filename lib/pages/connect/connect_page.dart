@@ -53,7 +53,6 @@ class _ConnectMugPageState extends State<ConnectMugPage> {
               const Text(
                 'Connect a Device',
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 28,
                 ),
               ),
@@ -67,10 +66,7 @@ class _ConnectMugPageState extends State<ConnectMugPage> {
                     ? const Center(
                         child: Text(
                           'No Ember mugs found',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
+                          style: TextStyle(fontSize: 16),
                         ),
                       )
                     : ListView.builder(
@@ -99,10 +95,7 @@ class _ConnectMugPageState extends State<ConnectMugPage> {
                                     device.platformName.isNotEmpty 
                                         ? device.platformName 
                                         : 'Ember Cup 2',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                    ),
+                                    style: const TextStyle(fontSize: 10),
                                     textAlign: TextAlign.center,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
@@ -133,7 +126,6 @@ class _ConnectMugPageState extends State<ConnectMugPage> {
                       const SizedBox(width: 8),
                       Text(
                         discoveryProvider.isScanning ? 'Scanning...' : 'Refresh',
-                        style: const TextStyle(color: Colors.white),
                       ),
                     ],
                   ),
