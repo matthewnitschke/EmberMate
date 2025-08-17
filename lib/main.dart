@@ -1,8 +1,10 @@
 import 'package:ember_mate/pages/connect/connect_page.dart';
 import 'package:ember_mate/pages/control/control_page.dart';
+import 'package:ember_mate/widgets/settings_widget.dart';
 import 'package:ember_mate/providers/ember_discovery_provider.dart';
 import 'package:ember_mate/providers/app_state_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:ember_mate/providers/ember_provider.dart';
 
@@ -39,12 +41,39 @@ class EmberMateApp extends StatelessWidget {
             decorationColor: Colors.white,
           ),
         ),
-        initialRoute: '/connect',
-        routes: {
-          '/': (context) => const MugControlPage(),
-          '/connect': (context) => const ConnectMugPage(),
+        home: const EmberMateHome(),
+        onGenerateRoute: (settings) {
+          if (settings.name == '/settings') {
+            return MaterialPageRoute(builder: (context) => const SettingsWidget());
+          }
+          return MaterialPageRoute(builder: (context) => const EmberMateHome());
         },
       ),
+    );
+  }
+}
+
+class EmberMateHome extends StatefulWidget {
+  const EmberMateHome({super.key});
+
+  @override
+  State<EmberMateHome> createState() => _EmberMateHomeState();
+}
+
+class _EmberMateHomeState extends State<EmberMateHome> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<EmberProvider>(
+      builder: (context, emberProvider, child) {
+        // Check if we have a connection by looking for the target temp characteristic
+        final isConnected = emberProvider.targetTemp > 0;
+        
+        if (isConnected) {
+          return const MugControlPage();
+        } else {
+          return const ConnectMugPage();
+        }
+      },
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'dart:async';
 
@@ -36,6 +37,7 @@ enum TemperatureUnit {
 }
 
 class EmberProvider extends ChangeNotifier {
+  static const MethodChannel _channel = MethodChannel('ember_mate/menubar');
 
   int _batteryLevel = 0;
   bool _isCharging = false;
@@ -59,6 +61,7 @@ class EmberProvider extends ChangeNotifier {
     if (value < 50 || value > 63) return;
     _targetTemp = value;
     _setTargetTemp(value);
+    _updateMenubarIcon();
     notifyListeners();
   }
 
@@ -153,6 +156,8 @@ class EmberProvider extends ChangeNotifier {
       );
     }
 
+    // Update menubar icon after connection
+    _updateMenubarIcon();
     notifyListeners();
   }
 
@@ -178,11 +183,13 @@ class EmberProvider extends ChangeNotifier {
       if (data.length >= 2) {
         final temp = (data[1] << 8) | data[0];
         _currentTemp = temp / 100.0;
+        _updateMenubarIcon();
       }
     } else if (characteristic == _batteryCharacteristic) {
       if (data.length >= 2) {
         _batteryLevel = data[0];
         _isCharging = data[1] == 1;
+        _updateMenubarIcon();
       }
     } else if (characteristic == _liquidStateCharacteristic) {
       if (data.isNotEmpty) {
@@ -199,6 +206,25 @@ class EmberProvider extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  void _updateMenubarIcon() {
+    try {
+      final temp = _currentTemp;
+      final unit = _temperatureUnit == TemperatureUnit.celsius ? 'C' : 'F';
+      final tempString = '${temp.toStringAsFixed(0)}°$unit';
+      
+      _channel.invokeMethod('updateIcon', {
+        'temperature': tempString,
+        'currentTemp': temp,
+        'targetTemp': _targetTemp,
+        'batteryLevel': _batteryLevel,
+        'isCharging': _isCharging,
+        'liquidState': _liquidState.name,
+      });
+    } catch (e) {
+      print('Error updating menubar icon: $e');
+    }
   }
 
   void _handleEventUpdate(List<int> data) {
