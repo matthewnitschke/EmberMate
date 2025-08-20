@@ -27,10 +27,11 @@ struct TemperatureInput: View {
                     }
                 },
                 set: {
+                    guard let doubleValue = Double($0) else { return }
                     if emberMug.temperatureUnit == .celcius {
-                        value = Double($0)!
+                        value = doubleValue
                     } else {
-                        value = (Double($0)! - 32) * 5/9
+                        value = (doubleValue - 32) * 5/9
                     }
                 }
             )
