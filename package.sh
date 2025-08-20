@@ -3,6 +3,7 @@
 xcodebuild \
     -project "EmberMate.xcodeproj" \
     -scheme "EmberMate" \
+    -destination "generic/platform=macOS" \
     archive \
     CODE_SIGN_IDENTITY="-" \
     -archivePath "build/EmberMate.xcarchive"
@@ -20,5 +21,7 @@ xcodebuild \
     -exportPath "build" \
     -exportOptionsPlist "exportOptions.plist"
 
+# Remove existing DMG if it exists
+rm -f "EmberMate 1.0.dmg"
 
 create-dmg --dmg-title='EmberMate' 'build/EmberMate.app' ./
