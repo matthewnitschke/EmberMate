@@ -55,7 +55,11 @@ struct ember_mateApp: App {
                 self.statusItem = statusItem
 
                 NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { event in
-                    let contextMenu = ContextMenu(bluetoothManager: bluetoothManager, emberMug: emberMug, openSettings: openSettings)
+                    let contextMenu = ContextMenu(
+                        bluetoothManager: bluetoothManager,
+                        emberMug: emberMug,
+                        openSettings: openSettings
+                    )
 
                     statusItem.menu = contextMenu.menu
                     statusItem.button?.performClick(nil)

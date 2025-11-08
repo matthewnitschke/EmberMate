@@ -25,20 +25,46 @@ class ContextMenu: NSObject, NSMenuDelegate {
         self.openSettings = openSettings
 
         super.init()
+        
+        let aboutMenuItem = NSMenuItem(
+            title: "About",
+            action: #selector(aboutClicked(_:)),
+            keyEquivalent: ""
+        )
+        aboutMenuItem.target = self
+        menu.addItem(aboutMenuItem)
 
-        let preferencesMenuItem = NSMenuItem(title: "Preferences", action: #selector(preferencesClicked(_:)), keyEquivalent: "")
+        let preferencesMenuItem = NSMenuItem(
+            title: "Preferences",
+            action: #selector(preferencesClicked(_:)),
+            keyEquivalent: ",",
+        )
         preferencesMenuItem.target = self
         menu.addItem(preferencesMenuItem)
+        
+        menu.addItem(NSMenuItem.separator())
 
-        menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.shared.terminate(_:)), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(
+            title: "Quit",
+            action: #selector(NSApplication.shared.terminate(_:)),
+            keyEquivalent: "Q"
+        ))
 
         // Set the menu delegate
         menu.delegate = self
+    }
+    
+    @objc open func aboutClicked(_ sender: NSMenuItem) {
+        showAboutWindow()
     }
 
     @objc open func preferencesClicked(_ sender: NSMenuItem) {
         self.openSettings()
         NSApp.activate(ignoringOtherApps: true)
+    }
+    
+    @objc open func checkForUpdatesClicked(_ sender: NSMenuItem) {
+        print("CHECKING")
     }
 
     @objc open func disconnectClicked(_ sender: NSMenuItem) {

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1A0489DA2B1FEF1100426D46 /* MenuBarExtraAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 1A0489D92B1FEF1100426D46 /* MenuBarExtraAccess */; };
 		1A0489DC2B2022B000426D46 /* ContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0489DB2B2022B000426D46 /* ContextMenu.swift */; };
+		1A30CCB42EBFE19F00F51310 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30CCB32EBFE19A00F51310 /* AboutView.swift */; };
 		1A31E58A2B1ED18A0082AD12 /* ember_mateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A31E5892B1ED18A0082AD12 /* ember_mateApp.swift */; };
 		1A31E58E2B1ED18B0082AD12 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A31E58D2B1ED18B0082AD12 /* Assets.xcassets */; };
 		1A31E5912B1ED18B0082AD12 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A31E5902B1ED18B0082AD12 /* Preview Assets.xcassets */; };
@@ -32,6 +33,7 @@
 
 /* Begin PBXFileReference section */
 		1A0489DB2B2022B000426D46 /* ContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenu.swift; sourceTree = "<group>"; };
+		1A30CCB32EBFE19A00F51310 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		1A31E5862B1ED18A0082AD12 /* EmberMate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmberMate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A31E5892B1ED18A0082AD12 /* ember_mateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ember_mateApp.swift; sourceTree = "<group>"; };
 		1A31E58D2B1ED18B0082AD12 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				1AD754472B1ED69E00E54851 /* ConnectMugView.swift */,
 				1A31E5982B1ED1B00082AD12 /* AppView.swift */,
 				9ACBA62A2E215F9B00D699B7 /* BatteryView.swift */,
+				1A30CCB32EBFE19A00F51310 /* AboutView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -226,6 +229,7 @@
 				1A5DCBF22D488278002A1504 /* PresetEntry.swift in Sources */,
 				1A31E59D2B1ED1E60082AD12 /* EmberMug.swift in Sources */,
 				1AE494212B1FE69D0097A4F1 /* MugControlView.swift in Sources */,
+				1A30CCB42EBFE19F00F51310 /* AboutView.swift in Sources */,
 				9ACBA62B2E215F9D00D699B7 /* BatteryView.swift in Sources */,
 				1A86E97C2B32A85A00ED0696 /* IconButton.swift in Sources */,
 				1A42A7472B269DC400233E50 /* AppState.swift in Sources */,
@@ -372,7 +376,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.7.2;
 				DEVELOPMENT_ASSET_PATHS = "\"EmberMate/Preview Content\"";
 				DEVELOPMENT_TEAM = 2UUHVMK45C;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -411,7 +415,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.7.2;
 				DEVELOPMENT_ASSET_PATHS = "\"EmberMate/Preview Content\"";
 				DEVELOPMENT_TEAM = 2UUHVMK45C;
 				ENABLE_HARDENED_RUNTIME = YES;
