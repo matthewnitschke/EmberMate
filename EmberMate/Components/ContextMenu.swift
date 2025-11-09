@@ -59,12 +59,8 @@ class ContextMenu: NSObject, NSMenuDelegate {
     }
 
     @objc open func preferencesClicked(_ sender: NSMenuItem) {
-        self.openSettings()
         NSApp.activate(ignoringOtherApps: true)
-    }
-    
-    @objc open func checkForUpdatesClicked(_ sender: NSMenuItem) {
-        print("CHECKING")
+        self.openSettings()
     }
 
     @objc open func disconnectClicked(_ sender: NSMenuItem) {

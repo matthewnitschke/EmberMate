@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct AboutView: View {
-    
     @State var isCheckingForUpdates: Bool = false
     @State var latestVersion: String?
     
@@ -27,6 +26,7 @@ struct AboutView: View {
             HStack(spacing: 1.5) {
                 Text("Made with").font(.footnote)
                 Image(systemName: "heart.fill")
+                    .foregroundColor(.red)
                     .font(.footnote)
                 Text("by").font(.footnote)
                 Link("Matthew Nitschke", destination: URL(string: "https://github.com/matthewnitschke")!).font(.footnote)
@@ -75,6 +75,8 @@ func showAboutWindow() {
     window.title = "About EmberMate"
     window.center()
     window.contentView = NSHostingView(rootView: AboutView())
-    window.makeKeyAndOrderFront(nil)
     window.isReleasedWhenClosed = false
+    
+    NSApp.activate(ignoringOtherApps: true)
+    window.makeKeyAndOrderFront(nil)
 }
