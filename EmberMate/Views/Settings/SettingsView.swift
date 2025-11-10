@@ -12,7 +12,6 @@ import LaunchAtLogin
 import UserNotifications
 
 struct SettingsView: View {
-    @State var internalTime: String?
 
     var body: some View {
         TabView {
@@ -101,6 +100,7 @@ struct GeneralSettingsView: View {
                         .opacity(appState.notificationsDisabled ? 0.5 : 1)
                 }
                 .disabled(appState.notificationsDisabled)
+                
             }
         
             Section {

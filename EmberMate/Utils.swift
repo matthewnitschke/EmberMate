@@ -73,3 +73,33 @@ func getColor(_ red: Int, _ green: Int, _ blue: Int) -> Color {
 func getColor(_ red: Double, _ green: Double, _ blue: Double) -> Color {
     return Color(red: red / 255, green: green / 255, blue: blue / 255)
 }
+
+extension Bundle {
+    var appVersion: String {
+        infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+    }
+
+    var buildNumber: String {
+        infoDictionary?["CFBundleVersion"] as? String ?? "Unknown"
+    }
+}
+
+func getLatestVersion() async -> String? {
+    let url = URL(string: "https://api.github.com/repos/matthewnitschke/EmberMate/releases/latest")!
+
+    do {
+        let (data, _) = try await URLSession.shared.data(from: url)
+        if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+           var name = json["name"] as? String {
+            
+            if name.hasPrefix("v") {
+                name = String(name.dropFirst())
+            }
+            
+            return name
+        }
+    } catch {
+        print("Error fetching data:", error)
+    }
+    return nil
+}
