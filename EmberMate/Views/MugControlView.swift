@@ -78,6 +78,8 @@ struct MugControlView: View {
             if !appState.timers.isEmpty {
                 TimerView()
             }
+            
+    
 
         }.padding(10).background(LinearGradient(
             colors: getBackgroundGradientForMugState(),

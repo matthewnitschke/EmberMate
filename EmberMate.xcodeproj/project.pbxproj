@@ -23,6 +23,7 @@
 		1A5DCBF22D488278002A1504 /* PresetEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5DCBF12D488278002A1504 /* PresetEntry.swift */; };
 		1A86E97C2B32A85A00ED0696 /* IconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A86E97B2B32A85A00ED0696 /* IconButton.swift */; };
 		1AA35E2C2B22CC0E00B144C0 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA35E2B2B22CC0E00B144C0 /* Utils.swift */; };
+		1AB9B4322EC7DEFE003183B3 /* BatteryIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9B4312EC7DEF8003183B3 /* BatteryIndicator.swift */; };
 		1AD754482B1ED69E00E54851 /* ConnectMugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD754472B1ED69E00E54851 /* ConnectMugView.swift */; };
 		1AD8485A2D46C4C000AD844D /* TemperatureInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD848592D46C4B600AD844D /* TemperatureInput.swift */; };
 		1AE494212B1FE69D0097A4F1 /* MugControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE494202B1FE69D0097A4F1 /* MugControlView.swift */; };
@@ -49,6 +50,7 @@
 		1A5DCBF12D488278002A1504 /* PresetEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetEntry.swift; sourceTree = "<group>"; };
 		1A86E97B2B32A85A00ED0696 /* IconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconButton.swift; sourceTree = "<group>"; };
 		1AA35E2B2B22CC0E00B144C0 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		1AB9B4312EC7DEF8003183B3 /* BatteryIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryIndicator.swift; sourceTree = "<group>"; };
 		1AD754472B1ED69E00E54851 /* ConnectMugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectMugView.swift; sourceTree = "<group>"; };
 		1AD848592D46C4B600AD844D /* TemperatureInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureInput.swift; sourceTree = "<group>"; };
 		1AE494202B1FE69D0097A4F1 /* MugControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MugControlView.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 		1A42A7412B2696CC00233E50 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				1AB9B4312EC7DEF8003183B3 /* BatteryIndicator.swift */,
 				1A42A7422B2697CF00233E50 /* TemperaturePresetButton.swift */,
 				1A0489DB2B2022B000426D46 /* ContextMenu.swift */,
 				1A42A7442B269A3900233E50 /* TimerView.swift */,
@@ -229,6 +232,7 @@
 				1A5DCBF22D488278002A1504 /* PresetEntry.swift in Sources */,
 				1A31E59D2B1ED1E60082AD12 /* EmberMug.swift in Sources */,
 				1AE494212B1FE69D0097A4F1 /* MugControlView.swift in Sources */,
+				1AB9B4322EC7DEFE003183B3 /* BatteryIndicator.swift in Sources */,
 				1A30CCB42EBFE19F00F51310 /* AboutView.swift in Sources */,
 				9ACBA62B2E215F9D00D699B7 /* BatteryView.swift in Sources */,
 				1A86E97C2B32A85A00ED0696 /* IconButton.swift in Sources */,
