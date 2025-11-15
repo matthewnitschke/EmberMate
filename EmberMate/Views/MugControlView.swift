@@ -78,6 +78,13 @@ struct MugControlView: View {
             if !appState.timers.isEmpty {
                 TimerView()
             }
+            
+            if appState.automaticallyCheckForUpdates {
+                Link(
+                    "Update Available",
+                    destination: URL(string: "https://github.com/matthewnitschke/EmberMate/releases/latest")!
+                ).font(.footnote)
+            }
 
         }.padding(10).background(LinearGradient(
             colors: getBackgroundGradientForMugState(),

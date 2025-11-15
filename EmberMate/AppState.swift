@@ -13,11 +13,9 @@ import UserNotifications
 class AppState: ObservableObject {
     var timer: Timer?
 
-    // this value is not persisted, only published
     @Published var selectedPreset: Preset?
-
     @Published var countdown: Int?
-
+    
     @AppStorage("timers") var timers: [String] = ["4:00", "5:00", "6:00"]
     @AppStorage("presets") var presets: [Preset] = [
         Preset(
@@ -42,6 +40,9 @@ class AppState: ObservableObject {
     @AppStorage("notifyOnTemperatureReached") var notifyOnTemperatureReached: Bool = true
     @AppStorage("notifyAtBatteryPercentage") var notifyAtBatteryPercentage: LowBatteryLevel = .default
     @AppStorage("showBatteryLevelWhenCharging") var showBatteryLevelWhenCharging: Bool = false
+    
+    @AppStorage("automaticallyCheckForUpdates") var automaticallyCheckForUpdates: Bool = true
+    
     
     private var cancellables: Set<AnyCancellable> = []
 
