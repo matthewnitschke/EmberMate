@@ -55,15 +55,21 @@ struct ember_mateApp: App {
                 self.statusItem = statusItem
 
                 NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { event in
-                    let contextMenu = ContextMenu(
-                        bluetoothManager: bluetoothManager,
-                        emberMug: emberMug,
-                        openSettings: openSettings
-                    )
+                    // if it's open, close the AppView window first
+                    self.isMenuPresented = false
+                    
+                    // Small delay to ensure the window is closed before showing menu
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        let contextMenu = ContextMenu(
+                            bluetoothManager: bluetoothManager,
+                            emberMug: emberMug,
+                            openSettings: openSettings
+                        )
 
-                    statusItem.menu = contextMenu.menu
-                    statusItem.button?.performClick(nil)
-                    statusItem.menu = nil
+                        statusItem.menu = contextMenu.menu
+                        statusItem.button?.performClick(nil)
+                        statusItem.menu = nil
+                    }
 
                     return event
                 }
