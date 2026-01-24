@@ -93,6 +93,7 @@ struct ember_mateApp: App {
 private struct OpenSettingsBackportKey: EnvironmentKey {
     static let defaultValue: () -> Void = {
         NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        NSApp.activate(ignoringOtherApps: true)
     }
 }
 
@@ -102,6 +103,7 @@ extension EnvironmentValues {
             if #available(macOS 14.0, *) {
                 return { [openSettings] in
                     openSettings()
+                    NSApp.activate(ignoringOtherApps: true)
                 }
             } else {
                 return self[OpenSettingsBackportKey.self]
