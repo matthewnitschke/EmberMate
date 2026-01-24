@@ -12,10 +12,17 @@ struct AppView: View {
     @EnvironmentObject private var bluetoothManager: BluetoothManager
 
     var body: some View {
-        switch bluetoothManager.state {
-        case .connected: MugControlView()
-        case .disconnected, .connecting: ConnectMugView()
-        case .reConnecting: Text("Device Lost, Searching...").padding()
+        Group {
+            switch bluetoothManager.state {
+            case .connected: MugControlView()
+            case .disconnected, .connecting: ConnectMugView()
+            case .reConnecting: Text("Device Lost, Searching...").padding()
+            }
+        }
+        .contextMenu {
+            Button("Quit") {
+                NSApp.terminate(nil)
+            }
         }
     }
 }
