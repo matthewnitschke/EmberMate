@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1A0489DA2B1FEF1100426D46 /* MenuBarExtraAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 1A0489D92B1FEF1100426D46 /* MenuBarExtraAccess */; };
 		1A0489DC2B2022B000426D46 /* ContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0489DB2B2022B000426D46 /* ContextMenu.swift */; };
 		1A30CCB42EBFE19F00F51310 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30CCB32EBFE19A00F51310 /* AboutView.swift */; };
 		1A31E58A2B1ED18A0082AD12 /* ember_mateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A31E5892B1ED18A0082AD12 /* ember_mateApp.swift */; };
@@ -63,7 +62,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AF9BE762B2E3BCE002C930D /* LaunchAtLogin in Frameworks */,
-				1A0489DA2B1FEF1100426D46 /* MenuBarExtraAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -164,7 +162,6 @@
 			);
 			name = EmberMate;
 			packageProductDependencies = (
-				1A0489D92B1FEF1100426D46 /* MenuBarExtraAccess */,
 				1AF9BE752B2E3BCE002C930D /* LaunchAtLogin */,
 			);
 			productName = EmberMate;
@@ -196,7 +193,6 @@
 			);
 			mainGroup = 1A31E57D2B1ED18A0082AD12;
 			packageReferences = (
-				1A0489D82B1FEF1100426D46 /* XCRemoteSwiftPackageReference "MenuBarExtraAccess" */,
 				1AF9BE742B2E3BCE002C930D /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
 			);
 			productRefGroup = 1A31E5872B1ED18A0082AD12 /* Products */;
@@ -464,14 +460,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		1A0489D82B1FEF1100426D46 /* XCRemoteSwiftPackageReference "MenuBarExtraAccess" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/orchetect/MenuBarExtraAccess";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		1AF9BE742B2E3BCE002C930D /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin-Modern";
@@ -483,11 +471,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		1A0489D92B1FEF1100426D46 /* MenuBarExtraAccess */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1A0489D82B1FEF1100426D46 /* XCRemoteSwiftPackageReference "MenuBarExtraAccess" */;
-			productName = MenuBarExtraAccess;
-		};
 		1AF9BE752B2E3BCE002C930D /* LaunchAtLogin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1AF9BE742B2E3BCE002C930D /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */;
