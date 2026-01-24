@@ -25,14 +25,14 @@ struct ember_mateApp: App {
 
 // MARK: - AppDelegate with NSStatusItem
 
-class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate {
     var emberMug: EmberMug!
     var bluetoothManager: BluetoothManager!
     var appState: AppState!
     private var notificationAdapter: NotificationAdapter!
     
     private var statusItem: NSStatusItem!
-    private var popover: NSPopover!
+    private var statusWindow: StatusItemWindow!
     private var contextMenuHandler: ContextMenu!
     
     private var cancellables = Set<AnyCancellable>()
@@ -49,7 +49,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         setupStatusItem()
-        setupPopover()
+        setupStatusWindow()
         setupObservers()
     }
     
@@ -79,17 +79,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     }
     
     private func handleLeftClick() {
-        if popover.isShown {
-            closePopover()
+        if statusWindow.isVisible {
+            closeStatusWindow()
         } else {
-            showPopover()
+            showStatusWindow()
         }
     }
     
     private func handleRightClick() {
-        // Close popover if open
-        if popover.isShown {
-            closePopover()
+        // Close window if open
+        if statusWindow.isVisible {
+            closeStatusWindow()
         }
         
         // Show context menu
@@ -104,46 +104,49 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         statusItem.menu = nil
     }
     
-    // MARK: - Popover Setup
+    // MARK: - Status Window Setup
     
-    private func setupPopover() {
-        popover = NSPopover()
-        popover.contentSize = NSSize(width: 280, height: 320)
-        popover.behavior = .transient
-        popover.delegate = self
-        
+    private func setupStatusWindow() {
         let contentView = AppView()
             .environmentObject(emberMug)
             .environmentObject(appState)
             .environmentObject(bluetoothManager)
         
-        popover.contentViewController = NSHostingController(rootView: contentView)
+        statusWindow = StatusItemWindow(contentView: contentView)
     }
     
-    private func showPopover() {
-        guard let button = statusItem.button else { return }
+    private func showStatusWindow() {
+        guard let button = statusItem.button,
+              let buttonWindow = button.window else { return }
+        
+        // Get the button's frame in screen coordinates
+        let buttonRect = button.convert(button.bounds, to: nil)
+        let screenRect = buttonWindow.convertToScreen(buttonRect)
+        
+        // Position window centered below the button
+        let windowSize = statusWindow.frame.size
+        let x = screenRect.midX - (windowSize.width / 2)
+        let y = screenRect.minY - windowSize.height // 4pt gap below menu bar
+        
+        statusWindow.setFrameOrigin(NSPoint(x: x, y: y))
         
         NSApp.activate(ignoringOtherApps: true)
-        popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+        statusWindow.makeKeyAndOrderFront(nil)
         
-        // Add event monitor to close popover when clicking outside
+        // Add event monitor to close window when clicking outside
         eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
-            self?.closePopover()
+            guard let self = self else { return }
+            
+            // Check if click is outside the window
+            if !self.statusWindow.frame.contains(NSEvent.mouseLocation) {
+                self.closeStatusWindow()
+            }
         }
     }
     
-    private func closePopover() {
-        popover.performClose(nil)
+    private func closeStatusWindow() {
+        statusWindow.orderOut(nil)
         
-        if let monitor = eventMonitor {
-            NSEvent.removeMonitor(monitor)
-            eventMonitor = nil
-        }
-    }
-    
-    // MARK: - NSPopoverDelegate
-    
-    func popoverDidClose(_ notification: Notification) {
         if let monitor = eventMonitor {
             NSEvent.removeMonitor(monitor)
             eventMonitor = nil
@@ -229,4 +232,65 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     private func openSettings() {
         NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
     }
+}
+
+// MARK: - Status Item Window
+
+class StatusItemWindow: NSPanel {
+    static let windowSize = NSSize(width: 306, height: 290)
+    
+    init<Content: View>(contentView: Content) {
+        let size = StatusItemWindow.windowSize
+        
+        super.init(
+            contentRect: NSRect(origin: .zero, size: size),
+            styleMask: [.nonactivatingPanel, .fullSizeContentView],
+            backing: .buffered,
+            defer: false
+        )
+        
+        // Window behavior
+        self.isFloatingPanel = true
+        self.level = .statusBar
+        self.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        self.isMovableByWindowBackground = false
+        self.hidesOnDeactivate = false
+        
+        // Make it look like a floating panel
+        self.isOpaque = false
+        self.backgroundColor = .clear
+        
+        // Host the SwiftUI view with rounded corners and background
+        let hostingView = NSHostingView(rootView:
+            contentView
+                .frame(width: size.width, height: size.height)
+                .background(VisualEffectBackground())
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+        )
+        
+        self.contentView = hostingView
+    }
+    
+    // Allow the window to become key so it can receive keyboard events
+    override var canBecomeKey: Bool { true }
+    
+    // Close the window when it loses focus
+    override func resignKey() {
+        super.resignKey()
+        self.orderOut(nil)
+    }
+}
+
+// MARK: - Visual Effect Background
+
+struct VisualEffectBackground: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.material = .popover
+        view.blendingMode = .behindWindow
+        view.state = .active
+        return view
+    }
+    
+    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {}
 }
