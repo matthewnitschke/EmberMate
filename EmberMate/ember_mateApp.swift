@@ -13,12 +13,9 @@ struct ember_mateApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
+        // Settings scene - not shown automatically, only when explicitly opened
         Settings {
-            SettingsView()
-                .frame(width: 400, height: 510)
-                .environmentObject(appDelegate.emberMug)
-                .environmentObject(appDelegate.appState)
-                .environmentObject(appDelegate.bluetoothManager)
+            EmptyView()
         }
     }
 }
@@ -34,6 +31,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private var statusWindow: StatusItemWindow!
     private var contextMenuHandler: ContextMenu!
+    private var settingsWindow: NSWindow?
     
     private var cancellables = Set<AnyCancellable>()
     private var eventMonitor: Any?
@@ -229,8 +227,39 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return "\(minutes)min"
     }
     
-    private func openSettings() {
-        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+    func openSettings() {
+        closeStatusWindow()
+        
+        NSApp.activate(ignoringOtherApps: true)
+        
+        // If settings window already exists, just show it
+        if let window = settingsWindow {
+            window.makeKeyAndOrderFront(nil)
+            return
+        }
+        
+        // Create settings window
+        let settingsSize = NSSize(width: 400, height: 510)
+        let settingsView = SettingsView()
+            .frame(width: settingsSize.width, height: settingsSize.height)
+            .environmentObject(emberMug)
+            .environmentObject(appState)
+            .environmentObject(bluetoothManager)
+        
+        let window = NSWindow(
+            contentRect: NSRect(origin: .zero, size: settingsSize),
+            styleMask: [.titled, .closable],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "Settings"
+        window.contentViewController = NSHostingController(rootView: settingsView)
+        window.setContentSize(settingsSize)
+        window.center()
+        window.isReleasedWhenClosed = false
+        
+        self.settingsWindow = window
+        window.makeKeyAndOrderFront(nil)
     }
 }
 
