@@ -25,14 +25,6 @@ class ContextMenu: NSObject, NSMenuDelegate {
         self.openSettings = openSettings
 
         super.init()
-        
-        let aboutMenuItem = NSMenuItem(
-            title: "About",
-            action: #selector(aboutClicked(_:)),
-            keyEquivalent: ""
-        )
-        aboutMenuItem.target = self
-        menu.addItem(aboutMenuItem)
 
         let preferencesMenuItem = NSMenuItem(
             title: "Preferences",
@@ -54,10 +46,6 @@ class ContextMenu: NSObject, NSMenuDelegate {
         menu.delegate = self
     }
     
-    @objc open func aboutClicked(_ sender: NSMenuItem) {
-        showAboutWindow()
-    }
-
     @objc open func preferencesClicked(_ sender: NSMenuItem) {
         NSApp.activate(ignoringOtherApps: true)
         self.openSettings()

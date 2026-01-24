@@ -19,6 +19,8 @@ struct SettingsView: View {
                 .tabItem { Label("General", systemImage: "gear") }
             PresetsSettingsView()
                 .tabItem { Label("Presets", systemImage: "square.and.arrow.down") }
+            AboutSettingsView()
+                .tabItem { Label("About", systemImage: "info.circle") }
         }
         .navigationTitle("Settings")
     }
@@ -179,6 +181,70 @@ struct PresetsSettingsView: View {
 
         }
         .formStyle(.grouped)
+    }
+}
+
+struct AboutSettingsView: View {
+    @State var isCheckingForUpdates: Bool = false
+    @State var latestVersion: String?
+    
+    var body: some View {
+        Form {
+            Section {
+                HStack {
+                    Spacer()
+                    VStack(spacing: 9) {
+                        Image(nsImage: NSApp.applicationIconImage!)
+                            .resizable()
+                            .frame(width: 64, height: 64)
+                        
+                        Text("EmberMate")
+                            .font(.title)
+                        
+                        Text("Version \(Bundle.main.appVersion)")
+                            .font(.footnote)
+                        
+                        HStack(spacing: 1.5) {
+                            Text("Made with").font(.footnote)
+                            Image(systemName: "heart.fill")
+                                .foregroundColor(.red)
+                                .font(.footnote)
+                            Text("by").font(.footnote)
+                            Link("Matthew Nitschke", destination: URL(string: "https://github.com/matthewnitschke")!).font(.footnote)
+                        }
+                    }
+                    Spacer()
+                }
+            }
+            
+            Section {
+                if (latestVersion != nil) {
+                    if (latestVersion == Bundle.main.appVersion) {
+                        Text("No updates available")
+                    } else {
+                        HStack(spacing: 1.5) {
+                            Text("Update available! Click")
+                            Link("here", destination: URL(string: "https://github.com/matthewnitschke/EmberMate/releases/latest")!)
+                            Text("to download")
+                        }
+                    }
+                } else {
+                    Button(
+                        isCheckingForUpdates ? "Checking for Updates..." : "Check for Updates"
+                    ) {
+                        checkForUpdates()
+                    }
+                }
+            }
+        }
+        .formStyle(.grouped)
+    }
+    
+    func checkForUpdates() {
+        isCheckingForUpdates = true
+        Task {
+            latestVersion = await getLatestVersion()
+        }
     }
 }
 
