@@ -6,18 +6,12 @@
 //
 
 import SwiftUI
-import MenuBarExtraAccess
 
 @main
 struct ember_mateApp: App {
     @ObservedObject private var emberMug: EmberMug
     @ObservedObject private var bluetoothManager: BluetoothManager
     @ObservedObject private var appState: AppState
-
-    @State private var isMenuPresented = false
-    @State private var statusItem: NSStatusItem?
-    
-    @Environment(\.openSettings_backport) private var openSettings
 
     private var notificationAdapter: NotificationAdapter
 
@@ -48,30 +42,6 @@ struct ember_mateApp: App {
                     Text(getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit))
                 } else if (bluetoothManager.state == .connected && emberMug.liquidState == .empty && emberMug.batteryLevel != 100 && emberMug.isCharging && appState.showBatteryLevelWhenCharging) {
                     Text(getFormattedBatteryLevel(emberMug.batteryLevel))
-                }
-            }
-        }.menuBarExtraAccess(isPresented: $isMenuPresented) { statusItem in
-            if (self.statusItem == nil) {
-                self.statusItem = statusItem
-
-                NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { event in
-                    // if it's open, close the AppView window first
-                    self.isMenuPresented = false
-                    
-                    // Small delay to ensure the window is closed before showing menu
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                        let contextMenu = ContextMenu(
-                            bluetoothManager: bluetoothManager,
-                            emberMug: emberMug,
-                            openSettings: openSettings
-                        )
-
-                        statusItem.menu = contextMenu.menu
-                        statusItem.button?.performClick(nil)
-                        statusItem.menu = nil
-                    }
-
-                    return event
                 }
             }
         }.menuBarExtraStyle(.window)
@@ -123,15 +93,17 @@ struct ember_mateApp: App {
 private struct OpenSettingsBackportKey: EnvironmentKey {
     static let defaultValue: () -> Void = {
         NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        NSApp.activate(ignoringOtherApps: true)
     }
 }
 
 extension EnvironmentValues {
-    fileprivate var openSettings_backport: () -> Void {
+    var openSettings_backport: () -> Void {
         get {
             if #available(macOS 14.0, *) {
                 return { [openSettings] in
                     openSettings()
+                    NSApp.activate(ignoringOtherApps: true)
                 }
             } else {
                 return self[OpenSettingsBackportKey.self]

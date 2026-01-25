@@ -12,6 +12,9 @@ import UserNotifications
 struct MugControlView: View {
     @EnvironmentObject private var emberMug: EmberMug
     @EnvironmentObject private var appState: AppState
+    
+    @Environment(\.openSettings_backport) private var openSettings
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack {
@@ -25,6 +28,12 @@ struct MugControlView: View {
                     isCharging: emberMug.isCharging,
                     textFont: .caption
                 )
+                Button(action: {
+                    dismiss()
+                    openSettings()
+                }) {
+                    Image(systemName: "gearshape.fill")
+                }.buttonStyle(PlainButtonStyle())
             }
 
             HStack {
