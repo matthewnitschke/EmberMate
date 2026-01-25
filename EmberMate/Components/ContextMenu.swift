@@ -9,7 +9,6 @@ import Foundation
 
 import Cocoa
 import UserNotifications
-import SwiftUICore
 import SwiftUI
 
 class ContextMenu: NSObject, NSMenuDelegate {
