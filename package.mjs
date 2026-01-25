@@ -10,13 +10,13 @@
  * Execution: `$ ./package.mjs`
  */
 
-const currentVersion = (await $`agvtool what-version -terse`).text().trim()
+const currentVersion = (await $`grep -m 1 "MARKETING_VERSION = " ./EmberMate.xcodeproj/project.pbxproj | sed -E 's/.*MARKETING_VERSION = ([0-9.]+);.*/\\1/'`).text().trim()
 
 const shouldUpdate = (await question(`Current project version is ${currentVersion}. Would you like to update this? (Y/n): `)).trim().toLowerCase()
 if (shouldUpdate == '' || shouldUpdate == 'y') {
   const newVersion = (await question(`Enter new version: `)).trim()
-  await $`agvtool new-version ${newVersion}`
-  await $`agvtool new-marketing-version ${newVersion}`
+
+  await $`sed -i '' "s/MARKETING_VERSION = .*;/MARKETING_VERSION = ${newVersion};/" ./EmberMate.xcodeproj/project.pbxproj`
 }
 
 await spinner('Building Project', () => $`
