@@ -129,7 +129,7 @@ struct MugControlView: View {
         if (currentTemp <= 50) {
             val = 0.0
         } else if (currentTemp >= 63) {
-            val = 13
+            val = 13.0
         } else {
             val = Double(currentTemp - 50)
         }
