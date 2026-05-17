@@ -41,7 +41,6 @@ class AppState: ObservableObject {
     
     @AppStorage("notifyOnTemperatureReached") var notifyOnTemperatureReached: Bool = true
     @AppStorage("notifyAtBatteryPercentage") var notifyAtBatteryPercentage: LowBatteryLevel = .default
-    @AppStorage("showBatteryLevelWhenCharging") var showBatteryLevelWhenCharging: Bool = false
     
     private var cancellables: Set<AnyCancellable> = []
 
