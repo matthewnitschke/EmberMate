@@ -47,20 +47,18 @@ struct MugSettingsView: View {
                     }
                     .popover(isPresented: $showMugPicker, arrowEdge: .trailing) {
                         VStack(alignment: .leading, spacing: 0) {
-                            Text("Available Mugs")
-                                .font(.headline)
-                                .padding(.horizontal)
-                                .padding(.top, 8)
-                                .padding(.bottom, 4)
+                            HStack {
+                                Text("Available Mugs")
+                                    .font(.subheadline)
+                                Spacer()
+                                ProgressView()
+                                    .scaleEffect(0.5)
+                            }
+                            .padding(.leading, 8)
+//                            .padding(.top, 8)
+//                            .padding(.bottom, 4)
 
                             Divider()
-
-                            HStack {
-                                Spacer()
-                                ProgressView("Searching...")
-                                    .scaleEffect(0.8)
-                                Spacer()
-                            }
 
                             List {
                                 ForEach(bluetoothManager.peripherals.filter { $0 != emberMug.peripheral }, id: \.identifier) { peripheral in
