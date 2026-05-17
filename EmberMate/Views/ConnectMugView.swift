@@ -19,17 +19,12 @@ struct ConnectMugView: View {
                 .fontWeight(.medium)
                 .font(.largeTitle)
             Spacer()
-            if (bluetoothManager.peripherals.isEmpty) {
-                VStack {
-                    ProgressView("Searching")
-                }
-                    .padding(10)
-                    .background(Color.black.opacity(0.29))
-                    .cornerRadius(9)
-            } else {
-                SelectDeviceView()
-            }
-        }.padding(20).frame(width: 350, height: 300)
+            
+            SelectDeviceView()
+
+            Text("Press and hold the power button on the mug to enter connection mode")
+                .font(.caption).italic()
+        }.padding(20).frame(width: 350, height: 330)
         .background(LinearGradient(
             colors: [getColor(234, 182, 125), getColor(186, 102, 56)],
             startPoint: .top,
@@ -55,7 +50,7 @@ struct SelectDeviceView: View {
                     VStack {
                         Spacer()
 
-                        if selectedMug != nil {
+                        if selectedMug == peripheral {
                             ProgressView()
                         } else {
                             Image(systemName: "mug")
@@ -74,8 +69,17 @@ struct SelectDeviceView: View {
                 .buttonStyle(.plain)
                 .cornerRadius(9)
                 }
+            
         }
-
+        
+        HStack(spacing: 1) {
+            ProgressView()
+                .scaleEffect(0.5)
+                .frame(height: 10)
+            Text("Searching")
+                .font(.caption2)
+        }
+        .padding(.top, 4)
 
         Spacer()
     }
