@@ -10,6 +10,7 @@ import SwiftUI
 
 struct AppView: View {
     @EnvironmentObject private var bluetoothManager: BluetoothManager
+    @Environment(\.openSettings_backport) private var openSettings
 
     var body: some View {
         Group {
@@ -20,6 +21,9 @@ struct AppView: View {
             }
         }
         .contextMenu {
+            Button("Settings") {
+                openSettings()
+            }
             Button("Quit") {
                 NSApp.terminate(nil)
             }
