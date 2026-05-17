@@ -105,12 +105,6 @@ struct GeneralSettingsView: View {
                 
             }
         
-            Section {
-                Toggle(isOn: appState.$showBatteryLevelWhenCharging) {
-                    Text("Show battery level in menubar when charging")
-                }
-            }
-            
         }
         .formStyle(.grouped)
         .task {
