@@ -17,6 +17,8 @@ struct SettingsView: View {
         TabView {
             GeneralSettingsView()
                 .tabItem { Label("General", systemImage: "gear") }
+            MugSettingsView()
+                .tabItem { Label("Mugs", systemImage: "mug.fill") }
             PresetsSettingsView()
                 .tabItem { Label("Presets", systemImage: "square.and.arrow.down") }
             AboutSettingsView()
@@ -27,47 +29,12 @@ struct SettingsView: View {
 }
 
 struct GeneralSettingsView: View {
-    @EnvironmentObject private var emberMug: EmberMug
     @EnvironmentObject private var appState: AppState
-    @EnvironmentObject private var bluetoothManager: BluetoothManager
     
     @Environment(\.openURL) var openURL
     
     var body: some View {
         Form {
-            Section {
-                HStack {
-                    if (bluetoothManager.state == .disconnected) {
-                        Image(systemName: "mug")
-                            .font(.largeTitle)
-                        Text("No Device Connected")
-                    } else {
-                        Image(systemName: "mug.fill")
-                            .font(.largeTitle)
-                        VStack(alignment: .leading) {
-                            Text(emberMug.peripheral?.name ?? "Unknown Device")
-                            BatteryView(
-                                display: .both,
-                                batteryLevel: emberMug.batteryLevel,
-                                isCharging: emberMug.isCharging
-                            ).foregroundColor(.gray)
-                        }
-                        Spacer()
-                        Button("Disconnect") {
-                            bluetoothManager.disconnect()
-                        }
-                    }
-                }
-                
-                if (bluetoothManager.state == .connected) {
-                    Picker("Measurement Unit", selection: $emberMug.temperatureUnit) {
-                        Text("℉").tag(TemperatureUnit.fahrenheit)
-                        Text("℃").tag(TemperatureUnit.celcius)
-                    }
-                    ColorPicker("LED Color", selection: $emberMug.color)
-                }
-            }
-            
             Section {
                 LaunchAtLogin.Toggle()
             }
