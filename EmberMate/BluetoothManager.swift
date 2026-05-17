@@ -55,6 +55,12 @@ class BluetoothManager: NSObject, ObservableObject {
         }
     }
 
+    func stopScanning() {
+        centralManager?.stopScan()
+        staleTimer?.invalidate()
+        staleTimer = nil
+    }
+
     func startScanning() {
         centralManager?.scanForPeripherals(
             withServices: [CBUUID(string: "fc543622-236c-4c94-8fa9-944a3e5353fa")],
@@ -131,7 +137,7 @@ extension BluetoothManager: CBCentralManagerDelegate {
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         state = .connected
-
+        stopScanning()
         peripheral.discoverServices(nil)
     }
 
