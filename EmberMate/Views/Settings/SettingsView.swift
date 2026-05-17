@@ -32,6 +32,7 @@ struct GeneralSettingsView: View {
     @EnvironmentObject private var bluetoothManager: BluetoothManager
     
     @Environment(\.openURL) var openURL
+    @FocusState private var nameFocused: Bool
     
     var body: some View {
         Form {
@@ -45,7 +46,12 @@ struct GeneralSettingsView: View {
                         Image(systemName: "mug.fill")
                             .font(.largeTitle)
                         VStack(alignment: .leading) {
-                            Text(emberMug.peripheral?.name ?? "Unknown Device")
+                            TextField("Name", text: $emberMug.mugName)
+                                .labelsHidden()
+                                .focused($nameFocused)
+                                .onSubmit {
+                                    emberMug.setMugName(emberMug.mugName)
+                                }
                             BatteryView(
                                 display: .both,
                                 batteryLevel: emberMug.batteryLevel,

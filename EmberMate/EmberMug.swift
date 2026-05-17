@@ -31,6 +31,7 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     @Published var liquidState: LiquidState = LiquidState.empty
     @Published var temperatureUnit: TemperatureUnit = TemperatureUnit.celcius
     @Published var color: Color = Color.white
+    @Published var mugName: String = ""
 
     var peripheral: CBPeripheral?
 
@@ -40,6 +41,12 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     private var liquidStateCharacteristic: CBCharacteristic?
     private var temperatureUnitCharacteristic: CBCharacteristic?
     private var colorCharacteristic: CBCharacteristic?
+    private var mugNameCharacteristic: CBCharacteristic?
+
+    private var storedMugNames: [String: String] {
+        get { UserDefaults.standard.dictionary(forKey: "mugNames") as? [String: String] ?? [:] }
+        set { UserDefaults.standard.set(newValue, forKey: "mugNames") }
+    }
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -93,6 +100,21 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
         peripheral?.writeValue(Data([red, green, blue, alpha]), for: colorCharacteristic!, type: .withResponse)
     }
 
+    func setMugName(_ name: String) {
+        if let characteristic = mugNameCharacteristic {
+            let cleaned = String(name.filter { $0.isASCII }.filter { $0 != " " }.prefix(14))
+            guard let data = cleaned.data(using: .ascii) else { return }
+            mugName = cleaned
+            peripheral?.writeValue(data, for: characteristic, type: .withResponse)
+        } else {
+            let cleaned = String(name.filter { $0.isASCII }.prefix(20))
+            mugName = cleaned
+            var names = storedMugNames
+            names[peripheral!.identifier.uuidString] = cleaned
+            storedMugNames = names
+        }
+    }
+
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         self.peripheral = peripheral
         for service: CBService in peripheral.services! {
@@ -119,6 +141,8 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
                 temperatureUnitCharacteristic = characteristic
             case CBUUID(string: "fc540014-236c-4c94-8fa9-944a3e5353fa"):
                 colorCharacteristic = characteristic
+            case CBUUID(string: "fc540001-236c-4c94-8fa9-944a3e5353fa"):
+                mugNameCharacteristic = characteristic
             case CBUUID(string: "fc540012-236c-4c94-8fa9-944a3e5353fa"):
                 // enable notifications for the event characteristic
                 peripheral.setNotifyValue(true, for: characteristic)
@@ -129,6 +153,11 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
             // read the initial value
             // TODO: probably only do this if its a value we care about
             peripheral.readValue(for: characteristic)
+        }
+
+        if mugNameCharacteristic == nil {
+            let uuid = peripheral.identifier.uuidString
+            mugName = storedMugNames[uuid] ?? peripheral.name ?? ""
         }
     }
 
@@ -159,6 +188,10 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
                 let blue = Double(data[2])
                 let alpha = Double(data[3])
                 color = Color(red: red/255, green: green/255, blue: blue/255, opacity: alpha/255)
+            } else if (characteristic == mugNameCharacteristic) {
+                if let name = String(data: data, encoding: .ascii) {
+                    mugName = name
+                }
             } else if (characteristic.uuid == CBUUID(string: "fc540012-236c-4c94-8fa9-944a3e5353fa")) {
                 let state = Int(data[0])
 

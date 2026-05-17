@@ -19,7 +19,7 @@ struct MugControlView: View {
     var body: some View {
         VStack {
             HStack(alignment: .center) {
-                Text(emberMug.peripheral?.name ?? "")
+                Text(emberMug.mugName)
                     .font(.caption)
                 Spacer()
                 BatteryView(
