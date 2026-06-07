@@ -18,13 +18,12 @@ struct ConnectMugView: View {
             Text("Connect a Device")
                 .fontWeight(.medium)
                 .font(.largeTitle)
-            Spacer()
-            
+
             SelectDeviceView()
 
             Text("Press and hold the power button on the mug to enter connection mode")
                 .font(.caption).italic()
-        }.padding(20).frame(width: 350, height: 330)
+        }.padding(20).frame(width: 350)
         .background(LinearGradient(
             colors: [getColor(234, 182, 125), getColor(186, 102, 56)],
             startPoint: .top,
@@ -80,7 +79,5 @@ struct SelectDeviceView: View {
                 .font(.caption2)
         }
         .padding(.top, 4)
-
-        Spacer()
     }
 }
