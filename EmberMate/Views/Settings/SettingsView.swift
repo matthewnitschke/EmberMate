@@ -74,6 +74,10 @@ struct GeneralSettingsView: View {
             
             Section {
                 LaunchAtLogin.Toggle()
+                
+                Toggle(isOn: appState.$autoCheckForUpdates) {
+                    Text("Automatically check for updates")
+                }
             }
             
             Section {

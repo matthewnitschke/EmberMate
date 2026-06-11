@@ -45,6 +45,7 @@ class AppState: ObservableObject {
     @Published var availableUpdate: String?
     @Published var selectedSettingsTab: String = "general"
     
+    @AppStorage("autoCheckForUpdates") var autoCheckForUpdates: Bool = true
     @AppStorage("lastUpdateCheck") private var lastUpdateCheck: Double = 0
     
     private var cancellables: Set<AnyCancellable> = []
@@ -55,8 +56,10 @@ class AppState: ObservableObject {
             await requestNotificationAuthorization(provisional: true)
             await updateNotificationsDisabled()
         }
-        checkForUpdates()
-        lastUpdateCheck = Date().timeIntervalSince1970
+        if autoCheckForUpdates {
+            checkForUpdates()
+            lastUpdateCheck = Date().timeIntervalSince1970
+        }
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(applicationDidBecomeActive),
@@ -66,6 +69,7 @@ class AppState: ObservableObject {
     }
 
     @objc private func applicationDidBecomeActive() {
+        guard autoCheckForUpdates else { return }
         let now = Date().timeIntervalSince1970
         let hoursSinceLastCheck = (now - lastUpdateCheck) / 3600
         if hoursSinceLastCheck >= 24 {
