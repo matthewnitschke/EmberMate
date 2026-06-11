@@ -12,15 +12,19 @@ import LaunchAtLogin
 import UserNotifications
 
 struct SettingsView: View {
+    @EnvironmentObject private var appState: AppState
 
     var body: some View {
-        TabView {
+        TabView(selection: $appState.selectedSettingsTab) {
             GeneralSettingsView()
                 .tabItem { Label("General", systemImage: "gear") }
+                .tag("general")
             PresetsSettingsView()
                 .tabItem { Label("Presets", systemImage: "square.and.arrow.down") }
+                .tag("presets")
             AboutSettingsView()
                 .tabItem { Label("About", systemImage: "info.circle") }
+                .tag("about")
         }
         .navigationTitle("Settings")
     }
@@ -179,9 +183,8 @@ struct PresetsSettingsView: View {
 }
 
 struct AboutSettingsView: View {
-    @State var isCheckingForUpdates: Bool = false
-    @State var latestVersion: String?
-    
+    @EnvironmentObject private var appState: AppState
+
     var body: some View {
         Form {
             Section {
@@ -212,33 +215,26 @@ struct AboutSettingsView: View {
             }
             
             Section {
-                if (latestVersion != nil) {
-                    if (latestVersion == Bundle.main.appVersion) {
+                if let availableUpdate = appState.availableUpdate {
+                    if availableUpdate == Bundle.main.appVersion {
                         Text("No updates available")
                     } else {
-                        HStack(spacing: 1.5) {
-                            Text("Update available! Click")
-                            Link("here", destination: URL(string: "https://github.com/matthewnitschke/EmberMate/releases/latest")!)
-                            Text("to download")
+                        VStack(spacing: 4) {
+                            Text("Update available!")
+                                .font(.headline)
+                            Link("Download \(availableUpdate) from GitHub",
+                                  destination: URL(string: "https://github.com/matthewnitschke/EmberMate/releases/latest")!)
+                                .font(.subheadline)
                         }
                     }
                 } else {
-                    Button(
-                        isCheckingForUpdates ? "Checking for Updates..." : "Check for Updates"
-                    ) {
-                        checkForUpdates()
+                    Button("Check for Updates") {
+                        appState.checkForUpdates()
                     }
                 }
             }
         }
         .formStyle(.grouped)
-    }
-    
-    func checkForUpdates() {
-        isCheckingForUpdates = true
-        Task {
-            latestVersion = await getLatestVersion()
-        }
     }
 }
 
