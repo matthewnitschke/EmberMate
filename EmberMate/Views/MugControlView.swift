@@ -100,7 +100,7 @@ struct MugControlView: View {
                 TimerView()
             }
 
-            if appState.availableUpdate != nil {
+            if appState.autoCheckForUpdates, appState.availableUpdate != nil {
                 Button(action: {
                     dismiss()
                     openURL(URL(string: "https://github.com/matthewnitschke/EmberMate/releases/latest")!)

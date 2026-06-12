@@ -73,14 +73,6 @@ struct GeneralSettingsView: View {
             }
             
             Section {
-                LaunchAtLogin.Toggle()
-                
-                Toggle(isOn: appState.$autoCheckForUpdates) {
-                    Text("Automatically check for updates")
-                }
-            }
-            
-            Section {
                 if appState.notificationsDisabled {
                     LabeledContent {
                         Button("System Settings") {
@@ -110,7 +102,14 @@ struct GeneralSettingsView: View {
                         .opacity(appState.notificationsDisabled ? 0.5 : 1)
                 }
                 .disabled(appState.notificationsDisabled)
+            }
+            
+            Section {
+                LaunchAtLogin.Toggle()
                 
+                Toggle(isOn: appState.$autoCheckForUpdates) {
+                    Text("Automatically check for updates")
+                }
             }
         
         }
