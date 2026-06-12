@@ -42,6 +42,12 @@ class AppState: ObservableObject {
     @AppStorage("notifyOnTemperatureReached") var notifyOnTemperatureReached: Bool = true
     @AppStorage("notifyAtBatteryPercentage") var notifyAtBatteryPercentage: LowBatteryLevel = .default
     
+    @Published var availableUpdate: String?
+    @Published var selectedSettingsTab: String = "general"
+    
+    @AppStorage("autoCheckForUpdates") var autoCheckForUpdates: Bool = true
+    @AppStorage("lastUpdateCheck") private var lastUpdateCheck: Double = 0
+    
     private var cancellables: Set<AnyCancellable> = []
 
     init() {
@@ -49,6 +55,36 @@ class AppState: ObservableObject {
             migrateUserDefaults()
             await requestNotificationAuthorization(provisional: true)
             await updateNotificationsDisabled()
+        }
+        if autoCheckForUpdates {
+            checkForUpdates()
+            lastUpdateCheck = Date().timeIntervalSince1970
+        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applicationDidBecomeActive),
+            name: NSApplication.didBecomeActiveNotification,
+            object: nil
+        )
+    }
+
+    @objc private func applicationDidBecomeActive() {
+        guard autoCheckForUpdates else { return }
+        let now = Date().timeIntervalSince1970
+        let hoursSinceLastCheck = (now - lastUpdateCheck) / 3600
+        if hoursSinceLastCheck >= 24 {
+            lastUpdateCheck = now
+            checkForUpdates()
+        }
+    }
+
+    func checkForUpdates() {
+        Task {
+            if let latest = await getLatestVersion(), latest != Bundle.main.appVersion {
+                await MainActor.run {
+                    self.availableUpdate = latest
+                }
+            }
         }
     }
     

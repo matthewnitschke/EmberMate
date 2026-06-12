@@ -14,6 +14,7 @@ struct MugControlView: View {
     @EnvironmentObject private var appState: AppState
     
     @Environment(\.openSettings_backport) private var openSettings
+    @Environment(\.openURL) private var openURL
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -97,6 +98,26 @@ struct MugControlView: View {
 
             if !appState.timers.isEmpty {
                 TimerView()
+            }
+
+            if appState.autoCheckForUpdates, appState.availableUpdate != nil {
+                Button(action: {
+                    dismiss()
+                    openURL(URL(string: "https://github.com/matthewnitschke/EmberMate/releases/latest")!)
+                }) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "arrow.down.circle.fill")
+                            .foregroundColor(.white)
+                        Text("Update available")
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
+                    .background(Color.accentColor.opacity(0.8))
+                    .cornerRadius(6)
+                }
+                .buttonStyle(.plain)
             }
 
         }.padding(10).background(LinearGradient(
