@@ -7,8 +7,18 @@
 
 import SwiftUI
 
+class AppDelegate: NSObject, NSApplicationDelegate {
+    var bluetoothManager: BluetoothManager?
+
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        bluetoothManager?.shutdown()
+        return .terminateNow
+    }
+}
+
 @main
 struct ember_mateApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @ObservedObject private var emberMug: EmberMug
     @ObservedObject private var bluetoothManager: BluetoothManager
     @ObservedObject private var appState: AppState
@@ -24,6 +34,8 @@ struct ember_mateApp: App {
         self.appState = state
 
         self.notificationAdapter = NotificationAdapter(appState: state, emberMug: mug)
+
+        appDelegate.bluetoothManager = bluetoothManager
     }
 
     var body: some Scene {

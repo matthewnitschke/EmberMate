@@ -93,6 +93,14 @@ class BluetoothManager: NSObject, ObservableObject {
         UserDefaults.standard.removeObject(forKey: "peripheralIdentifier")
         state = .disconnected
     }
+
+    func shutdown() {
+        stopScanning()
+        if let peripheral = emberMug.peripheral {
+            centralManager?.cancelPeripheralConnection(peripheral)
+        }
+        centralManager = nil
+    }
 }
 
 extension BluetoothManager: CBCentralManagerDelegate {
