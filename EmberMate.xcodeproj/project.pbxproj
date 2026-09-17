@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1A0489DC2B2022B000426D46 /* ContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0489DB2B2022B000426D46 /* ContextMenu.swift */; };
 		1A31E58A2B1ED18A0082AD12 /* ember_mateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A31E5892B1ED18A0082AD12 /* ember_mateApp.swift */; };
+		9ACBA62C2E215FA100D699B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACBA62D2E215FA200D699B7 /* AppDelegate.swift */; };
 		1A31E58E2B1ED18B0082AD12 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A31E58D2B1ED18B0082AD12 /* Assets.xcassets */; };
 		1A31E5912B1ED18B0082AD12 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A31E5902B1ED18B0082AD12 /* Preview Assets.xcassets */; };
 		1A31E5992B1ED1B00082AD12 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A31E5982B1ED1B00082AD12 /* AppView.swift */; };
@@ -33,6 +34,7 @@
 		1A0489DB2B2022B000426D46 /* ContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenu.swift; sourceTree = "<group>"; };
 		1A31E5862B1ED18A0082AD12 /* EmberMate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmberMate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A31E5892B1ED18A0082AD12 /* ember_mateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ember_mateApp.swift; sourceTree = "<group>"; };
+		9ACBA62D2E215FA200D699B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1A31E58D2B1ED18B0082AD12 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A31E5902B1ED18B0082AD12 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1A31E5922B1ED18B0082AD12 /* EmberMate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EmberMate.entitlements; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 			children = (
 				1AE785402B2A975C00FD31ED /* Info.plist */,
 				1A31E5892B1ED18A0082AD12 /* ember_mateApp.swift */,
+				9ACBA62D2E215FA200D699B7 /* AppDelegate.swift */,
 				1AF9BE732B2E2E59002C930D /* Views */,
 				1A42A7412B2696CC00233E50 /* Components */,
 				1A31E59C2B1ED1E60082AD12 /* EmberMug.swift */,
@@ -219,6 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A31E58A2B1ED18A0082AD12 /* ember_mateApp.swift in Sources */,
+				9ACBA62C2E215FA100D699B7 /* AppDelegate.swift in Sources */,
 				1A5DCBF22D488278002A1504 /* PresetEntry.swift in Sources */,
 				1A31E59D2B1ED1E60082AD12 /* EmberMug.swift in Sources */,
 				1AE494212B1FE69D0097A4F1 /* MugControlView.swift in Sources */,

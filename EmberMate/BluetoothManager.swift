@@ -81,15 +81,17 @@ class BluetoothManager: NSObject, ObservableObject {
     }
 
     func connect(peripheral: CBPeripheral) {
+        guard let centralManager else { return }
         state = .connecting
         UserDefaults.standard.set(peripheral.identifier.uuidString, forKey: "peripheralIdentifier")
         peripheral.delegate = emberMug
-        self.centralManager!.connect(peripheral)
+        centralManager.connect(peripheral)
         startScanning()
     }
 
     @objc func disconnect() {
-        self.centralManager!.cancelPeripheralConnection(emberMug.peripheral!)
+        guard let centralManager = centralManager, let peripheral = emberMug.peripheral else { return }
+        centralManager.cancelPeripheralConnection(peripheral)
         UserDefaults.standard.removeObject(forKey: "peripheralIdentifier")
         state = .disconnected
     }
@@ -102,11 +104,11 @@ extension BluetoothManager: CBCentralManagerDelegate {
         if central.state == .poweredOn {
             // Try to reconnect to a known device
             if let peripheralIdentifier = peripheralIdentifier {
-                let peripherals = centralManager!.retrievePeripherals(withIdentifiers: [peripheralIdentifier])
+                let peripherals = central.retrievePeripherals(withIdentifiers: [peripheralIdentifier])
                 if let peripheral = peripherals.first {
                     self.peripherals.append(peripheral)
                     peripheral.delegate = emberMug
-                    centralManager!.connect(peripheral, options: nil)
+                    central.connect(peripheral, options: nil)
                 } else {
                     print("Peripheral not found. Make sure the device is nearby and powered on.")
                 }
@@ -146,7 +148,7 @@ extension BluetoothManager: CBCentralManagerDelegate {
         // eg: dont re-connect to a device that was just explicitly disconnected
         if state == .connected {
             state = .reConnecting
-            centralManager!.connect(emberMug.peripheral!, options: nil)
+            central.connect(peripheral, options: nil)
         }
 
         startScanning()

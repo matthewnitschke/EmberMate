@@ -15,7 +15,7 @@ struct MugControlView: View {
     
     @Environment(\.openSettings_backport) private var openSettings
     @Environment(\.openURL) private var openURL
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismissPopover) private var dismissPopover
 
     var body: some View {
         VStack {
@@ -30,7 +30,7 @@ struct MugControlView: View {
                     textFont: .caption
                 )
                 Button(action: {
-                    dismiss()
+                    dismissPopover()
                     openSettings()
                 }) {
                     Image(systemName: "gearshape.fill")
@@ -102,7 +102,7 @@ struct MugControlView: View {
 
             if appState.autoCheckForUpdates, appState.availableUpdate != nil {
                 Button(action: {
-                    dismiss()
+                    dismissPopover()
                     openURL(URL(string: "https://github.com/matthewnitschke/EmberMate/releases/latest")!)
                 }) {
                     HStack(spacing: 4) {

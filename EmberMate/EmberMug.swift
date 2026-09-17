@@ -68,6 +68,7 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
         // I'm unsure if this is a requirement, but I
         // dont want to have people accidentially breaking their mugs
         if (temp < 50 || temp > 63) { return }
+        guard let targetTempCharacteristic, let peripheral else { return }
 
         self.targetTemp = temp
 
@@ -76,26 +77,31 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
         let byte2 = UInt8((uintVal >> 8) & 0xFF)
 
         let data = Data([byte1, byte2])
-        peripheral?.writeValue(data, for: targetTempCharacteristic!, type: .withResponse)
+        peripheral.writeValue(data, for: targetTempCharacteristic, type: .withResponse)
     }
 
     func setTemperatureUnit(_ unit: TemperatureUnit) {
+        guard let temperatureUnitCharacteristic, let peripheral else { return }
         let data = Data([UInt8(unit.rawValue)])
-        peripheral?.writeValue(data, for: temperatureUnitCharacteristic!, type: .withResponse)
+        peripheral.writeValue(data, for: temperatureUnitCharacteristic, type: .withResponse)
     }
-    
+
     func setColor(_ color: Color) {
-        let parts = NSColor(color).cgColor.components!
-        let red = UInt8(parts[0] * 255)
-        let green = UInt8(parts[1] * 255)
-        let blue = UInt8(parts[2] * 255)
-        let alpha = UInt8(parts[3] * 255)
-        peripheral?.writeValue(Data([red, green, blue, alpha]), for: colorCharacteristic!, type: .withResponse)
+        guard let components = NSColor(color).cgColor.components,
+            let colorCharacteristic,
+            let peripheral
+        else { return }
+        let red = UInt8(components[0] * 255)
+        let green = UInt8(components[1] * 255)
+        let blue = UInt8(components[2] * 255)
+        let alpha = UInt8(components[3] * 255)
+        peripheral.writeValue(Data([red, green, blue, alpha]), for: colorCharacteristic, type: .withResponse)
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         self.peripheral = peripheral
-        for service: CBService in peripheral.services! {
+        guard let services = peripheral.services else { return }
+        for service: CBService in services {
             // only discover characteristics for main ember mug service
             if service.uuid == CBUUID(string: "FC543622-236C-4C94-8FA9-944A3E5353FA") {
                 peripheral.discoverCharacteristics(nil, for: service)
@@ -104,7 +110,8 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        for characteristic: CBCharacteristic in service.characteristics! {
+        guard let characteristics = service.characteristics else { return }
+        for characteristic: CBCharacteristic in characteristics {
 
             switch characteristic.uuid {
             case CBUUID(string: "fc540003-236c-4c94-8fa9-944a3e5353fa"):
@@ -162,18 +169,18 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
             } else if (characteristic.uuid == CBUUID(string: "fc540012-236c-4c94-8fa9-944a3e5353fa")) {
                 let state = Int(data[0])
 
-                if (state == 1) {
-                    peripheral.readValue(for: batteryCharacteristic!)
-                } else if (state == 2) {
+                if let characteristic = batteryCharacteristic, state == 1 {
+                    peripheral.readValue(for: characteristic)
+                } else if state == 2 {
                     isCharging = true
-                } else if (state == 3) {
+                } else if state == 3 {
                     isCharging = false
-                } else if (state == 4) {
-                    peripheral.readValue(for: targetTempCharacteristic!)
-                } else if (state == 5) {
-                    peripheral.readValue(for: currentTempCharacteristic!)
-                } else if (state == 8) {
-                    peripheral.readValue(for: liquidStateCharacteristic!)
+                } else if let characteristic = targetTempCharacteristic, state == 4 {
+                    peripheral.readValue(for: characteristic)
+                } else if let characteristic = currentTempCharacteristic, state == 5 {
+                    peripheral.readValue(for: characteristic)
+                } else if let characteristic = liquidStateCharacteristic, state == 8 {
+                    peripheral.readValue(for: characteristic)
                 }
             }
         }
