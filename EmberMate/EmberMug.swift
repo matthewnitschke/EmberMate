@@ -34,6 +34,12 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
 
     var peripheral: CBPeripheral?
 
+    // The last time we received *any* response from the mug over BLE.
+    // Used by BluetoothManager's heartbeat to detect a stale ("zombie")
+    // connection where macOS still reports `connected` but nothing is
+    // actually coming back over the link.
+    private(set) var lastResponseTime: Date = Date()
+
     private var targetTempCharacteristic: CBCharacteristic?
     private var currentTempCharacteristic: CBCharacteristic?
     private var batteryCharacteristic: CBCharacteristic?
@@ -62,6 +68,24 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
             .store(in: &cancellables)
     }
 
+
+    // Record that the mug talked to us, so the heartbeat considers the link alive.
+    func markAlive() {
+        lastResponseTime = Date()
+    }
+
+    // Actively solicit a response from the mug. If the connection is stale the
+    // read either never completes or never calls back, so `lastResponseTime`
+    // stops advancing and the BluetoothManager forces a reconnect.
+    func ping() {
+        guard let peripheral = peripheral else { return }
+
+        if let characteristic = currentTempCharacteristic {
+            peripheral.readValue(for: characteristic)
+        } else if let characteristic = batteryCharacteristic {
+            peripheral.readValue(for: characteristic)
+        }
+    }
 
     func setTargetTemp(temp: Double) {
         // add an artifical limit, to mirror the app
@@ -94,6 +118,7 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        markAlive()
         self.peripheral = peripheral
         for service: CBService in peripheral.services! {
             // only discover characteristics for main ember mug service
@@ -104,6 +129,7 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        markAlive()
         for characteristic: CBCharacteristic in service.characteristics! {
 
             switch characteristic.uuid {
@@ -133,6 +159,7 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        markAlive()
         let data = characteristic.value
 
         if let data = data {
@@ -177,6 +204,18 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
                 }
             }
         }
+    }
+
+    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+        markAlive()
+    }
+
+    func peripheral(
+        _ peripheral: CBPeripheral,
+        didUpdateNotificationStateFor characteristic: CBCharacteristic,
+        error: Error?
+    ) {
+        markAlive()
     }
 }
 
