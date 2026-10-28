@@ -11,11 +11,14 @@ import Combine
 import SwiftUI
 
 enum LiquidState: Int {
+    case standby = 0
     case empty = 1
     case filling = 2
+    case coldNoTempControl = 3
     case cooling = 4
     case heating = 5
     case stableTemperature = 6
+    case warmNoTempControl = 7
 }
 
 enum TemperatureUnit: Int {
