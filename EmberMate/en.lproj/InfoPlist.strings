@@ -1,0 +1,3 @@
+/* Bluetooth permission prompts. Keep in sync with INFOPLIST_KEY_NSBluetooth*UsageDescription. */
+"NSBluetoothAlwaysUsageDescription" = "Bluetooth used to communicate with ember mug";
+"NSBluetoothPeripheralUsageDescription" = "Peripheral usage detection used to communicate with ember mug";

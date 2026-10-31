@@ -27,6 +27,8 @@
 		1AF9BE722B2E2D35002C930D /* NotificationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF9BE712B2E2D35002C930D /* NotificationAdapter.swift */; };
 		1AF9BE762B2E3BCE002C930D /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 1AF9BE752B2E3BCE002C930D /* LaunchAtLogin */; };
 		9ACBA62B2E215F9D00D699B7 /* BatteryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACBA62A2E215F9B00D699B7 /* BatteryView.swift */; };
+		1AB0C0DE2E30000100000002 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 1AB0C0DE2E30000100000001 /* Localizable.xcstrings */; };
+		1AB0C0DE2E30000200000010 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1AB0C0DE2E30000200000000 /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +54,14 @@
 		1AE785402B2A975C00FD31ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1AF9BE712B2E2D35002C930D /* NotificationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationAdapter.swift; sourceTree = "<group>"; };
 		9ACBA62A2E215F9B00D699B7 /* BatteryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryView.swift; sourceTree = "<group>"; };
+		1AB0C0DE2E30000100000001 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		1AB0C0DE2E30000200000001 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1AB0C0DE2E30000200000002 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1AB0C0DE2E30000200000003 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1AB0C0DE2E30000200000004 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1AB0C0DE2E30000200000005 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1AB0C0DE2E30000200000006 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		1AB0C0DE2E30000200000007 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +105,8 @@
 				1A31E59A2B1ED1D40082AD12 /* BluetoothManager.swift */,
 				1AF9BE712B2E2D35002C930D /* NotificationAdapter.swift */,
 				1A31E58D2B1ED18B0082AD12 /* Assets.xcassets */,
+				1AB0C0DE2E30000100000001 /* Localizable.xcstrings */,
+				1AB0C0DE2E30000200000000 /* InfoPlist.strings */,
 				1A31E5922B1ED18B0082AD12 /* EmberMate.entitlements */,
 				1A31E58F2B1ED18B0082AD12 /* Preview Content */,
 			);
@@ -144,6 +156,23 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXVariantGroup section */
+		1AB0C0DE2E30000200000000 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1AB0C0DE2E30000200000001 /* en */,
+				1AB0C0DE2E30000200000002 /* de */,
+				1AB0C0DE2E30000200000003 /* es */,
+				1AB0C0DE2E30000200000004 /* fr */,
+				1AB0C0DE2E30000200000005 /* ja */,
+				1AB0C0DE2E30000200000006 /* pt-BR */,
+				1AB0C0DE2E30000200000007 /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin PBXNativeTarget section */
 		1A31E5852B1ED18A0082AD12 /* EmberMate */ = {
 			isa = PBXNativeTarget;
@@ -187,6 +216,12 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
+				es,
+				fr,
+				ja,
+				pt-BR,
+				"zh-Hans",
 			);
 			mainGroup = 1A31E57D2B1ED18A0082AD12;
 			packageReferences = (
@@ -206,6 +241,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AB0C0DE2E30000100000002 /* Localizable.xcstrings in Resources */,
+				1AB0C0DE2E30000200000010 /* InfoPlist.strings in Resources */,
 				1A31E5912B1ED18B0082AD12 /* Preview Assets.xcassets in Resources */,
 				1A31E58E2B1ED18B0082AD12 /* Assets.xcassets in Resources */,
 			);

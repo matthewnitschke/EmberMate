@@ -24,6 +24,13 @@ enum LiquidState: Int {
 enum TemperatureUnit: Int {
     case celcius = 0
     case fahrenheit = 1
+
+    /// Fahrenheit is only the customary unit in the United States, so pick it
+    /// from the user's region rather than always starting on celsius. The mug
+    /// reports its own stored unit as soon as it connects, which then wins.
+    static var defaultForCurrentLocale: TemperatureUnit {
+        Locale.current.measurementSystem == .us ? .fahrenheit : .celcius
+    }
 }
 
 class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
@@ -32,7 +39,7 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     @Published var currentTemp: Double = 0.0
     @Published var targetTemp: Double = 0.0
     @Published var liquidState: LiquidState = LiquidState.empty
-    @Published var temperatureUnit: TemperatureUnit = TemperatureUnit.celcius
+    @Published var temperatureUnit: TemperatureUnit = TemperatureUnit.defaultForCurrentLocale
     @Published var color: Color = Color.white
 
     var peripheral: CBPeripheral?
@@ -107,8 +114,12 @@ class EmberMug: NSObject, ObservableObject, CBPeripheralDelegate {
     }
 
     func setTemperatureUnit(_ unit: TemperatureUnit) {
+        // The characteristic only exists once the mug has connected, and the mug
+        // reports its own unit on connect, so bail out instead of force unwrapping.
+        guard let characteristic = temperatureUnitCharacteristic else { return }
+
         let data = Data([UInt8(unit.rawValue)])
-        peripheral?.writeValue(data, for: temperatureUnitCharacteristic!, type: .withResponse)
+        peripheral?.writeValue(data, for: characteristic, type: .withResponse)
     }
     
     func setColor(_ color: Color) {

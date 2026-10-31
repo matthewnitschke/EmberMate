@@ -50,11 +50,13 @@ struct MugControlView: View {
                 Spacer()
 
                 VStack {
-                    Text(
-                        emberMug.liquidState == LiquidState.empty
-                            ? "Empty"
-                            : getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit)
-                    ).font(.largeTitle)
+                    if emberMug.liquidState == LiquidState.empty {
+                        Text("Empty")
+                            .font(.largeTitle)
+                    } else {
+                        Text(verbatim: getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit))
+                            .font(.largeTitle)
+                    }
 
                     Text("Target: \(getFormattedTemperature(emberMug.targetTemp, unit: emberMug.temperatureUnit))")
                 }

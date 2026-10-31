@@ -15,22 +15,48 @@ func getBackgroundGradient(_ val: Double) -> [Color] {
     ]
 }
 
+/// Formats a temperature (always stored in celsius) for display.
+///
+/// Uses the user's locale so the decimal separator is correct (`65.5°` in en_US,
+/// `65,5°` in de_DE). The degree symbol is appended by hand rather than using
+/// `Measurement.formatted()` because the UI already implies the unit via the
+/// picker and the extra "C"/"F" glyph does not fit the fixed-width buttons.
 func getFormattedTemperature(_ temp: Double, unit: TemperatureUnit) -> String {
-    if unit == .celcius {
-        return String(format: "%.1f°", temp)
+    let value: Double
+    let fractionDigits: Int
+
+    switch unit {
+    case .celcius:
+        // The mug reports temperatures to a hundredth of a degree, but a single
+        // decimal is all the UI has room for.
+        value = temp
+        fractionDigits = 1
+    case .fahrenheit:
+        value = Measurement(value: temp, unit: UnitTemperature.celsius)
+            .converted(to: .fahrenheit)
+            .value
+        fractionDigits = 0
     }
 
-    return String(format: "%.0f°", (temp * 9/5) + 32)
+    let number = value.formatted(
+        .number
+            .precision(.fractionLength(fractionDigits))
+            .rounded(rule: .toNearestOrEven)
+    )
+
+    return "\(number)°"
 }
 
 func getFormattedBatteryLevel(_ batteryLevel: Int) -> String {
-    return String(format: "%d%%", batteryLevel)
+    // `batteryLevel` is a whole percentage (0...100), so shift it into the 0...1
+    // range the percent format style expects.
+    return (Double(batteryLevel) / 100).formatted(.percent.precision(.fractionLength(0)))
 }
 
 func formatTime(_ seconds: Int) -> String {
     let minutes = seconds / 60
     let remainingSeconds = seconds % 60
-    return String(format: "%d:%02d", minutes, remainingSeconds)
+    return String(format: "%d:%02d", locale: Locale.current, minutes, remainingSeconds)
 }
 
 func convertTimeToSeconds(_ timeString: String) -> Int? {

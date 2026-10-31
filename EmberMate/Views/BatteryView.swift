@@ -23,7 +23,9 @@ struct BatteryView: View {
                 Image(systemName: getBatteryIcon(batteryLevel, isCharging: isCharging))
             }
             if display.showPercentage {
-                Text("\(batteryLevel, format: .percent)")
+                // `Text(_:format:)` renders a value through a format style
+                // without treating it as a localization key.
+                Text(batteryLevel, format: .percent)
                     .font(textFont)
             }
         }

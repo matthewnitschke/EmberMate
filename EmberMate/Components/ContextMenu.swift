@@ -26,7 +26,7 @@ class ContextMenu: NSObject, NSMenuDelegate {
         super.init()
 
         let preferencesMenuItem = NSMenuItem(
-            title: "Preferences",
+            title: String(localized: "Preferences"),
             action: #selector(preferencesClicked(_:)),
             keyEquivalent: ",",
         )
@@ -36,7 +36,7 @@ class ContextMenu: NSObject, NSMenuDelegate {
         menu.addItem(NSMenuItem.separator())
 
         menu.addItem(NSMenuItem(
-            title: "Quit",
+            title: String(localized: "Quit"),
             action: #selector(NSApplication.shared.terminate(_:)),
             keyEquivalent: "Q"
         ))
