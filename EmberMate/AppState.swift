@@ -47,6 +47,8 @@ class AppState: ObservableObject {
     
     @AppStorage("autoCheckForUpdates") var autoCheckForUpdates: Bool = true
     @AppStorage("lastUpdateCheck") private var lastUpdateCheck: Double = 0
+    // Only ever holds the single version the user dismissed. Cleared once a newer version is found
+    @AppStorage("ignoredUpdateVersion") private var ignoredUpdateVersion: String = ""
     
     private var cancellables: Set<AnyCancellable> = []
 
@@ -80,12 +82,31 @@ class AppState: ObservableObject {
 
     func checkForUpdates() {
         Task {
-            if let latest = await getLatestVersion(), latest != Bundle.main.appVersion {
-                await MainActor.run {
-                    self.availableUpdate = latest
+            guard let latest = await getLatestVersion(), latest != Bundle.main.appVersion else {
+                return
+            }
+
+            await MainActor.run {
+                // The ignored version is no longer the latest, so there is no reason to keep it around
+                if latest != self.ignoredUpdateVersion {
+                    self.ignoredUpdateVersion = ""
                 }
+                self.availableUpdate = latest
             }
         }
+    }
+
+    // The main page hides the version the user dismissed. Everything else (e.g. About) always shows the latest
+    var shouldShowUpdateBanner: Bool {
+        guard autoCheckForUpdates, let availableUpdate else { return false }
+        return availableUpdate != ignoredUpdateVersion
+    }
+
+    func dismissAvailableUpdate() {
+        guard let update = availableUpdate else { return }
+
+        objectWillChange.send()
+        ignoredUpdateVersion = update
     }
     
     @MainActor
