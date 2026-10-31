@@ -1,0 +1,3 @@
+/* Bluetooth permission prompts. */
+"NSBluetoothAlwaysUsageDescription" = "O Bluetooth é usado para se comunicar com a sua caneca Ember.";
+"NSBluetoothPeripheralUsageDescription" = "Detecção de periféricos para se comunicar com a sua caneca Ember.";

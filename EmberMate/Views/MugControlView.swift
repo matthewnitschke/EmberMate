@@ -50,13 +50,18 @@ struct MugControlView: View {
                 Spacer()
 
                 VStack {
-                    Text(
-                        emberMug.liquidState == LiquidState.empty
-                            ? "Empty"
-                            : getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit)
-                    ).font(.largeTitle)
+                    if emberMug.liquidState == LiquidState.empty {
+                        Text("Empty")
+                            .font(.largeTitle)
+                    } else {
+                        Text(verbatim: getFormattedTemperature(emberMug.currentTemp, unit: emberMug.temperatureUnit))
+                            .font(.largeTitle)
+                    }
 
-                    Text("Target: \(getFormattedTemperature(emberMug.targetTemp, unit: emberMug.temperatureUnit))")
+                    Text(verbatim: String(
+                        format: String(localized: "Target: %@"),
+                        getFormattedTemperature(emberMug.targetTemp, unit: emberMug.temperatureUnit)
+                    ))
                 }
 
                 Spacer()
@@ -108,7 +113,10 @@ struct MugControlView: View {
                     }) {
                         HStack(spacing: 4) {
                             Image(systemName: "arrow.down.circle.fill")
-                            Text("Update Available (v\(availableUpdate))")
+                            Text(verbatim: String(
+                                format: String(localized: "Update Available (v%@)"),
+                                availableUpdate
+                            ))
                                 .font(.caption)
                         }
                         .frame(maxWidth: .infinity)
@@ -126,7 +134,10 @@ struct MugControlView: View {
                             .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
-                    .help("Skip version \(availableUpdate)")
+                    .help(Text(verbatim: String(
+                        format: String(localized: "Skip version %@"),
+                        availableUpdate
+                    )))
                 }
                 .foregroundColor(.white)
                 .padding(.trailing, 4)

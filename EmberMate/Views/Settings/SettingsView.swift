@@ -49,7 +49,7 @@ struct GeneralSettingsView: View {
                         Image(systemName: "mug.fill")
                             .font(.largeTitle)
                         VStack(alignment: .leading) {
-                            Text(emberMug.peripheral?.name ?? "Unknown Device")
+                            Text(verbatim: emberMug.peripheral?.name ?? String(localized: "Unknown Device"))
                             BatteryView(
                                 display: .both,
                                 batteryLevel: emberMug.batteryLevel,
@@ -65,8 +65,8 @@ struct GeneralSettingsView: View {
                 
                 if (bluetoothManager.state == .connected) {
                     Picker("Measurement Unit", selection: $emberMug.temperatureUnit) {
-                        Text("℉").tag(TemperatureUnit.fahrenheit)
-                        Text("℃").tag(TemperatureUnit.celcius)
+                        Text(verbatim: "℉").tag(TemperatureUnit.fahrenheit)
+                        Text(verbatim: "℃").tag(TemperatureUnit.celcius)
                     }
                     ColorPicker("LED Color", selection: $emberMug.color)
                 }
@@ -105,7 +105,11 @@ struct GeneralSettingsView: View {
             }
             
             Section {
-                LaunchAtLogin.Toggle()
+                // Explicit label so the key lands in our string catalog; the
+                // package's default initializer uses its own "Launch at login" key.
+                LaunchAtLogin.Toggle {
+                    Text("Launch at login")
+                }
                 
                 Toggle(isOn: appState.$autoCheckForUpdates) {
                     Text("Automatically check for updates")
@@ -138,8 +142,10 @@ struct PresetsSettingsView: View {
             } footer: {
                 HStack {
                     Spacer()
-                    Button("+") {
+                    Button(action: {
                         appState.presets.append(Preset())
+                    }) {
+                        Text(verbatim: "+")
                     }
                 }
             }
@@ -174,8 +180,10 @@ struct PresetsSettingsView: View {
             } footer: {
                 HStack {
                     Spacer()
-                    Button("+") {
+                    Button(action: {
                         appState.timers.append("4:00")
+                    }) {
+                        Text(verbatim: "+")
                     }
                 }
             }
@@ -198,10 +206,13 @@ struct AboutSettingsView: View {
                             .resizable()
                             .frame(width: 64, height: 64)
                         
-                        Text("EmberMate")
+                        Text(verbatim: "EmberMate")
                             .font(.title)
                         
-                        Text("Version \(Bundle.main.appVersion)")
+                        Text(verbatim: String(
+                            format: String(localized: "Version %@"),
+                            Bundle.main.appVersion
+                        ))
                             .font(.footnote)
                         
                         HStack(spacing: 1.5) {
@@ -210,7 +221,10 @@ struct AboutSettingsView: View {
                                 .foregroundColor(.red)
                                 .font(.footnote)
                             Text("by").font(.footnote)
-                            Link("Matthew Nitschke", destination: URL(string: "https://github.com/matthewnitschke")!).font(.footnote)
+                            Link(destination: URL(string: "https://github.com/matthewnitschke")!) {
+                                Text(verbatim: "Matthew Nitschke")
+                                    .font(.footnote)
+                            }
                         }
                     }
                     Spacer()
@@ -225,8 +239,12 @@ struct AboutSettingsView: View {
                         VStack(spacing: 4) {
                             Text("Update available!")
                                 .font(.headline)
-                            Link("Download \(availableUpdate) from GitHub",
-                                  destination: URL(string: "https://github.com/matthewnitschke/EmberMate/releases/latest")!)
+                            Link(destination: URL(string: "https://github.com/matthewnitschke/EmberMate/releases/latest")!) {
+                                Text(verbatim: String(
+                                    format: String(localized: "Download %@ from GitHub"),
+                                    availableUpdate
+                                ))
+                            }
                                 .font(.subheadline)
                         }
                     }

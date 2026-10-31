@@ -1,0 +1,3 @@
+/* Bluetooth permission prompts. */
+"NSBluetoothAlwaysUsageDescription" = "使用蓝牙与 Ember 杯子进行通信。";
+"NSBluetoothPeripheralUsageDescription" = "检测蓝牙设备以与 Ember 杯子进行通信。";

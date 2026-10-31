@@ -62,8 +62,11 @@ class NotificationAdapter {
         }
 
         let content = UNMutableNotificationContent()
-        content.title = "Target Temperature Reached"
-        content.subtitle = "Your beverage is now \(getFormattedTemperature(emberMug.targetTemp, unit: emberMug.temperatureUnit))"
+        content.title = String(localized: "Target Temperature Reached")
+        content.subtitle = String(
+            format: String(localized: "Your beverage is now %@"),
+            getFormattedTemperature(emberMug.targetTemp, unit: emberMug.temperatureUnit)
+        )
         content.sound = UNNotificationSound.default
         content.userInfo = ["icon": "AppIcon"]
 
@@ -77,8 +80,11 @@ class NotificationAdapter {
         }
 
         let content = UNMutableNotificationContent()
-        content.title = "Mug has low battery"
-        content.subtitle = "Your mug has reached \(appState.notifyAtBatteryPercentage) battery level. Charge to prevent the heater turning off"
+        content.title = String(localized: "Mug has low battery")
+        content.subtitle = String(
+            format: String(localized: "Your mug has reached %@ battery level. Charge to prevent the heater turning off"),
+            appState.notifyAtBatteryPercentage.description
+        )
         content.sound = UNNotificationSound.default
         content.userInfo = ["icon": "AppIcon"]
 

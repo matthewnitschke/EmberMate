@@ -1,0 +1,3 @@
+/* Bluetooth permission prompts. */
+"NSBluetoothAlwaysUsageDescription" = "Se usa Bluetooth para comunicarse con tu taza Ember.";
+"NSBluetoothPeripheralUsageDescription" = "Detección de periféricos para comunicarse con tu taza Ember.";

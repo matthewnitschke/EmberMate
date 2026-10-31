@@ -22,17 +22,17 @@ class AppState: ObservableObject {
     @AppStorage("presets") var presets: [Preset] = [
         Preset(
             icon: "cup.and.saucer.fill",
-            name: "Latte",
+            name: String(localized: "Latte"),
             temperature: 52.0
         ),
         Preset(
             icon: "mug.fill",
-            name: "Coffee",
+            name: String(localized: "Coffee"),
             temperature: 55.0
         ),
         Preset(
             icon: "leaf.fill",
-            name: "Tea",
+            name: String(localized: "Tea"),
             temperature: 60.0
         )
     ]
@@ -162,8 +162,8 @@ class AppState: ObservableObject {
                 self.stopTimer()
 
                 let content = UNMutableNotificationContent()
-                content.title = "Ember Timer Complete"
-                content.subtitle = "Your timer is complete"
+                content.title = String(localized: "Ember Timer Complete")
+                content.subtitle = String(localized: "Your timer is complete")
                 content.sound = UNNotificationSound.default
                 content.userInfo = ["icon": "AppIcon"]
 
@@ -182,7 +182,7 @@ class AppState: ObservableObject {
 class Preset: Identifiable, ObservableObject, Codable {
     var id = UUID().uuidString
     @Published var icon: String = "mug.fill"
-    @Published var name: String = "Coffee"
+    @Published var name: String = String(localized: "Coffee")
     @Published var temperature: Double = 55.0
 
     private enum CodingKeys: String, CodingKey {
@@ -194,7 +194,7 @@ class Preset: Identifiable, ObservableObject, Codable {
 
     init(
         icon: String = "mug.fill",
-        name: String = "Coffee",
+        name: String = String(localized: "Coffee"),
         temperature: Double = 55.0
     ) {
         self.icon = icon
@@ -242,7 +242,7 @@ extension AppState {
         
         var description: String {
             if self == .off {
-                return "Off"
+                return String(localized: "Off")
             }
             
             return getFormattedBatteryLevel(self.rawValue)

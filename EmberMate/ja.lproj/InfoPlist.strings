@@ -1,0 +1,3 @@
+/* Bluetooth permission prompts. */
+"NSBluetoothAlwaysUsageDescription" = "Ember マグとの通信に Bluetooth を使用します。";
+"NSBluetoothPeripheralUsageDescription" = "Ember マグとの通信のために Bluetooth 機器を検出します。";

@@ -58,7 +58,7 @@ struct SelectDeviceView: View {
 
                         Spacer()
 
-                        Text(peripheral.name ?? "Unknown Device")
+                        Text(verbatim: peripheral.name ?? String(localized: "Unknown Device"))
                             .font(.caption)
                     }
                     .padding(10)

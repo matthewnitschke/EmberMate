@@ -84,9 +84,10 @@ struct ember_mateApp: App {
         let minutes = roundedMinutes.partialValue
         
         if (minutes == 0) {
-            return ">1min"
+            // Less than a minute remains.
+            return String(localized: "<1min")
         }
-        return "\(minutes)min"
+        return String(format: String(localized: "%lldmin"), minutes)
     }
 }
 
