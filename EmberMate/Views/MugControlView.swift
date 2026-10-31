@@ -100,24 +100,38 @@ struct MugControlView: View {
                 TimerView()
             }
 
-            if appState.autoCheckForUpdates, appState.availableUpdate != nil {
-                Button(action: {
-                    dismiss()
-                    openURL(URL(string: "https://github.com/matthewnitschke/EmberMate/releases/latest")!)
-                }) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "arrow.down.circle.fill")
-                            .foregroundColor(.white)
-                        Text("Update available")
-                            .foregroundColor(.white)
-                            .font(.caption)
+            if appState.shouldShowUpdateBanner, let availableUpdate = appState.availableUpdate {
+                HStack(spacing: 0) {
+                    Button(action: {
+                        dismiss()
+                        openURL(URL(string: "https://github.com/matthewnitschke/EmberMate/releases/latest")!)
+                    }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "arrow.down.circle.fill")
+                            Text("Update Available (v\(availableUpdate))")
+                                .font(.caption)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 6)
+                        .contentShape(Rectangle())
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 6)
-                    .background(Color.accentColor.opacity(0.8))
-                    .cornerRadius(6)
+                    .buttonStyle(.plain)
+
+                    Button(action: {
+                        appState.dismissAvailableUpdate()
+                    }) {
+                        Image(systemName: "xmark")
+                            .font(.caption.weight(.bold))
+                            .frame(width: 22, height: 22)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .help("Skip version \(availableUpdate)")
                 }
-                .buttonStyle(.plain)
+                .foregroundColor(.white)
+                .padding(.trailing, 4)
+                .background(Color.accentColor.opacity(0.8))
+                .cornerRadius(6)
             }
 
         }.padding(10).background(LinearGradient(
