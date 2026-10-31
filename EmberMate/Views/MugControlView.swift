@@ -58,10 +58,7 @@ struct MugControlView: View {
                             .font(.largeTitle)
                     }
 
-                    Text(verbatim: String(
-                        format: String(localized: "Target: %@"),
-                        getFormattedTemperature(emberMug.targetTemp, unit: emberMug.temperatureUnit)
-                    ))
+                    Text("Target: \(getFormattedTemperature(emberMug.targetTemp, unit: emberMug.temperatureUnit))")
                 }
 
                 Spacer()
@@ -113,10 +110,7 @@ struct MugControlView: View {
                     }) {
                         HStack(spacing: 4) {
                             Image(systemName: "arrow.down.circle.fill")
-                            Text(verbatim: String(
-                                format: String(localized: "Update Available (v%@)"),
-                                availableUpdate
-                            ))
+                            Text("Update Available (v\(availableUpdate))")
                                 .font(.caption)
                         }
                         .frame(maxWidth: .infinity)
@@ -134,10 +128,7 @@ struct MugControlView: View {
                             .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
-                    .help(Text(verbatim: String(
-                        format: String(localized: "Skip version %@"),
-                        availableUpdate
-                    )))
+                    .help("Skip version \(availableUpdate)")
                 }
                 .foregroundColor(.white)
                 .padding(.trailing, 4)

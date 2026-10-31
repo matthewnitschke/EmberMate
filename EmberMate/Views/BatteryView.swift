@@ -23,10 +23,9 @@ struct BatteryView: View {
                 Image(systemName: getBatteryIcon(batteryLevel, isCharging: isCharging))
             }
             if display.showPercentage {
-                // Interpolating here would make "%@" a localizable key, and
-                // `IntegerFormatStyle.percent` already renders whole percentages
-                // (85 -> "85%") using the user's locale.
-                Text(verbatim: batteryLevel.formatted(.percent))
+                // `Text(_:format:)` renders a value through a format style
+                // without treating it as a localization key.
+                Text(batteryLevel, format: .percent)
                     .font(textFont)
             }
         }

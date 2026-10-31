@@ -209,10 +209,7 @@ struct AboutSettingsView: View {
                         Text(verbatim: "EmberMate")
                             .font(.title)
                         
-                        Text(verbatim: String(
-                            format: String(localized: "Version %@"),
-                            Bundle.main.appVersion
-                        ))
+                        Text("Version \(Bundle.main.appVersion)")
                             .font(.footnote)
                         
                         HStack(spacing: 1.5) {
@@ -239,12 +236,8 @@ struct AboutSettingsView: View {
                         VStack(spacing: 4) {
                             Text("Update available!")
                                 .font(.headline)
-                            Link(destination: URL(string: "https://github.com/matthewnitschke/EmberMate/releases/latest")!) {
-                                Text(verbatim: String(
-                                    format: String(localized: "Download %@ from GitHub"),
-                                    availableUpdate
-                                ))
-                            }
+                            Link("Download \(availableUpdate) from GitHub",
+                                  destination: URL(string: "https://github.com/matthewnitschke/EmberMate/releases/latest")!)
                                 .font(.subheadline)
                         }
                     }
